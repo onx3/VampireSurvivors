@@ -561,7 +561,6 @@ void GameManager::GameOverScreen()
 std::vector<std::string> GameManager::GetCommonResourcePaths()
 {
     return {
-        "Art/Astroid.png",
         "Art/Nuke.png",
         "Art/life.png",
         "Art/laserGreen.png",
@@ -571,9 +570,7 @@ std::vector<std::string> GameManager::GetCommonResourcePaths()
         "Art/playerRight.png",
         "Art/playerDamaged.png",
         "Art/Explosion.png",
-        "Art/Crosshair.png",
-        "Art/Background/backgroundFar.png",
-        "Art/Background/backgroundReallyFar.png"
+        "Art/Crosshair.png"
     };
 }
 

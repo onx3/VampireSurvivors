@@ -55,13 +55,13 @@ void PlayerManager::InitPlayer()
         auto pSpriteComponent = pPlayer->GetComponent<SpriteComponent>().lock();
         if (pSpriteComponent)
         {
-            std::string file = "Art/Player.png";
+            std::string file = "Art/Player/elf_m_idle_anim_f0.png";
             ResourceId resourceId(file);
 
             auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
             if (pTexture)
             {
-                pSpriteComponent->SetSprite(pTexture, sf::Vector2f(0.25f, 0.25f));
+                pSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.2f, 1.2f));
                 pSpriteComponent->SetPosition(centerPosition);
             }
         }
@@ -151,7 +151,7 @@ void PlayerManager::Update(float deltaTime)
                     });
             }
 
-            if (pHealthComp && pHealthComp->GetLives() == 1)
+            /*if (pHealthComp && pHealthComp->GetLives() == 1)
             {
                 auto pSpriteComponent = pPlayer->GetComponent<SpriteComponent>().lock();
                 if (pSpriteComponent)
@@ -165,7 +165,7 @@ void PlayerManager::Update(float deltaTime)
                         pSpriteComponent->SetSprite(texture, pSpriteComponent->GetSprite().getScale());
                     }
                 }
-            }
+            }*/
         }
 
         if (mLoseLifeSound.getStatus() == sf::Sound::Stopped)

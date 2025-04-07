@@ -294,7 +294,7 @@ void EnemyAIManager::SetUpSprite(SpriteComponent & spriteComp, EEnemy type)
     {
         case (EEnemy::LizardF):
         {
-            scale = sf::Vector2f(.2f, .2f);
+            scale = sf::Vector2f(1.2f, 1.2f);
             break;
         }
         case (EEnemy::Ogre):
@@ -304,7 +304,7 @@ void EnemyAIManager::SetUpSprite(SpriteComponent & spriteComp, EEnemy type)
         }
         default :
         {
-            scale = sf::Vector2f(.2f, .2f);
+            scale = sf::Vector2f(1.2f, 1.2f);
             break;
         }
     }

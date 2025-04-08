@@ -101,7 +101,7 @@ void AIPathComponent::Update(float deltaTime)
         float movementSpeed = mMovementSpeed * deltaTime;
         sf::Vector2f newPosition = myPosition + (direction * movementSpeed);
 
-        GetGameObject().SetPosition(newPosition);
+        //GetGameObject().SetPosition(newPosition);
 
         float threshold = movementSpeed * 1.5f;
         if (distance < threshold)

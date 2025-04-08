@@ -6,7 +6,7 @@
 SwordSlashComponent::SwordSlashComponent(GameObject * owner, GameManager & gameManager, float arcAngleDeg, float radius, float duration)
 	: GameComponent(owner, gameManager)
 	, mCenter(owner->GetPosition())
-	, mArcAngleRad(arcAngleDeg * 3.14159f / 180.f)
+	, mArcAngleRad(arcAngleDeg * BD::gsPi / 180.f)
 	, mRadius(radius)
 	, mDuration(duration)
 	, mElapsedTime(0.f)
@@ -123,7 +123,7 @@ void SwordSlashComponent::draw(sf::RenderTarget & target, sf::RenderStates state
 
 	float angle = 0.f;
 	if (std::abs(currentDir.x) > 0.001f || std::abs(currentDir.y) > 0.001f)
-		angle = std::atan2(currentDir.y, currentDir.x) * 180.f / 3.14159f;
+		angle = std::atan2(currentDir.y, currentDir.x) * 180.f / BD::gsPi;
 
 	mWedge.setRotation(angle);
 	target.draw(mWedge, states);

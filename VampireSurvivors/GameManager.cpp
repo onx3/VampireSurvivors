@@ -17,6 +17,11 @@
 #include "BaseManager.h"
 #include "LevelManager.h"
 
+namespace
+{
+    static bool gsDrawHitBoxes = false;
+}
+
 GameManager::GameManager(WindowManager & windowManager)
     : mWindowManager(windowManager)
     , mpWindow(windowManager.GetWindow())
@@ -273,6 +278,8 @@ void GameManager::RenderImGui()
         ImGui::Columns(2, "GameObjectsColumns", true);
 
         // LEFT SIDE: GameObject Tree
+        RenderConCommands();
+
         ImGui::Text("GameObject Tree");
         ImGui::Separator();
 
@@ -340,6 +347,13 @@ void GameManager::RenderImGui()
 
 //------------------------------------------------------------------------------------------------------------------------
 
+void GameManager::RenderConCommands()
+{
+    ImGui::Checkbox("Draw Hitboxes", &gsDrawHitBoxes);
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
 void GameManager::Render(float deltaTime)
 {
     mpWindow->clear();
@@ -373,9 +387,46 @@ void GameManager::Render(float deltaTime)
 
         // Render ImGui draw data
         ImGui::SFML::Render(*mpWindow);
+
+        // Box2d Collision
+        DrawPhysicsDebug(*mpWindow);
     }
 
     mpWindow->display();
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void GameManager::DrawPhysicsDebug(sf::RenderTarget & target)
+{
+    if (!gsDrawHitBoxes)
+    {
+        return;
+    }
+
+    for (b2Body * body = mPhysicsWorld.GetBodyList(); body; body = body->GetNext())
+    {
+        for (b2Fixture * fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
+        {
+            if (fixture->GetType() == b2Shape::e_polygon)
+            {
+                b2PolygonShape * poly = static_cast<b2PolygonShape *>(fixture->GetShape());
+                sf::ConvexShape shape;
+                shape.setPointCount(poly->m_count);
+
+                for (int i = 0; i < poly->m_count; ++i)
+                {
+                    b2Vec2 point = body->GetWorldPoint(poly->m_vertices[i]);
+                    shape.setPoint(i, sf::Vector2f(point.x * BD::gsPixelsPerMeter, point.y * BD::gsPixelsPerMeter));
+                }
+
+                shape.setFillColor(sf::Color(0, 0, 0, 0));
+                shape.setOutlineColor(sf::Color::Green);
+                shape.setOutlineThickness(1.f);
+                target.draw(shape);
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

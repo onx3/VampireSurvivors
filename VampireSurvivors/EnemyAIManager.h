@@ -7,7 +7,7 @@
 
 namespace
 {
-	const int mkMaxEnemies = 1;
+	const int mkMaxEnemies = 15;
 }
 
 enum class EEnemy

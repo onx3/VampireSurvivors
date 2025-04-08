@@ -140,7 +140,7 @@ void PlayerManager::InitPlayer()
 
         // Collision Component
         {
-            auto pWeaponCollisionComponent = pPlayerWeapon->GetComponent<CollisionComponent>().lock();
+            /*auto pWeaponCollisionComponent = pPlayerWeapon->GetComponent<CollisionComponent>().lock();
             if (!pWeaponCollisionComponent)
             {
                 pPlayerWeapon->CreatePhysicsBody(&gameManager.GetPhysicsWorld(), pPlayerWeapon->GetSize(), true);
@@ -152,7 +152,7 @@ void PlayerManager::InitPlayer()
                     pPlayerWeapon->GetSize(),
                     true
                 ));
-            }
+            }*/
         }
 
         // Sword Logic

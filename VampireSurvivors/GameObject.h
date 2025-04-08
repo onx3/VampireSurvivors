@@ -31,6 +31,7 @@ public:
     bool IsDestroyed() const;
 
     void CreatePhysicsBody(b2World * world, const sf::Vector2f & size, bool isDynamic);
+    void SetPhysicsBody(b2Body * pBody);
 
     void DestroyPhysicsBody(b2World * world);
 

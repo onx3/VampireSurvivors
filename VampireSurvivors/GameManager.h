@@ -80,6 +80,8 @@ private:
 	void CleanUpDestroyedGameObjects(BD::Handle rootHandle);
 
 	void RenderImGui();
+	void RenderConCommands();
+	void DrawPhysicsDebug(sf::RenderTarget & target);
 
 	void InitWindow();
 

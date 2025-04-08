@@ -98,6 +98,13 @@ void GameObject::CreatePhysicsBody(b2World * world, const sf::Vector2f & size, b
 
 //------------------------------------------------------------------------------------------------------------------------
 
+void GameObject::SetPhysicsBody(b2Body * pBody)
+{
+    mpPhysicsBody = pBody;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
 void GameObject::DestroyPhysicsBody(b2World * world)
 {
     if (mpPhysicsBody)

@@ -79,7 +79,7 @@ void EnemyBulletComponent::Shoot()
 		float rotation = pOwnerGameObj->GetRotationRadians();
 		sf::Vector2f directionVec = { std::sin(rotation), -std::cos(rotation) };
 
-		float angleDegrees = std::atan2(directionVec.y, directionVec.x) * (180.f / 3.14159265f);
+		float angleDegrees = std::atan2(directionVec.y, directionVec.x) * (180.f / BD::gsPi);
 
 		// Set projectile position and rotation
 		pBulletSpriteComp->SetPosition(spawnPosition);

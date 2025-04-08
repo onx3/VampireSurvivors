@@ -14,7 +14,8 @@ class GameManager;
 enum class ETeam
 {
     Player,
-    Friendly,
+    FriendlyPersistant,
+    FriendlyFleeting,
     Enemy,
     Neutral,
     NukeDrop,

@@ -55,7 +55,7 @@ std::string ProjectileComponent::GetCorrectProjectileFile()
 void ProjectileComponent::Shoot()
 {
 	GameManager & gameManager = GetGameManager();
-	BD::Handle projectileHandle = gameManager.CreateNewGameObject(ETeam::Friendly, mOwnerHandle);
+	BD::Handle projectileHandle = gameManager.CreateNewGameObject(ETeam::FriendlyFleeting, mOwnerHandle);
 	GameObject * pProjectile = gameManager.GetGameObject(projectileHandle);
 	GameObject * pOwnerGameObj = gameManager.GetGameObject(mOwnerHandle);
 
@@ -99,7 +99,7 @@ void ProjectileComponent::Shoot()
 		}
 
 		// Calculate angle in degrees
-		float angleDegrees = std::atan2(direction.y, direction.x) * (180.f / 3.14159265f);
+		float angleDegrees = std::atan2(direction.y, direction.x) * (180.f / BD::gsPi);
 
 		// Set projectile position and rotation
 		pProjectileSpriteComponent->SetPosition(spawnPosition);

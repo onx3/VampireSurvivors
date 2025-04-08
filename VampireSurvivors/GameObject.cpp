@@ -212,7 +212,7 @@ float GameObject::GetRotationRadians() const
     auto pGameObjectSprite = GetComponent<SpriteComponent>().lock();
     if (pGameObjectSprite)
     {
-        return pGameObjectSprite->GetRotation() * (3.14159265f / 180.f);
+        return pGameObjectSprite->GetRotation() * (BD::gsPi / 180.f);
     }
     return 0.0f;
 }

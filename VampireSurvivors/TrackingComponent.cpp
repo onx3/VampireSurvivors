@@ -40,7 +40,7 @@ void TrackingComponent::Update(float deltaTime)
         direction /= length;
     }
 
-    float angleDegrees = std::atan2(direction.y, direction.x) * (180.f / 3.14159265f);
+    float angleDegrees = std::atan2(direction.y, direction.x) * (180.f / BD::gsPi);
 
     pGameObject->SetRotation(angleDegrees + 90.f);
 }

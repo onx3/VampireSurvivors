@@ -9,8 +9,10 @@
 #include <cassert>
 #include "ResourceManager.h"
 #include "CameraManager.h"
+#include "FollowComponent.h"
+#include "SwordSlashComponent.h"
 
-static int sPlayerHealth = 100;
+static int sPlayerHealth = 100000;
 
 PlayerManager::PlayerManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
@@ -77,15 +79,6 @@ void PlayerManager::InitPlayer()
         }
     }
 
-    // Projectile Component
-    {
-        auto pProjectileComponent = pPlayer->GetComponent<ProjectileComponent>().lock();
-        if (!pProjectileComponent)
-        {
-            pPlayer->AddComponent(std::make_shared<ProjectileComponent>(pPlayer, gameManager));
-        }
-    }
-
     // Health Component
     {
         auto pHealthComponent = pPlayer->GetComponent<HealthComponent>().lock();
@@ -109,6 +102,67 @@ void PlayerManager::InitPlayer()
                 pPlayer->GetSize(),
                 true
             ));
+        }
+    }
+
+    // Add default sword weapon GameObject to display
+    {
+        BD::Handle playerWeaponHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, pPlayer->GetHandle());
+        GameObject * pPlayerWeapon = gameManager.GetGameObject(playerWeaponHandle);
+
+        // Sprite Component
+        {
+            auto pWeaponSpriteComponent = pPlayerWeapon->GetComponent<SpriteComponent>().lock();
+            if (pWeaponSpriteComponent)
+            {
+                std::string file = "Art/Weapons/weapon_anime_sword.png";
+                ResourceId resourceId(file);
+
+                auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
+                if (pTexture)
+                {
+                    pWeaponSpriteComponent->SetSprite(pTexture, sf::Vector2f(.8f, .8f));
+                    pWeaponSpriteComponent->SetPosition(pPlayer->GetPosition());
+                    pPlayerWeapon->SetRotation(pPlayerWeapon->GetRotationDegrees() + 90);
+                }
+            }
+        }
+
+        // Follow Component
+        {
+            auto pWeaponFollowComponent = pPlayerWeapon->GetComponent<FollowComponent>().lock();
+            if (!pWeaponFollowComponent)
+            {
+                auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, playerHandle, sf::Vector2f(18, 10));
+                pPlayerWeapon->AddComponent(pWeaponFollowComponent);
+            }
+        }
+
+        // Collision Component
+        {
+            auto pWeaponCollisionComponent = pPlayerWeapon->GetComponent<CollisionComponent>().lock();
+            if (!pWeaponCollisionComponent)
+            {
+                pPlayerWeapon->CreatePhysicsBody(&gameManager.GetPhysicsWorld(), pPlayerWeapon->GetSize(), true);
+                pPlayerWeapon->AddComponent(std::make_shared<CollisionComponent>(
+                    pPlayerWeapon,
+                    gameManager,
+                    &gameManager.GetPhysicsWorld(),
+                    pPlayerWeapon->GetPhysicsBody(),
+                    pPlayerWeapon->GetSize(),
+                    true
+                ));
+            }
+        }
+
+        // Sword Logic
+        {
+            auto pSwordSlashComponent = pPlayerWeapon->GetComponent<SwordSlashComponent>().lock();
+            if (!pSwordSlashComponent)
+            {
+                auto pSwordSlashComponent = std::make_shared<SwordSlashComponent>(pPlayerWeapon, gameManager, 60.f, 100.f, 0.3f);
+                pPlayerWeapon->AddComponent(pSwordSlashComponent);
+            }
         }
     }
 }

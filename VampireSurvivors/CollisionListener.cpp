@@ -49,8 +49,31 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
             }
         }
     }
-    // Projectile hit enemy
-    else if (pObjA->GetTeam() == ETeam::Friendly && pObjB->GetTeam() == ETeam::Enemy)
+    // Persistant Obj
+    else if (pObjA->GetTeam() == ETeam::FriendlyPersistant && pObjB->GetTeam() == ETeam::Enemy)
+    {
+        if (pObjB->IsActive())
+        {
+            auto pObjBHealthComp = pObjB->GetComponent<HealthComponent>().lock();
+            if (pObjBHealthComp)
+            {
+                pObjBHealthComp->LoseHealth(100);
+            }
+        }
+    }
+    else if (pObjA->GetTeam() == ETeam::Enemy && pObjB->GetTeam() == ETeam::FriendlyPersistant)
+    {
+        if (pObjA->IsActive())
+        {
+            auto pObjAHealthComp = pObjA->GetComponent<HealthComponent>().lock();
+            if (pObjAHealthComp)
+            {
+                pObjAHealthComp->LoseHealth(100);
+            }
+        }
+    }
+    // Fleeting Obj
+    else if (pObjA->GetTeam() == ETeam::FriendlyFleeting && pObjB->GetTeam() == ETeam::Enemy)
     {
         if (pObjB->IsActive())
         {
@@ -62,7 +85,7 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
             }
         }
     }
-    else if (pObjA->GetTeam() == ETeam::Enemy && pObjB->GetTeam() == ETeam::Friendly)
+    else if (pObjA->GetTeam() == ETeam::Enemy && pObjB->GetTeam() == ETeam::FriendlyFleeting)
     {
         if (pObjA->IsActive())
         {

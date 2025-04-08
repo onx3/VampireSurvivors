@@ -86,7 +86,7 @@ void EnemyAIManager::Update(float deltaTime)
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> angleDist(0.f, 2.f * 3.14159f);
+    std::uniform_real_distribution<float> angleDist(0.f, 2.f * BD::gsPi);
     std::uniform_real_distribution<float> radiusDist(minRadius, maxRadius);
 
 	while (mEnemyHandles.size() < mkMaxEnemies)

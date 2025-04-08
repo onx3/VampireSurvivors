@@ -173,6 +173,7 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
+    <ClCompile Include="SwordSlashComponent.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TrackingComponent.cpp" />
     <ClCompile Include="WindowManager.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="SpriteComponent.h" />
+    <ClInclude Include="SwordSlashComponent.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TPool.h" />
     <ClInclude Include="TrackingComponent.h" />

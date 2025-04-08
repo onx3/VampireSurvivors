@@ -3,6 +3,7 @@
 namespace BD
 {
 	static float gsPixelCountCellSize = 16.f;
+	static float gsPi = 3.14159f;
 };
 
 class WindowManager

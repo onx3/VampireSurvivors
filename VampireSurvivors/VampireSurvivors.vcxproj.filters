@@ -121,6 +121,9 @@
     <ClCompile Include="EnemyBulletComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="SwordSlashComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -211,6 +214,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="EnemyBulletComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordSlashComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

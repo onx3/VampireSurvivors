@@ -118,11 +118,6 @@ void ControlledMovementComponent::Update(float deltaTime)
              }
         }
         pSpriteComponent->SetPosition(position);
-
-        //auto crosshairPosition = GetGameObject().GetGameManager().GetManager<CameraManager>()->GetCrosshairPosition();
-        //sf::Vector2f direction = crosshairPosition - position;
-        //float angle = std::atan2(direction.y, direction.x) * 180.f / 3.14159f;
-        //pSpriteComponent->SetRotation(angle + 90.f);
     }
 }
 

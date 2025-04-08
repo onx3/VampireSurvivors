@@ -1,5 +1,13 @@
 #pragma once
 #include "GameComponent.h"
+
+struct Slash
+{
+    BD::Handle handle;
+    float lifespan;
+    int damage;
+};
+
 class SwordSlashComponent : public GameComponent
 {
 public:
@@ -13,10 +21,13 @@ public:
 
 
 private:
-    void PerformSlash(const sf::Vector2f & direction);
+    void PerformSlash();
 
-    sf::Vector2f mCenter;
+    void CleanUpSlashes(float deltaTime);
+
+    std::vector<Slash> mSlashObjs;
     sf::ConvexShape mWedge;
+    sf::Vector2f mSlashDirection;
 
     float mArcAngleRad;
     float mRadius;
@@ -24,10 +35,7 @@ private:
     float mElapsedTime;
     float mTimeSinceLastSlash;
     float mCooldown;
-
     bool mIsSlashing;
-    b2Fixture * mpFixture;
-
     std::string mName;
 };
 

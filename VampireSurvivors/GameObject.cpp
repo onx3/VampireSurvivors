@@ -98,6 +98,56 @@ void GameObject::CreatePhysicsBody(b2World * world, const sf::Vector2f & size, b
 
 //------------------------------------------------------------------------------------------------------------------------
 
+bool GameObject::CreateWedgeShapePhysicsBody(b2World * world, float arcAngleRad, float radius, int pointCount, bool isDynamic)
+{
+    pointCount = std::min(pointCount, b2_maxPolygonVertices - 1);
+    if (pointCount < 2)
+        return false;
+
+    // Define the body
+    b2BodyDef bodyDef;
+    bodyDef.type = isDynamic ? b2_dynamicBody : b2_staticBody;
+    bodyDef.position.Set(GetPosition().x / PIXELS_PER_METER, GetPosition().y / PIXELS_PER_METER);
+    bodyDef.bullet = true;
+    bodyDef.awake = true;
+
+    mpPhysicsBody = world->CreateBody(&bodyDef);
+
+    // Create the wedge shape
+    b2Vec2 points[b2_maxPolygonVertices];
+    points[0].Set(0.f, 0.f); // Center
+
+    float halfAngle = arcAngleRad * 0.5f;
+    for (int i = 0; i <= pointCount; ++i)
+    {
+        float t = static_cast<float>(i) / pointCount;
+        float angle = -halfAngle + arcAngleRad * t;
+        float x = std::cos(angle) * radius;
+        float y = std::sin(angle) * radius;
+        points[i + 1].Set(x, y);
+    }
+
+    int totalPoints = pointCount + 2;
+    b2PolygonShape wedgeShape;
+    wedgeShape.Set(points, totalPoints);
+
+    // Define the fixture
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &wedgeShape;
+    fixtureDef.density = isDynamic ? 1.0f : 0.0f;
+    fixtureDef.friction = 0.3f;
+    fixtureDef.isSensor = true; // likely true for slashes
+
+    mpPhysicsBody->CreateFixture(&fixtureDef);
+
+    // Set user data
+    mpPhysicsBody->GetUserData().pointer = reinterpret_cast<uintptr_t>(this);
+
+    return true;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
 void GameObject::SetPhysicsBody(b2Body * pBody)
 {
     mpPhysicsBody = pBody;

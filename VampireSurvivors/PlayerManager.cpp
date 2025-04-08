@@ -110,7 +110,7 @@ void PlayerManager::InitPlayer()
         BD::Handle playerWeaponHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, pPlayer->GetHandle());
         GameObject * pPlayerWeapon = gameManager.GetGameObject(playerWeaponHandle);
 
-        // Sprite Component
+        // Sword Sprite Component
         {
             auto pWeaponSpriteComponent = pPlayerWeapon->GetComponent<SpriteComponent>().lock();
             if (pWeaponSpriteComponent)
@@ -128,7 +128,7 @@ void PlayerManager::InitPlayer()
             }
         }
 
-        // Follow Component
+        // Sword Follow Component
         {
             auto pWeaponFollowComponent = pPlayerWeapon->GetComponent<FollowComponent>().lock();
             if (!pWeaponFollowComponent)
@@ -138,29 +138,12 @@ void PlayerManager::InitPlayer()
             }
         }
 
-        // Collision Component
-        {
-            /*auto pWeaponCollisionComponent = pPlayerWeapon->GetComponent<CollisionComponent>().lock();
-            if (!pWeaponCollisionComponent)
-            {
-                pPlayerWeapon->CreatePhysicsBody(&gameManager.GetPhysicsWorld(), pPlayerWeapon->GetSize(), true);
-                pPlayerWeapon->AddComponent(std::make_shared<CollisionComponent>(
-                    pPlayerWeapon,
-                    gameManager,
-                    &gameManager.GetPhysicsWorld(),
-                    pPlayerWeapon->GetPhysicsBody(),
-                    pPlayerWeapon->GetSize(),
-                    true
-                ));
-            }*/
-        }
-
-        // Sword Logic
+        // Sword SlashComponent
         {
             auto pSwordSlashComponent = pPlayerWeapon->GetComponent<SwordSlashComponent>().lock();
             if (!pSwordSlashComponent)
             {
-                auto pSwordSlashComponent = std::make_shared<SwordSlashComponent>(pPlayerWeapon, gameManager, 60.f, 100.f, 0.3f);
+                auto pSwordSlashComponent = std::make_shared<SwordSlashComponent>(pPlayerWeapon, gameManager, 60.f, 100.f, 5.1f);
                 pPlayerWeapon->AddComponent(pSwordSlashComponent);
             }
         }

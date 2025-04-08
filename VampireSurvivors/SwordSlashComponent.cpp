@@ -2,10 +2,11 @@
 #include "SwordSlashComponent.h"
 #include "CameraManager.h"
 #include "HealthComponent.h"
+#include "CollisionComponent.h"
 
 SwordSlashComponent::SwordSlashComponent(GameObject * owner, GameManager & gameManager, float arcAngleDeg, float radius, float duration)
 	: GameComponent(owner, gameManager)
-	, mCenter(owner->GetPosition())
+    , mSlashObjs()
 	, mArcAngleRad(arcAngleDeg * BD::gsPi / 180.f)
 	, mRadius(radius)
 	, mDuration(duration)
@@ -13,7 +14,6 @@ SwordSlashComponent::SwordSlashComponent(GameObject * owner, GameManager & gameM
 	, mTimeSinceLastSlash(0.f)
 	, mCooldown(1.0f)
 	, mIsSlashing(false)
-	, mpFixture(nullptr)
 	, mName("SwordSlashComponent")
 {
     int pointCount = 30; // number of triangle segments to form the arc
@@ -60,27 +60,39 @@ void SwordSlashComponent::Update(float deltaTime)
             if (len > 0.01f)
             {
                 aimDir /= len;
-                PerformSlash(aimDir);
+                mSlashDirection = aimDir;
+                PerformSlash();
             }
         }
     }
 
     if (!mIsSlashing)
+    {
         return;
+    }
 
     mElapsedTime += deltaTime;
     float t = std::min(mElapsedTime / mDuration, 1.0f);
     float swingAngle = -mArcAngleRad / 2.f + mArcAngleRad * t;
 
     auto pCameraManager = GetGameManager().GetManager<CameraManager>();
-    if (!pCameraManager) return;
+    if (!pCameraManager)
+    {
+        return;
+    }
 
     sf::Vector2f mouseWorld = pCameraManager->GetCrosshairPosition();
-    sf::Vector2f currentDir = mouseWorld - mCenter;
+    sf::Vector2f currentDir = mouseWorld - GetGameObject().GetPosition();
 
     float len = std::sqrt(currentDir.x * currentDir.x + currentDir.y * currentDir.y);
-    if (len > 0.01f) currentDir /= len;
-    else currentDir = { 1.f, 0.f };
+    if (len > 0.01f)
+    {
+        currentDir /= len;
+    }
+    else
+    {
+        currentDir = { 1.f, 0.f };
+    }
 
     float cosA = std::cos(swingAngle);
     float sinA = std::sin(swingAngle);
@@ -89,7 +101,7 @@ void SwordSlashComponent::Update(float deltaTime)
         currentDir.x * sinA + currentDir.y * cosA
     );
 
-    sf::Vector2f newPos = mCenter + swingDir * mRadius;
+    sf::Vector2f newPos = GetGameObject().GetPosition() + swingDir * mRadius;
     GetGameObject().SetPosition(newPos);
 
     float alpha = 1.f - t;
@@ -99,31 +111,33 @@ void SwordSlashComponent::Update(float deltaTime)
     {
         mIsSlashing = false;
         mElapsedTime = 0.f;
-
-        if (mpFixture)
-            mpFixture->SetSensor(true);
     }
+
+    CleanUpSlashes(deltaTime);
 }
 
 //------------------------------------------------------------------------------------------------------------------------
 
 void SwordSlashComponent::draw(sf::RenderTarget & target, sf::RenderStates states)
 {
-	if (!mIsSlashing)
-		return;
+    if (!mIsSlashing)
+    {
+        return;
+    }
 
 	mWedge.setPosition(GetGameObject().GetParent()->GetPosition());
 
 	auto pCameraManager = GetGameManager().GetManager<CameraManager>();
-	if (!pCameraManager)
-		return;
-
-	sf::Vector2f mouseWorld = pCameraManager->GetCrosshairPosition();
-	sf::Vector2f currentDir = mouseWorld - mCenter;
+    if (!pCameraManager)
+    {
+        return;
+    }
 
 	float angle = 0.f;
-	if (std::abs(currentDir.x) > 0.001f || std::abs(currentDir.y) > 0.001f)
-		angle = std::atan2(currentDir.y, currentDir.x) * 180.f / BD::gsPi;
+    if (std::abs(mSlashDirection.x) > 0.001f || std::abs(mSlashDirection.y) > 0.001f)
+    {
+        angle = std::atan2(mSlashDirection.y, mSlashDirection.x) * 180.f / BD::gsPi;
+    }
 
 	mWedge.setRotation(angle);
 	target.draw(mWedge, states);
@@ -144,7 +158,7 @@ std::string & SwordSlashComponent::GetClassName()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void SwordSlashComponent::PerformSlash(const sf::Vector2f & direction)
+void SwordSlashComponent::PerformSlash()
 {
     if (mTimeSinceLastSlash < mCooldown || mIsSlashing)
     {
@@ -155,19 +169,72 @@ void SwordSlashComponent::PerformSlash(const sf::Vector2f & direction)
 	mElapsedTime = 0.f;
 	mIsSlashing = true;
 
-	mCenter = GetGameObject().GetParent()->GetPosition();
-
-	if (!mpFixture)
-	{
-		b2Body * pBody = GetGameObject().GetPhysicsBody();
-		if (pBody && pBody->GetFixtureList())
-			mpFixture = pBody->GetFixtureList();
-	}
-    if (mpFixture)
+    auto & gameManager = GetGameManager();
+    auto slashHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, GetGameObject().GetHandle());
+    auto * pSlashObj = gameManager.GetGameObject(slashHandle);
+    if (!pSlashObj)
     {
-        mpFixture->SetSensor(false);
+        return;
     }
+
+    pSlashObj->SetPosition(GetGameObject().GetParent()->GetPosition());
+    float angleRad = std::atan2(mSlashDirection.y, mSlashDirection.x);
+    float angleDeg = angleRad * (180.f / BD::gsPi);
+    pSlashObj->SetRotation(angleDeg);
+
+    auto pSlashCollisionComponent = pSlashObj->GetComponent<CollisionComponent>().lock();
+    if (!pSlashCollisionComponent)
+    {
+        pSlashObj->CreateWedgeShapePhysicsBody(
+            &gameManager.GetPhysicsWorld(),
+            mArcAngleRad,
+            (mRadius) / BD::gsPixelsPerMeter,
+            6,            // safe number of segments
+            true          // dynamic
+        );
+
+        pSlashObj->AddComponent(std::make_shared<CollisionComponent>(
+            pSlashObj,
+            gameManager,
+            &gameManager.GetPhysicsWorld(),
+            pSlashObj->GetPhysicsBody(),
+            pSlashObj->GetSize(),
+            true
+        ));
+    }
+
+    Slash slash = { slashHandle, mDuration, 10 };
+    mSlashObjs.push_back(slash);
 }
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void SwordSlashComponent::CleanUpSlashes(float deltaTime)
+{
+    auto & gameManager = GetGameManager();
+
+    for (auto & slash : mSlashObjs)
+    {
+        GameObject * pSlash = gameManager.GetGameObject(slash.handle);
+        if (pSlash && !pSlash->IsDestroyed())
+        {
+            slash.lifespan -= deltaTime;
+        }
+    }
+
+    mSlashObjs.erase(
+        std::remove_if(mSlashObjs.begin(), mSlashObjs.end(),
+            [&gameManager](Slash & slash) {
+                GameObject * pSlash = gameManager.GetGameObject(slash.handle);
+                if (pSlash && !pSlash->IsDestroyed() && slash.lifespan <= 0.0f)
+                {
+                    pSlash->Destroy();
+                }
+                return !pSlash || pSlash->IsDestroyed();
+            }),
+        mSlashObjs.end());
+}
+
 //------------------------------------------------------------------------------------------------------------------------
 // EOF
 //------------------------------------------------------------------------------------------------------------------------

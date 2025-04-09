@@ -123,7 +123,7 @@ void PlayerManager::InitPlayer()
                 {
                     pWeaponSpriteComponent->SetSprite(pTexture, sf::Vector2f(.8f, .8f));
                     pWeaponSpriteComponent->SetPosition(pPlayer->GetPosition());
-                    pPlayerWeapon->SetRotation(pPlayerWeapon->GetRotationDegrees() + 90);
+                    pPlayerWeapon->SetRotation(pPlayerWeapon->GetRotationDegrees());
                 }
             }
         }
@@ -133,7 +133,7 @@ void PlayerManager::InitPlayer()
             auto pWeaponFollowComponent = pPlayerWeapon->GetComponent<FollowComponent>().lock();
             if (!pWeaponFollowComponent)
             {
-                auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, playerHandle, sf::Vector2f(18, 10));
+                auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, playerHandle, sf::Vector2f(10, 0));
                 pPlayerWeapon->AddComponent(pWeaponFollowComponent);
             }
         }
@@ -143,7 +143,7 @@ void PlayerManager::InitPlayer()
             auto pSwordSlashComponent = pPlayerWeapon->GetComponent<SwordSlashComponent>().lock();
             if (!pSwordSlashComponent)
             {
-                auto pSwordSlashComponent = std::make_shared<SwordSlashComponent>(pPlayerWeapon, gameManager, 60.f, 100.f, 5.1f);
+                auto pSwordSlashComponent = std::make_shared<SwordSlashComponent>(pPlayerWeapon, gameManager, 60.f, 100.f, .1f);
                 pPlayerWeapon->AddComponent(pSwordSlashComponent);
             }
         }

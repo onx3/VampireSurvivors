@@ -134,7 +134,7 @@ void DropManager::SpawnDrop(EDropType dropType, const sf::Vector2f & position)
         pDrop->AddComponent(pDropMovementComponent);
 
         // Add collision or interaction logic for pickup
-        pDrop->CreatePhysicsBody(&gameManager.GetPhysicsWorld(), pDrop->GetSize(), true);
+        pDrop->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pDrop->GetSize(), true);
 
         auto pCollisionComp = std::make_shared<CollisionComponent>(
             pDrop, gameManager, &gameManager.GetPhysicsWorld(), pDrop->GetPhysicsBody(), pDrop->GetSize(), true);

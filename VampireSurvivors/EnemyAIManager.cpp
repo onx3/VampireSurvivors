@@ -152,7 +152,7 @@ void EnemyAIManager::AddEnemies(int count, EEnemy type, sf::Vector2f pos)
 
         // Physics and Collision
         {
-            pEnemy->CreatePhysicsBody(&gameManager.GetPhysicsWorld(), pEnemy->GetSize(), true);
+            pEnemy->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pEnemy->GetSize(), true);
             auto pCollisionComp = std::make_shared<CollisionComponent>(
                 pEnemy,
                 gameManager,
@@ -248,8 +248,8 @@ void EnemyAIManager::OnDeath(GameObject * pEnemy)
     }
     // Add Score
     {
-        auto pScoreManager = gameManager.GetManager<ScoreManager>();
-        pScoreManager->AddScore(1000);
+        auto pUIManager = gameManager.GetManager<UIManager>();
+        pUIManager->AddScore(1000);
     }
     // Drops
     {

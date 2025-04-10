@@ -3,23 +3,27 @@
 #include "BaseManager.h"
 
 class GameManager;
-class ScoreManager : public BaseManager
+class UIManager : public BaseManager
 {
 public:
-	ScoreManager(GameManager * pGameManager);
+	UIManager(GameManager * pGameManager);
 
-	virtual void Render(sf::RenderWindow & window);
+	virtual void Update(float deltaTime) override;
+	virtual void Render(sf::RenderWindow & window) override;
 
 	void AddScore(int points);
 	const sf::Text & GetScoreText();
 
 	std::vector<sf::Sprite> & GetSpriteLives();
-	int GetScore();
+	int GetScore() const;
 
 private:
 	int mScore;
 	sf::Font mFont;
 	sf::Text mScoreText;
+
+	float mRunTime;
+	sf::Text mRunTimeText;
 
 	sf::Texture mLifeTexture;
 	sf::Sprite mLifeSprite;

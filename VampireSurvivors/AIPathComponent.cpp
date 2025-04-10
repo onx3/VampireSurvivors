@@ -12,7 +12,8 @@
 namespace
 {
     static const int skSearchRadius = 5;
-    static const float skUpdateInterval = 0.35f;
+    static const float skPlayerUpdateInterval = .35f;
+    static const float skPathUpdateInterval = 1.00f;
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -24,7 +25,7 @@ AIPathComponent::AIPathComponent(GameObject * pGameObject, GameManager & gameMan
     , mPathIndex(0)
     , mLastPlayerTile()
     , mStopDistance(0.f)
-    , mMovementSpeed(200.f)
+    , mMovementSpeed(100.f)
     , mTimeSinceLastPlayerMovement(2.f)
     , mPlayerPosition()
 {
@@ -55,7 +56,7 @@ void AIPathComponent::Update(float deltaTime)
     auto myPosition = GetGameObject().GetPosition();
 
     mTimeSinceLastPlayerMovement += deltaTime;
-    if (mTimeSinceLastPlayerMovement >= skUpdateInterval)
+    if (mTimeSinceLastPlayerMovement >= skPlayerUpdateInterval)
     {
         mPlayerPosition = pPlayer->GetPosition();
         mTimeSinceLastPlayerMovement = 0.f;
@@ -75,7 +76,9 @@ void AIPathComponent::Update(float deltaTime)
 
     sf::Vector2i goalTile = FindClosestWalkableTile(playerTile);
 
-    if (playerTile != mLastPlayerTile || mPath.empty())
+    mTimeSinceLastPathUpdate += deltaTime;
+
+    if (playerTile != mLastPlayerTile || mPath.empty() && mTimeSinceLastPathUpdate >= skPathUpdateInterval)
     {
         mPath = FindPath(myTile, goalTile);
         mPathIndex = 0;
@@ -101,7 +104,7 @@ void AIPathComponent::Update(float deltaTime)
         float movementSpeed = mMovementSpeed * deltaTime;
         sf::Vector2f newPosition = myPosition + (direction * movementSpeed);
 
-        //GetGameObject().SetPosition(newPosition);
+        GetGameObject().SetPosition(newPosition);
 
         float threshold = movementSpeed * 1.5f;
         if (distance < threshold)

@@ -85,7 +85,7 @@ void EnemyBulletComponent::Shoot()
 		pBulletSpriteComp->SetPosition(spawnPosition);
 		pBulletSpriteComp->SetRotation(angleDegrees + 90.f);
 
-		pBullet->CreatePhysicsBody(&pOwnerGameObj->GetGameManager().GetPhysicsWorld(), pBullet->GetSize(), true);
+		pBullet->CreateBoxShapePhysicsBody(&pOwnerGameObj->GetGameManager().GetPhysicsWorld(), pBullet->GetSize(), true);
 		auto pCollisionComponent = std::make_shared<CollisionComponent>(
 			pBullet,
 			gameManager,

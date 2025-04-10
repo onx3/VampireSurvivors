@@ -31,7 +31,7 @@ int main()
 
             if (fpsTimer >= 1.f) // Once every second
             {
-                std::cout << "FPS: " << frameCount << std::endl;
+                //std::cout << "FPS: " << frameCount << std::endl;
                 fpsTimer = 0.f;
                 frameCount = 0;
             }

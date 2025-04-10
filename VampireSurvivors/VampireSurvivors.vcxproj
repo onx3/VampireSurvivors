@@ -150,6 +150,7 @@
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionListener.cpp" />
     <ClCompile Include="ControlledMovementComponent.cpp" />
+    <ClCompile Include="DamageComponent.cpp" />
     <ClCompile Include="DropManager.cpp" />
     <ClCompile Include="DropMovementComponent.cpp" />
     <ClCompile Include="DungeonManager.cpp" />
@@ -171,7 +172,7 @@
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="ProjectileComponent.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
-    <ClCompile Include="ScoreManager.cpp" />
+    <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="SwordSlashComponent.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionListener.h" />
     <ClInclude Include="ControlledMovementComponent.h" />
+    <ClInclude Include="DamageComponent.h" />
     <ClInclude Include="DropManager.h" />
     <ClInclude Include="DropMovementComponent.h" />
     <ClInclude Include="DungeonManager.h" />
@@ -202,7 +204,7 @@
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="ProjectileComponent.h" />
     <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="ScoreManager.h" />
+    <ClInclude Include="UIManager.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="SwordSlashComponent.h" />
     <ClInclude Include="Timer.h" />

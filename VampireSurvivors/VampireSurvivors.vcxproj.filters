@@ -46,7 +46,7 @@
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="ScoreManager.cpp">
+    <ClCompile Include="UIManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="WindowManager.cpp">
@@ -124,6 +124,9 @@
     <ClCompile Include="SwordSlashComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="DamageComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -147,7 +150,7 @@
     <ClInclude Include="ResourceManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="ScoreManager.h">
+    <ClInclude Include="UIManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="WindowManager.h">
@@ -219,5 +222,6 @@
     <ClInclude Include="SwordSlashComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="DamageComponent.h" />
   </ItemGroup>
 </Project>

@@ -30,7 +30,7 @@ public:
     void Destroy();
     bool IsDestroyed() const;
 
-    void CreatePhysicsBody(b2World * world, const sf::Vector2f & size, bool isDynamic);
+    void CreateBoxShapePhysicsBody(b2World * world, const sf::Vector2f & size, bool isDynamic);
     bool CreateWedgeShapePhysicsBody(b2World * world, float arcAngleRad, float radius, int pointCount, bool isDynamic);
     void SetPhysicsBody(b2Body * pBody);
 
@@ -86,7 +86,7 @@ public:
     void GetChildren(std::vector<GameObject *> & childObjs);
     std::vector<BD::Handle> & GetChildrenHandles();
 
-    GameObject * GetParent() const;
+    GameObject & GetParent() const;
     BD::Handle GetParentHandle();
     void SetParent(BD::Handle parentHandle);
 

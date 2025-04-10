@@ -4,7 +4,7 @@
 #include "box2d/box2d.h"
 #include "EnemyAIManager.h"
 #include "GameObject.h"
-#include "ScoreManager.h"
+#include "UIManager.h"
 #include "BaseManager.h"
 #include "WindowManager.h"
 #include "CollisionListener.h"

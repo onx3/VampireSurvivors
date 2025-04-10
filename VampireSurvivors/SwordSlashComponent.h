@@ -35,6 +35,7 @@ private:
     float mElapsedTime;
     float mTimeSinceLastSlash;
     float mCooldown;
+    int mDamagePerSlash;
     bool mIsSlashing;
     std::string mName;
 };

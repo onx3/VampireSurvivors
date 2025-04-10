@@ -42,6 +42,7 @@ private:
 	float mStopDistance; // Used if you don't want the enemy to run into the player
 	float mMovementSpeed;
 	float mTimeSinceLastPlayerMovement;
+	float mTimeSinceLastPathUpdate;
 	sf::Vector2f mPlayerPosition;
 };
 

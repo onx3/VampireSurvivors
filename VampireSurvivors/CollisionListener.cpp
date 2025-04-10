@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "ProjectileComponent.h"
 #include "HealthComponent.h"
+#include "DamageComponent.h"
 
 CollisionListener::CollisionListener(GameManager * pGameManager)
     : mpGameManager(pGameManager)
@@ -54,10 +55,18 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
     {
         if (pObjB->IsActive())
         {
+            int damageNumber = 0;
+            auto pObjADamageComponent = pObjA->GetComponent<DamageComponent>().lock();
+            if (pObjADamageComponent)
+            {
+                damageNumber = pObjADamageComponent->GetDamageAmount();
+            }
+
             auto pObjBHealthComp = pObjB->GetComponent<HealthComponent>().lock();
             if (pObjBHealthComp)
             {
-                pObjBHealthComp->LoseHealth(100);
+                printf("Did %d damage", damageNumber);
+                pObjBHealthComp->LoseHealth(damageNumber);
             }
         }
     }
@@ -65,10 +74,18 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
     {
         if (pObjA->IsActive())
         {
+            int damageNumber = 0;
+            auto pObjBDamageComponent = pObjB->GetComponent<DamageComponent>().lock();
+            if (pObjBDamageComponent)
+            {
+                damageNumber = pObjBDamageComponent->GetDamageAmount();
+            }
+
             auto pObjAHealthComp = pObjA->GetComponent<HealthComponent>().lock();
             if (pObjAHealthComp)
             {
-                pObjAHealthComp->LoseHealth(100);
+                printf("Did %d damage", damageNumber);
+                pObjAHealthComp->LoseHealth(damageNumber);
             }
         }
     }
@@ -77,10 +94,17 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
     {
         if (pObjB->IsActive())
         {
+            int damageNumber = 0;
+            auto pObjADamageComponent = pObjA->GetComponent<DamageComponent>().lock();
+            if (pObjADamageComponent)
+            {
+                damageNumber = pObjADamageComponent->GetDamageAmount();
+            }
+
             auto pObjBHealthComp = pObjB->GetComponent<HealthComponent>().lock();
             if (pObjBHealthComp)
             {
-                pObjBHealthComp->LoseHealth(100);
+                pObjBHealthComp->LoseHealth(damageNumber);
                 pObjA->Destroy();
             }
         }
@@ -89,10 +113,17 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
     {
         if (pObjA->IsActive())
         {
+            int damageNumber = 0;
+            auto pObjBDamageComponent = pObjB->GetComponent<DamageComponent>().lock();
+            if (pObjBDamageComponent)
+            {
+                damageNumber = pObjBDamageComponent->GetDamageAmount();
+            }
+
             auto pObjAHealthComp = pObjA->GetComponent<HealthComponent>().lock();
             if (pObjAHealthComp)
             {
-                pObjAHealthComp->LoseHealth(100);
+                pObjAHealthComp->LoseHealth(damageNumber);
                 pObjB->Destroy();
             }
         }

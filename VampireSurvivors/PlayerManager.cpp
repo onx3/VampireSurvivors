@@ -12,7 +12,10 @@
 #include "FollowComponent.h"
 #include "SwordSlashComponent.h"
 
-static int sPlayerHealth = 100000;
+namespace
+{
+    static int sPlayerHealth = 100;
+}
 
 PlayerManager::PlayerManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
@@ -93,7 +96,7 @@ void PlayerManager::InitPlayer()
         auto pCollisionComponent = pPlayer->GetComponent<CollisionComponent>().lock();
         if (!pCollisionComponent)
         {
-            pPlayer->CreatePhysicsBody(&gameManager.GetPhysicsWorld(), pPlayer->GetSize(), true);
+            pPlayer->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pPlayer->GetSize(), true);
             pPlayer->AddComponent(std::make_shared<CollisionComponent>(
                 pPlayer,
                 gameManager,

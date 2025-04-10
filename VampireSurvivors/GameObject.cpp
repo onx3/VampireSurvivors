@@ -67,7 +67,7 @@ bool GameObject::IsDestroyed() const
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void GameObject::CreatePhysicsBody(b2World * world, const sf::Vector2f & size, bool isDynamic)
+void GameObject::CreateBoxShapePhysicsBody(b2World * world, const sf::Vector2f & size, bool isDynamic)
 {
     // Define the body
     b2BodyDef bodyDef;
@@ -354,9 +354,11 @@ std::vector<BD::Handle> & GameObject::GetChildrenHandles()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-GameObject * GameObject::GetParent() const
+GameObject & GameObject::GetParent() const
 {
-    return GetGameManager().GetGameObject(mParentHandle);
+    auto * pParent = GetGameManager().GetGameObject(mParentHandle);
+    assert(pParent);
+    return *pParent;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

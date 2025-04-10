@@ -52,7 +52,7 @@ GameManager::GameManager(WindowManager & windowManager)
         }
         AddManager<CameraManager>();
         AddManager<EnemyAIManager>();
-        AddManager<ScoreManager>();
+        AddManager<UIManager>();
         AddManager<DropManager>();
     }
     
@@ -178,18 +178,6 @@ void GameManager::DebugUpdate(float deltaTime)
     {
         return;
     }
-
-    // DungeonManager
-    {
-        auto * pDungeonManager = GetManager<DungeonManager>();
-        if (pDungeonManager)
-        {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::H))
-            {
-                //pDungeonManager->GenerateDungeonGrid();
-            }
-        }
-    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -212,7 +200,10 @@ void GameManager::UpdateGameObjects(float deltaTime)
 void GameManager::CleanUpDestroyedGameObjects(BD::Handle rootHandle)
 {
     GameObject * pRoot = GetGameObject(rootHandle);
-    if (!pRoot) return;
+    if (!pRoot)
+    {
+        return;
+    }
 
     std::vector<BD::Handle> objectsToDelete;
 
@@ -600,10 +591,10 @@ void GameManager::GameOverScreen()
 {
     mIsGameOver = true;
 
-    auto * pScoreManager = GetManager<ScoreManager>();
-    if (pScoreManager)
+    auto * pUIManager = GetManager<UIManager>();
+    if (pUIManager)
     {
-        mScoreText.setString("Score: " + std::to_string(pScoreManager->GetScore()) + "\n" + "Press ENTER to Play Again!");
+        mScoreText.setString("Score: " + std::to_string(pUIManager->GetScore()) + "\n" + "Press ENTER to Play Again!");
     }
 }
 

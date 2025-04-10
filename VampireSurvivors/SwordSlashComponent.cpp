@@ -3,6 +3,7 @@
 #include "CameraManager.h"
 #include "HealthComponent.h"
 #include "CollisionComponent.h"
+#include "DamageComponent.h"
 
 SwordSlashComponent::SwordSlashComponent(GameObject * owner, GameManager & gameManager, float arcAngleDeg, float radius, float duration)
 	: GameComponent(owner, gameManager)
@@ -13,6 +14,7 @@ SwordSlashComponent::SwordSlashComponent(GameObject * owner, GameManager & gameM
 	, mElapsedTime(0.f)
 	, mTimeSinceLastSlash(0.f)
 	, mCooldown(1.0f)
+    , mDamagePerSlash(50)
 	, mIsSlashing(false)
 	, mName("SwordSlashComponent")
 {
@@ -53,7 +55,7 @@ void SwordSlashComponent::Update(float deltaTime)
         auto pCameraManager = GetGameManager().GetManager<CameraManager>();
         if (pCameraManager)
         {
-            sf::Vector2f playerPos = GetGameObject().GetParent()->GetPosition();
+            sf::Vector2f playerPos = GetGameObject().GetParent().GetPosition();
             sf::Vector2f aimDir = pCameraManager->GetCrosshairPosition() - playerPos;
 
             float len = std::sqrt(aimDir.x * aimDir.x + aimDir.y * aimDir.y);
@@ -125,7 +127,7 @@ void SwordSlashComponent::draw(sf::RenderTarget & target, sf::RenderStates state
         return;
     }
 
-	mWedge.setPosition(GetGameObject().GetParent()->GetPosition());
+	mWedge.setPosition(GetGameObject().GetParent().GetPosition());
 
 	auto pCameraManager = GetGameManager().GetManager<CameraManager>();
     if (!pCameraManager)
@@ -177,33 +179,45 @@ void SwordSlashComponent::PerformSlash()
         return;
     }
 
-    pSlashObj->SetPosition(GetGameObject().GetParent()->GetPosition());
+    pSlashObj->SetPosition(GetGameObject().GetParent().GetPosition());
     float angleRad = std::atan2(mSlashDirection.y, mSlashDirection.x);
     float angleDeg = angleRad * (180.f / BD::gsPi);
     pSlashObj->SetRotation(angleDeg);
-
-    auto pSlashCollisionComponent = pSlashObj->GetComponent<CollisionComponent>().lock();
-    if (!pSlashCollisionComponent)
+    
+    // Collision
     {
-        pSlashObj->CreateWedgeShapePhysicsBody(
-            &gameManager.GetPhysicsWorld(),
-            mArcAngleRad,
-            (mRadius) / BD::gsPixelsPerMeter,
-            6,            // safe number of segments
-            true          // dynamic
-        );
+        auto pSlashCollisionComponent = pSlashObj->GetComponent<CollisionComponent>().lock();
+        if (!pSlashCollisionComponent)
+        {
+            pSlashObj->CreateWedgeShapePhysicsBody(
+                &gameManager.GetPhysicsWorld(),
+                mArcAngleRad,
+                (mRadius) / BD::gsPixelsPerMeter,
+                6,            // safe number of segments
+                true          // dynamic
+            );
 
-        pSlashObj->AddComponent(std::make_shared<CollisionComponent>(
-            pSlashObj,
-            gameManager,
-            &gameManager.GetPhysicsWorld(),
-            pSlashObj->GetPhysicsBody(),
-            pSlashObj->GetSize(),
-            true
-        ));
+            pSlashObj->AddComponent(std::make_shared<CollisionComponent>(
+                pSlashObj,
+                gameManager,
+                &gameManager.GetPhysicsWorld(),
+                pSlashObj->GetPhysicsBody(),
+                pSlashObj->GetSize(),
+                true
+            ));
+        }
+    }
+    // DamageComponent
+    {
+        auto pSlashDamageComponent = pSlashObj->GetComponent<DamageComponent>().lock();
+        if (!pSlashDamageComponent)
+        {
+            auto pSwordSlashComponent = std::make_shared<DamageComponent>(pSlashObj, gameManager, mDamagePerSlash);
+            pSlashObj->AddComponent(pSwordSlashComponent);
+        }
     }
 
-    Slash slash = { slashHandle, mDuration, 10 };
+    Slash slash = { slashHandle, mDuration, mDamagePerSlash };
     mSlashObjs.push_back(slash);
 }
 

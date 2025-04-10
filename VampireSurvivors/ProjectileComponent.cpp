@@ -106,7 +106,7 @@ void ProjectileComponent::Shoot()
 		pProjectileSpriteComponent->SetRotation(angleDegrees + 90.f); // Adjust rotation for sprite alignment
 
 		// Add collision
-		pProjectile->CreatePhysicsBody(&pOwnerGameObj->GetGameManager().GetPhysicsWorld(), pProjectile->GetSize(), true);
+		pProjectile->CreateBoxShapePhysicsBody(&pOwnerGameObj->GetGameManager().GetPhysicsWorld(), pProjectile->GetSize(), true);
 		auto pCollisionComponent = std::make_shared<CollisionComponent>(
 			pProjectile,
 			gameManager,

@@ -5,11 +5,6 @@
 #include "DropManager.h"
 #include "SpriteComponent.h"
 
-namespace
-{
-	const int mkMaxEnemies = 35;
-}
-
 enum class EEnemy
 {
 	LizardF,
@@ -43,6 +38,10 @@ private:
 
 	void SetUpSprite(SpriteComponent & spriteComp, EEnemy type);
 
+	int mBaseEnemyCount;
+	int mCurrentMaxEnemies;
+	float mBaseHealth;
+	float mCurrentHealth;
 	std::vector<BD::Handle> mEnemyHandles;
 };
 

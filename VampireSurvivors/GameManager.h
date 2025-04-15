@@ -104,6 +104,7 @@ private:
 	// GameOver
 	bool mIsGameOver;
 	sf::Text mGameOverText;
+	sf::Text mRunTimeText;
 	sf::Text mScoreText;
 	sf::Font mFont;
 

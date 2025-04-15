@@ -16,15 +16,16 @@
 #include "TrackingComponent.h"
 #include "PlayerManager.h"
 #include "EnemyBulletComponent.h"
+#include "AISimplePathComponent.h"
 
-namespace
-{
-    int skBossHealth = 100;
-    int skMaxBossHealth = 100;
-}
 
 EnemyAIManager::EnemyAIManager(GameManager * pGameManager)
-	: BaseManager(pGameManager)
+    : BaseManager(pGameManager)
+    , mBaseEnemyCount(5)
+    , mCurrentMaxEnemies(mBaseEnemyCount)
+    , mBaseHealth(100.f)
+    , mCurrentHealth(mBaseHealth)
+    , mEnemyHandles()
 {
 
 }
@@ -40,6 +41,22 @@ EnemyAIManager::~EnemyAIManager()
 
 void EnemyAIManager::Update(float deltaTime)
 {
+    GameManager & gameManager = GetGameManager();
+    // Update mCurrentMaxEnemies and mCurrentHealth
+    {
+        auto pUIManager = gameManager.GetManager<UIManager>();
+        if (pUIManager)
+        {
+            float runTime = pUIManager->GetRunTime();
+
+            float healthMultiplier = .25f + runTime / 60.f;
+            mCurrentHealth = mBaseHealth * std::min(healthMultiplier, 5.f); // Cap at 5x health
+
+            int extraEnemies = int(runTime / 30.f); // +1 every 30s
+            mCurrentMaxEnemies = mBaseEnemyCount + extraEnemies;
+        }
+    }
+
     for (auto enemyHandle : mEnemyHandles)
     {
         auto * pEnemy = GetGameManager().GetGameObject(enemyHandle);
@@ -89,7 +106,7 @@ void EnemyAIManager::Update(float deltaTime)
     std::uniform_real_distribution<float> angleDist(0.f, 2.f * BD::gsPi);
     std::uniform_real_distribution<float> radiusDist(minRadius, maxRadius);
 
-	while (mEnemyHandles.size() < mkMaxEnemies)
+	while (mEnemyHandles.size() < mCurrentMaxEnemies)
 	{
         float angle = angleDist(gen);
         float radius = radiusDist(gen);
@@ -142,12 +159,23 @@ void EnemyAIManager::AddEnemies(int count, EEnemy type, sf::Vector2f pos)
         SetUpSprite(*pSpriteComp, type);
         pSpriteComp->SetPosition(pos);
 
-        // AI Path Movement
-        auto pAIPathComponentComp = std::make_shared<AIPathComponent>(pEnemy, gameManager);
-        pEnemy->AddComponent(pAIPathComponentComp);
+        // AI Simple Path Movement
+        {
+            auto pPlayerManager = gameManager.GetManager<PlayerManager>();
+            if (pPlayerManager)
+            {
+                auto & players = pPlayerManager->GetPlayers();
+                if (!players.empty())
+                {
+                    BD::Handle playerHandle = players[0];
+                    auto pAISimplePathComponentComp = std::make_shared<AISimplePathComponent>(pEnemy, gameManager, playerHandle);
+                    pEnemy->AddComponent(pAISimplePathComponentComp);
+                }
+            }
+        }
 
         // Health Component
-        auto pHealthComponent = std::make_shared<HealthComponent>(pEnemy, gameManager, skBossHealth, skMaxBossHealth, 1, 1);
+        auto pHealthComponent = std::make_shared<HealthComponent>(pEnemy, gameManager, mCurrentHealth, mCurrentHealth, 1, 1);
         pEnemy->AddComponent(pHealthComponent);
 
         // Physics and Collision

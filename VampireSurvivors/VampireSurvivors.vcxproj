@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AIPathComponent.cpp" />
+    <ClCompile Include="AISimplePathComponent.cpp" />
     <ClCompile Include="AstroidsPrivate.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -181,6 +182,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIPathComponent.h" />
+    <ClInclude Include="AISimplePathComponent.h" />
     <ClInclude Include="AstroidsPrivate.h" />
     <ClInclude Include="BaseManager.h" />
     <ClInclude Include="BDConfig.h" />

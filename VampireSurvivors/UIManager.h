@@ -17,6 +17,9 @@ public:
 	std::vector<sf::Sprite> & GetSpriteLives();
 	int GetScore() const;
 
+	const sf::Text & GetRunTimeText();
+	float GetRunTime() const;
+
 private:
 	int mScore;
 	sf::Font mFont;

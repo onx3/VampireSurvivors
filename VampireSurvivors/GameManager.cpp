@@ -64,14 +64,20 @@ GameManager::GameManager(WindowManager & windowManager)
         mGameOverText.setFont(mFont);
         mGameOverText.setString("GAME OVER");
         mGameOverText.setCharacterSize(64);
-        mGameOverText.setFillColor(sf::Color::Green);
+        mGameOverText.setFillColor(sf::Color::Cyan);
         mGameOverText.setPosition(700, 400);
+
+        mRunTimeText.setFont(mFont);
+        mRunTimeText.setString("");
+        mRunTimeText.setCharacterSize(64);
+        mRunTimeText.setFillColor(sf::Color::Cyan);
+        mRunTimeText.setPosition(700, 500);
 
         // Setup Score text
         mScoreText.setFont(mFont);
         mScoreText.setCharacterSize(32);
-        mScoreText.setFillColor(sf::Color::Green);
-        mScoreText.setPosition(700, 500);
+        mScoreText.setFillColor(sf::Color::Cyan);
+        mScoreText.setPosition(700, 600);
     }
 
     // Box2d
@@ -206,11 +212,9 @@ void GameManager::CleanUpDestroyedGameObjects(BD::Handle rootHandle)
     }
 
     std::vector<BD::Handle> objectsToDelete;
+    std::vector<BD::Handle> & children = pRoot->GetChildrenHandles();
 
-    // Copy the child handles to avoid modifying while iterating
-    std::vector<BD::Handle> children = pRoot->GetChildrenHandles();
-
-    for (BD::Handle childHandle : children)
+    for (BD::Handle & childHandle : children)
     {
         CleanUpDestroyedGameObjects(childHandle);
 
@@ -352,6 +356,7 @@ void GameManager::Render(float deltaTime)
     if (mIsGameOver)
     {
         mpWindow->draw(mGameOverText);
+        mpWindow->draw(mRunTimeText);
         mpWindow->draw(mScoreText);
     }
     else
@@ -589,11 +594,13 @@ void GameManager::InitImGui()
 
 void GameManager::GameOverScreen()
 {
-    mIsGameOver = true;
-
     auto * pUIManager = GetManager<UIManager>();
     if (pUIManager)
     {
+        char buffer[32];
+        snprintf(buffer, sizeof(buffer), "Time Survived: %.1fs", pUIManager->GetRunTime());
+        mRunTimeText.setString(buffer);
+        //mRunTimeText.setString("Time Survived: " + std::to_string(pUIManager->GetRunTime()));
         mScoreText.setString("Score: " + std::to_string(pUIManager->GetScore()) + "\n" + "Press ENTER to Play Again!");
     }
 }

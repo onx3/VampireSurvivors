@@ -5,18 +5,18 @@
 class HealthComponent : public GameComponent
 {
 public:
-	HealthComponent(GameObject * pOwner, GameManager & gameManager, int initialHealth, int maxHealth, int lifeCount, int maxLives, float hitCooldown = 0.f);
+	HealthComponent(GameObject * pOwner, GameManager & gameManager, float initialHealth, float maxHealth, int lifeCount, int maxLives, float hitCooldown = 0.f);
 
-	int GetHealth() const;
-	void AddHealth(int amount);
-	void LoseHealth(int amount);
+	float GetHealth() const;
+	void AddHealth(float amount);
+	void LoseHealth(float amount);
 
 	int GetLives() const;
 	void AddLife(int amount);
 	void LoseLife();
 
-	int GetMaxHealth() const;
-	void AddMaxHealth(int amount);
+	float GetMaxHealth() const;
+	void AddMaxHealth(float amount);
 
 	void SetDeathCallBack(std::function<void()> callback);
 	void SetLifeLostCallback(std::function<void()> callback);
@@ -26,8 +26,8 @@ public:
 	virtual std::string & GetClassName() override;
 
 private:
-	int mHealth;
-	int mMaxHealth;
+	float mHealth;
+	float mMaxHealth;
 	int mLifeCount;
 	int mMaxLives;
 	float mHitCooldown;

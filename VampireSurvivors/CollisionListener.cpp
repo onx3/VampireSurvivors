@@ -35,7 +35,7 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
         {
             if (pObjB->IsActive())
             {
-                pHealthComp->LoseHealth(100);
+                pHealthComp->LoseHealth(100.f);
             }
         }
     }
@@ -46,7 +46,7 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
         {
             if (pObjB->IsActive())
             {
-                pHealthComp->LoseHealth(100);
+                pHealthComp->LoseHealth(100.f);
             }
         }
     }
@@ -55,7 +55,7 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
     {
         if (pObjB->IsActive())
         {
-            int damageNumber = 0;
+            float damageNumber = 0.f;
             auto pObjADamageComponent = pObjA->GetComponent<DamageComponent>().lock();
             if (pObjADamageComponent)
             {
@@ -65,7 +65,6 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
             auto pObjBHealthComp = pObjB->GetComponent<HealthComponent>().lock();
             if (pObjBHealthComp)
             {
-                printf("Did %d damage", damageNumber);
                 pObjBHealthComp->LoseHealth(damageNumber);
             }
         }
@@ -74,7 +73,7 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
     {
         if (pObjA->IsActive())
         {
-            int damageNumber = 0;
+            float damageNumber = 0.f;
             auto pObjBDamageComponent = pObjB->GetComponent<DamageComponent>().lock();
             if (pObjBDamageComponent)
             {
@@ -84,7 +83,6 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
             auto pObjAHealthComp = pObjA->GetComponent<HealthComponent>().lock();
             if (pObjAHealthComp)
             {
-                printf("Did %d damage", damageNumber);
                 pObjAHealthComp->LoseHealth(damageNumber);
             }
         }
@@ -94,7 +92,7 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
     {
         if (pObjB->IsActive())
         {
-            int damageNumber = 0;
+            float damageNumber = 0.f;
             auto pObjADamageComponent = pObjA->GetComponent<DamageComponent>().lock();
             if (pObjADamageComponent)
             {
@@ -113,7 +111,7 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
     {
         if (pObjA->IsActive())
         {
-            int damageNumber = 0;
+            float damageNumber = 0.f;
             auto pObjBDamageComponent = pObjB->GetComponent<DamageComponent>().lock();
             if (pObjBDamageComponent)
             {

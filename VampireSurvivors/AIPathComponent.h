@@ -20,6 +20,7 @@ struct Node
 	}
 };
 
+// Using A* movement
 class AIPathComponent : public GameComponent
 {
 public:

@@ -8,7 +8,7 @@
 #include <cmath>
 #include "imgui.h"
 
-HealthComponent::HealthComponent(GameObject * pOwner, GameManager & gameManager, int initialHealth, int maxHealth, int lifeCount, int maxLives, float hitCooldown)
+HealthComponent::HealthComponent(GameObject * pOwner, GameManager & gameManager, float initialHealth, float maxHealth, int lifeCount, int maxLives, float hitCooldown)
     : GameComponent(pOwner, gameManager)
     , mHealth(initialHealth)
     , mMaxHealth(maxHealth)
@@ -22,14 +22,14 @@ HealthComponent::HealthComponent(GameObject * pOwner, GameManager & gameManager,
 
 //------------------------------------------------------------------------------------------------------------------------
 
-int HealthComponent::GetHealth() const
+float HealthComponent::GetHealth() const
 {
     return mHealth;
 }
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void HealthComponent::AddHealth(int amount)
+void HealthComponent::AddHealth(float amount)
 {
     mHealth += amount;
     if (mHealth > mMaxHealth)
@@ -40,7 +40,7 @@ void HealthComponent::AddHealth(int amount)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void HealthComponent::LoseHealth(int amount)
+void HealthComponent::LoseHealth(float amount)
 {
     if (mTimeSinceLastHit >= mHitCooldown)
     {
@@ -69,14 +69,14 @@ void HealthComponent::AddLife(int amount)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-int HealthComponent::GetMaxHealth() const
+float HealthComponent::GetMaxHealth() const
 {
     return mMaxHealth;
 }
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void HealthComponent::AddMaxHealth(int amount)
+void HealthComponent::AddMaxHealth(float amount)
 {
     mMaxHealth += amount;
 }

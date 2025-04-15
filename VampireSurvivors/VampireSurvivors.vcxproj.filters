@@ -127,6 +127,9 @@
     <ClCompile Include="DamageComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AISimplePathComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -223,5 +226,6 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="DamageComponent.h" />
+    <ClInclude Include="AISimplePathComponent.h" />
   </ItemGroup>
 </Project>

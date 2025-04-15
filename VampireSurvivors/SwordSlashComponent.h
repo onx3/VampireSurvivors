@@ -5,7 +5,7 @@ struct Slash
 {
     BD::Handle handle;
     float lifespan;
-    int damage;
+    float damage;
 };
 
 class SwordSlashComponent : public GameComponent
@@ -35,7 +35,7 @@ private:
     float mElapsedTime;
     float mTimeSinceLastSlash;
     float mCooldown;
-    int mDamagePerSlash;
+    float mDamagePerSlash;
     bool mIsSlashing;
     std::string mName;
 };

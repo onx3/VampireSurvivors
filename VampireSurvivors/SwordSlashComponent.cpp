@@ -14,7 +14,7 @@ SwordSlashComponent::SwordSlashComponent(GameObject * owner, GameManager & gameM
 	, mElapsedTime(0.f)
 	, mTimeSinceLastSlash(0.f)
 	, mCooldown(1.0f)
-    , mDamagePerSlash(50)
+    , mDamagePerSlash(50.f)
 	, mIsSlashing(false)
 	, mName("SwordSlashComponent")
 {

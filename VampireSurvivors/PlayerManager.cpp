@@ -14,7 +14,7 @@
 
 namespace
 {
-    static int sPlayerHealth = 100;
+    static float sPlayerHealth = 100.f;
 }
 
 PlayerManager::PlayerManager(GameManager * pGameManager)

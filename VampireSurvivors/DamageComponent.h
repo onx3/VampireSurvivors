@@ -3,17 +3,17 @@
 class DamageComponent : public GameComponent
 {
 public:
-	DamageComponent(GameObject * pOwner, GameManager & gameManager, int damage);
+	DamageComponent(GameObject * pOwner, GameManager & gameManager, float damage);
 	~DamageComponent();
 
 	virtual void Update(float deltaTime) override;
 	virtual void DebugImGuiComponentInfo() override;
 	virtual std::string & GetClassName() override;
 
-	int GetDamageAmount();
+	float GetDamageAmount();
 
 private:
-	int mDamage;
+	float mDamage;
     std::string mName;
 };
 

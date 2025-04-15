@@ -1,7 +1,7 @@
 #include "AstroidsPrivate.h"
 #include "DamageComponent.h"
 
-DamageComponent::DamageComponent(GameObject * pOwner, GameManager & gameManager, int damage)
+DamageComponent::DamageComponent(GameObject * pOwner, GameManager & gameManager, float damage)
 	: GameComponent(pOwner, gameManager)
 	, mDamage(damage)
 	, mName("DamageComponent")
@@ -35,7 +35,7 @@ std::string & DamageComponent::GetClassName()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-int DamageComponent::GetDamageAmount()
+float DamageComponent::GetDamageAmount()
 {
 	return mDamage;
 }

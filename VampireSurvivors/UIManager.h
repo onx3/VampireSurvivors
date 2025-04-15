@@ -14,6 +14,8 @@ public:
 	void AddScore(int points);
 	const sf::Text & GetScoreText();
 
+	float GetPlayerHelath();
+
 	std::vector<sf::Sprite> & GetSpriteLives();
 	int GetScore() const;
 
@@ -24,6 +26,9 @@ private:
 	int mScore;
 	sf::Font mFont;
 	sf::Text mScoreText;
+
+	float mHealth;
+	sf::Text mHealthText;
 
 	float mRunTime;
 	sf::Text mRunTimeText;

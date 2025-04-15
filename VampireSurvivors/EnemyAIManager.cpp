@@ -17,6 +17,7 @@
 #include "PlayerManager.h"
 #include "EnemyBulletComponent.h"
 #include "AISimplePathComponent.h"
+#include "EnemyMeleeAttackComponent.h"
 
 
 EnemyAIManager::EnemyAIManager(GameManager * pGameManager)
@@ -160,6 +161,7 @@ void EnemyAIManager::AddEnemies(int count, EEnemy type, sf::Vector2f pos)
         pSpriteComp->SetPosition(pos);
 
         // AI Simple Path Movement
+        BD::Handle playerHandle;
         {
             auto pPlayerManager = gameManager.GetManager<PlayerManager>();
             if (pPlayerManager)
@@ -167,7 +169,7 @@ void EnemyAIManager::AddEnemies(int count, EEnemy type, sf::Vector2f pos)
                 auto & players = pPlayerManager->GetPlayers();
                 if (!players.empty())
                 {
-                    BD::Handle playerHandle = players[0];
+                    playerHandle = players[0];
                     auto pAISimplePathComponentComp = std::make_shared<AISimplePathComponent>(pEnemy, gameManager, playerHandle);
                     pEnemy->AddComponent(pAISimplePathComponentComp);
                 }
@@ -177,6 +179,10 @@ void EnemyAIManager::AddEnemies(int count, EEnemy type, sf::Vector2f pos)
         // Health Component
         auto pHealthComponent = std::make_shared<HealthComponent>(pEnemy, gameManager, mCurrentHealth, mCurrentHealth, 1, 1);
         pEnemy->AddComponent(pHealthComponent);
+
+        // MeleeAttackComponent
+        auto pMeleeAttackComponent = std::make_shared<EnemyMeleeAttackComponent>(pEnemy, gameManager, playerHandle);
+        pEnemy->AddComponent(pMeleeAttackComponent);
 
         // Physics and Collision
         {

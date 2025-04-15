@@ -10,12 +10,15 @@
 #include "CollisionListener.h"
 #include "TPool.h"
 
-class BaseManager;
-struct ParallaxLayer
+enum class EGameState
 {
-	std::vector<sf::Sprite> mSprites;
-	float parallaxSpeed;
+	Running,
+	Paused,
+	AbilitySelect,
+	EndGame,
 };
+
+class BaseManager;
 
 //------------------------------------------------------------------------------------------------------------------------
 
@@ -36,9 +39,30 @@ public:
 	void Render(float deltaTime);
 
 	template <typename T>
-	void AddManager();
+	void AddManager()
+	{
+		static_assert(std::is_base_of<BaseManager, T>::value, "T must inherit from BaseManager");
+		if (std::none_of(mManagers.begin(), mManagers.end(),
+			[](const auto & pair) { return pair.first == std::type_index(typeid(T)); }))
+		{
+			mManagers.emplace_back(std::type_index(typeid(T)), new T(this));
+		}
+	}
+
+	//------------------------------------------------------------------------------------------------------------------------
+
 	template <typename T, typename... Args>
-	void AddManager(Args&&... args);
+	void AddManager(Args&&... args)
+	{
+		static_assert(std::is_base_of<BaseManager, T>::value, "T must inherit from BaseManager");
+		if (std::none_of(mManagers.begin(), mManagers.end(),
+			[](const auto & pair) { return pair.first == std::type_index(typeid(T)); }))
+		{
+			mManagers.emplace_back(std::type_index(typeid(T)), new T(this, std::forward<Args>(args)...));
+		}
+	}
+
+	//------------------------------------------------------------------------------------------------------------------------
 
 	template <typename T>
 	T * GetManager()
@@ -89,8 +113,6 @@ private:
 	
 	void GameOverScreen();
 
-	std::vector<std::string> GetCommonResourcePaths();
-
 	bool mShowImGuiWindow;
 	std::vector<std::pair<std::type_index, BaseManager *>> mManagers;
 	BD::Handle mRootHandle;
@@ -101,8 +123,9 @@ private:
 	sf::Sound mSound;
 	bool mSoundPlayed;
 
+	EGameState mGameState;
+
 	// GameOver
-	bool mIsGameOver;
 	sf::Text mGameOverText;
 	sf::Text mRunTimeText;
 	sf::Text mScoreText;
@@ -111,8 +134,6 @@ private:
 	// Box2d
 	b2World mPhysicsWorld;
 	CollisionListener mCollisionListener;
-
-	std::vector<ParallaxLayer> mParallaxLayers;
 
 	// Debug
 	bool mPaused;

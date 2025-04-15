@@ -30,25 +30,25 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
     // Enemy hit player
     if (pObjA->GetTeam() == ETeam::Player && pObjB->GetTeam() == ETeam::Enemy)
     {
-        auto pHealthComp = pObjA->GetComponent<HealthComponent>().lock();
+       /* auto pHealthComp = pObjA->GetComponent<HealthComponent>().lock();
         if (pHealthComp)
         {
             if (pObjB->IsActive())
             {
                 pHealthComp->LoseHealth(100.f);
             }
-        }
+        }*/
     }
     else if (pObjA->GetTeam() == ETeam::Enemy && pObjB->GetTeam() == ETeam::Player)
     {
-        auto pHealthComp = pObjB->GetComponent<HealthComponent>().lock();
+        /*auto pHealthComp = pObjB->GetComponent<HealthComponent>().lock();
         if (pHealthComp)
         {
             if (pObjB->IsActive())
             {
                 pHealthComp->LoseHealth(100.f);
             }
-        }
+        }*/
     }
     // Persistant Obj
     else if (pObjA->GetTeam() == ETeam::FriendlyPersistant && pObjB->GetTeam() == ETeam::Enemy)

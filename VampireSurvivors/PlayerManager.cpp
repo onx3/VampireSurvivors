@@ -190,22 +190,6 @@ void PlayerManager::Update(float deltaTime)
                     OnPlayerDeath(pPlayer);
                     });
             }
-
-            /*if (pHealthComp && pHealthComp->GetLives() == 1)
-            {
-                auto pSpriteComponent = pPlayer->GetComponent<SpriteComponent>().lock();
-                if (pSpriteComponent)
-                {
-                    std::string file = "Art/playerDamaged.png";
-                    ResourceId resourceId(file);
-
-                    auto texture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
-                    if (texture)
-                    {
-                        pSpriteComponent->SetSprite(texture, pSpriteComponent->GetSprite().getScale());
-                    }
-                }
-            }*/
         }
 
         if (mLoseLifeSound.getStatus() == sf::Sound::Stopped)

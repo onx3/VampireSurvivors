@@ -130,6 +130,9 @@
     <ClCompile Include="AISimplePathComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyMeleeAttackComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -227,5 +230,9 @@
     </ClInclude>
     <ClInclude Include="DamageComponent.h" />
     <ClInclude Include="AISimplePathComponent.h" />
+    <ClInclude Include="EnemyMeleeAttackComponent.h" />
+    <ClInclude Include="Math.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -45,7 +45,7 @@ void HealthComponent::LoseHealth(float amount)
     if (mTimeSinceLastHit >= mHitCooldown)
     {
         mHealth -= amount;
-        if (mHealth < 0)
+        if (mHealth <= 0)
         {
             mHealth = 0;
         }

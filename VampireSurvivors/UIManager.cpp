@@ -21,6 +21,12 @@ UIManager::UIManager(GameManager * pGameManager)
 	mScoreText.setPosition(10.f, 10.f); // Top-left corner
 	mScoreText.setString("Score: 0");
 
+    mHealthText.setFont(mFont);
+    mHealthText.setCharacterSize(24);
+    mHealthText.setFillColor(sf::Color::Red);
+    mHealthText.setOutlineColor(sf::Color::Black);
+    mHealthText.setString("Health: ");
+
     mRunTimeText.setFont(mFont);
     mRunTimeText.setCharacterSize(24);
     mRunTimeText.setFillColor(sf::Color::Cyan);
@@ -40,6 +46,9 @@ void UIManager::Update(float deltaTime)
     char buffer[32];
     snprintf(buffer, sizeof(buffer), "Time: %.1fs", mRunTime);
     mRunTimeText.setString(buffer);
+
+    mHealth = GetPlayerHelath();
+    mHealthText.setString("Health: " + std::to_string(int(mHealth)));
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -51,11 +60,13 @@ void UIManager::Render(sf::RenderWindow & window)
     sf::Vector2f viewTopLeft = view.getCenter() - (viewSize / 2.f);
 
     mScoreText.setPosition(viewTopLeft.x + 10.f, viewTopLeft.y + 10.f);
+    mHealthText.setPosition(viewTopLeft.x + 10.f, viewTopLeft.y + 30.f);
 
     sf::FloatRect bounds = mRunTimeText.getLocalBounds();
     mRunTimeText.setPosition(viewTopLeft.x + (viewSize.x - bounds.width) / 2.f, viewTopLeft.y + 10.f);
 
     window.draw(mScoreText);
+    window.draw(mHealthText);
     window.draw(mRunTimeText);
 
     auto & lives = GetSpriteLives();
@@ -82,6 +93,38 @@ const sf::Text & UIManager::GetScoreText()
 
 //------------------------------------------------------------------------------------------------------------------------
 
+float UIManager::GetPlayerHelath()
+{
+    float health = 0.f;
+    auto * pPlayerManager = GetGameManager().GetManager<PlayerManager>();
+    if (!pPlayerManager)
+    {
+        return health;
+    }
+
+    auto & players = pPlayerManager->GetPlayers();
+    if (players.empty())
+    {
+        return health;
+    }
+
+    BD::Handle playerHandle = players[0];
+    GameObject * pPlayerObject = GetGameManager().GetGameObject(playerHandle);
+    if (!pPlayerObject || pPlayerObject->IsDestroyed())
+    {
+        return health;
+    }
+
+    auto pHealthComp = pPlayerObject->GetComponent<HealthComponent>().lock();
+    if (pHealthComp)
+    {
+        health = pHealthComp->GetHealth();
+    }
+    return health;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
 std::vector<sf::Sprite> & UIManager::GetSpriteLives()
 {
     mSpriteLives.clear(); // Clear existing sprites
@@ -90,7 +133,7 @@ std::vector<sf::Sprite> & UIManager::GetSpriteLives()
     auto & window = GetGameManager().GetWindow();
     viewTopLeft = window.getView().getCenter() - window.getView().getSize() / 2.f;
 
-    sf::Vector2f lifeStartPos(viewTopLeft.x + 10.f, viewTopLeft.y + 50.f);
+    sf::Vector2f lifeStartPos(viewTopLeft.x + 10.f, viewTopLeft.y + 70.f);
 
     // Find the player GameObject and get its HealthComponent
     int lives = 0;

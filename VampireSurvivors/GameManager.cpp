@@ -30,7 +30,7 @@ GameManager::GameManager(WindowManager & windowManager)
     , mRootHandle()
     , mManagers()
     , mSoundPlayed(false)
-    , mIsGameOver(false)
+    , mGameState(EGameState::Running)
     , mPhysicsWorld(b2Vec2(0.0f, 0.f))
     , mCollisionListener(this)
     , mPaused(false)
@@ -89,8 +89,6 @@ GameManager::GameManager(WindowManager & windowManager)
     // ResourceManager
     {
         auto * pResourceManager = GetManager<ResourceManager>();
-        auto resourcesToLoad = GetCommonResourcePaths();
-        pResourceManager->PreloadResources(resourcesToLoad);
     }
 }
 
@@ -120,7 +118,7 @@ GameManager::~GameManager()
 
 void GameManager::EndGame()
 {
-    mIsGameOver = true;
+    mGameState = EGameState::EndGame;
 
     // Notify all managers that the game is ending
     for (auto & manager : mManagers)
@@ -353,7 +351,7 @@ void GameManager::Render(float deltaTime)
 {
     mpWindow->clear();
 
-    if (mIsGameOver)
+    if (mGameState == EGameState::EndGame)
     {
         mpWindow->draw(mGameOverText);
         mpWindow->draw(mRunTimeText);
@@ -427,32 +425,6 @@ void GameManager::DrawPhysicsDebug(sf::RenderTarget & target)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-template <typename T>
-void GameManager::AddManager()
-{
-    static_assert(std::is_base_of<BaseManager, T>::value, "T must inherit from BaseManager");
-    if (std::none_of(mManagers.begin(), mManagers.end(),
-        [](const auto & pair) { return pair.first == std::type_index(typeid(T)); }))
-    {
-        mManagers.emplace_back(std::type_index(typeid(T)), new T(this));
-    }
-}
-
-//------------------------------------------------------------------------------------------------------------------------
-
-template <typename T, typename... Args>
-void GameManager::AddManager(Args&&... args)
-{
-    static_assert(std::is_base_of<BaseManager, T>::value, "T must inherit from BaseManager");
-    if (std::none_of(mManagers.begin(), mManagers.end(),
-        [](const auto & pair) { return pair.first == std::type_index(typeid(T)); }))
-    {
-        mManagers.emplace_back(std::type_index(typeid(T)), new T(this, std::forward<Args>(args)...));
-    }
-}
-
-//------------------------------------------------------------------------------------------------------------------------
-
 BD::Handle GameManager::CreateNewGameObject(ETeam team, BD::Handle parentHandle)
 {
     GameObject * pNewObject = new GameObject(this, team, BD::Handle(0), parentHandle);
@@ -503,7 +475,11 @@ BD::Handle GameManager::GetRootGameObjectHandle()
 
 bool GameManager::IsGameOver() const
 {
-    return mIsGameOver;
+    if (mGameState == EGameState::EndGame)
+    {
+        return true;
+    }
+    return false;
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -600,27 +576,8 @@ void GameManager::GameOverScreen()
         char buffer[32];
         snprintf(buffer, sizeof(buffer), "Time Survived: %.1fs", pUIManager->GetRunTime());
         mRunTimeText.setString(buffer);
-        //mRunTimeText.setString("Time Survived: " + std::to_string(pUIManager->GetRunTime()));
         mScoreText.setString("Score: " + std::to_string(pUIManager->GetScore()) + "\n" + "Press ENTER to Play Again!");
     }
-}
-
-//------------------------------------------------------------------------------------------------------------------------
-
-std::vector<std::string> GameManager::GetCommonResourcePaths()
-{
-    return {
-        "Art/Nuke.png",
-        "Art/life.png",
-        "Art/laserGreen.png",
-        "Art/laserRed.png",
-        "Art/player.png",
-        "Art/playerLeft.png",
-        "Art/playerRight.png",
-        "Art/playerDamaged.png",
-        "Art/Explosion.png",
-        "Art/Crosshair.png"
-    };
 }
 
 //------------------------------------------------------------------------------------------------------------------------

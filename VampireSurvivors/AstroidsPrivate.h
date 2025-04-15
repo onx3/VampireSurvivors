@@ -9,3 +9,4 @@
 #include "Timer.h"
 #include "GameManager.h"
 #include "ResourceManager.h"
+#include "Math.h"

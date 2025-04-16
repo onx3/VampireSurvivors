@@ -15,26 +15,11 @@ SwordSlashComponent::SwordSlashComponent(GameObject * owner, GameManager & gameM
 	, mTimeSinceLastSlash(0.f)
 	, mCooldown(1.0f)
     , mDamagePerSlash(50.f)
+    , mRangeMult(1.f)
 	, mIsSlashing(false)
 	, mName("SwordSlashComponent")
 {
-    int pointCount = 30; // number of triangle segments to form the arc
-    float halfAngle = mArcAngleRad * 0.5f;
-
-    mWedge.setPointCount(pointCount + 2); // center + all arc points
-    mWedge.setPoint(0, sf::Vector2f(0.f, 0.f)); // center
-
-    for (int i = 0; i <= pointCount; ++i)
-    {
-        float t = static_cast<float>(i) / pointCount;
-        float angle = -halfAngle + mArcAngleRad * t;
-        sf::Vector2f point(std::cos(angle) * mRadius, std::sin(angle) * mRadius);
-        mWedge.setPoint(i + 1, point);
-    }
-
-    mWedge.setFillColor(sf::Color(255, 100, 100, 180));
-    mWedge.setOutlineThickness(1.f); // optional debug help
-    mWedge.setOutlineColor(sf::Color::White);
+    RebuildWedgeShape();
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -55,7 +40,7 @@ void SwordSlashComponent::Update(float deltaTime)
         auto pCameraManager = GetGameManager().GetManager<CameraManager>();
         if (pCameraManager)
         {
-            sf::Vector2f playerPos = GetGameObject().GetParent().GetPosition();
+            sf::Vector2f playerPos = GetGameObject().GetPosition();
             sf::Vector2f aimDir = pCameraManager->GetCrosshairPosition() - playerPos;
 
             float len = std::sqrt(aimDir.x * aimDir.x + aimDir.y * aimDir.y);
@@ -103,9 +88,6 @@ void SwordSlashComponent::Update(float deltaTime)
         currentDir.x * sinA + currentDir.y * cosA
     );
 
-    sf::Vector2f newPos = GetGameObject().GetPosition() + swingDir * mRadius;
-    GetGameObject().SetPosition(newPos);
-
     float alpha = 1.f - t;
     mWedge.setFillColor(sf::Color(255, 100, 100, static_cast<sf::Uint8>(alpha * 180)));
 
@@ -127,7 +109,7 @@ void SwordSlashComponent::draw(sf::RenderTarget & target, sf::RenderStates state
         return;
     }
 
-	mWedge.setPosition(GetGameObject().GetParent().GetPosition());
+	mWedge.setPosition(GetGameObject().GetPosition());
 
 	auto pCameraManager = GetGameManager().GetManager<CameraManager>();
     if (!pCameraManager)
@@ -160,8 +142,17 @@ std::string & SwordSlashComponent::GetClassName()
 
 //------------------------------------------------------------------------------------------------------------------------
 
+void SwordSlashComponent::SetRangeMultiplier(float mult)
+{
+    mRangeMult *= mult;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
 void SwordSlashComponent::PerformSlash()
 {
+    RebuildWedgeShape();
+
     if (mTimeSinceLastSlash < mCooldown || mIsSlashing)
     {
         return;
@@ -179,7 +170,7 @@ void SwordSlashComponent::PerformSlash()
         return;
     }
 
-    pSlashObj->SetPosition(GetGameObject().GetParent().GetPosition());
+    pSlashObj->SetPosition(GetGameObject().GetPosition());
     float angleRad = std::atan2(mSlashDirection.y, mSlashDirection.x);
     float angleDeg = angleRad * (180.f / BD::gsPi);
     pSlashObj->SetRotation(angleDeg);
@@ -192,7 +183,7 @@ void SwordSlashComponent::PerformSlash()
             pSlashObj->CreateWedgeShapePhysicsBody(
                 &gameManager.GetPhysicsWorld(),
                 mArcAngleRad,
-                (mRadius) / BD::gsPixelsPerMeter,
+                (mRadius * mRangeMult) / BD::gsPixelsPerMeter,
                 6,            // safe number of segments
                 true          // dynamic
             );
@@ -247,6 +238,29 @@ void SwordSlashComponent::CleanUpSlashes(float deltaTime)
                 return !pSlash || pSlash->IsDestroyed();
             }),
         mSlashObjs.end());
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void SwordSlashComponent::RebuildWedgeShape()
+{
+    int pointCount = 30;
+    float halfAngle = mArcAngleRad * 0.5f;
+
+    mWedge.setPointCount(pointCount + 2);
+    mWedge.setPoint(0, sf::Vector2f(0.f, 0.f));
+
+    float effectiveRadius = mRadius * mRangeMult;
+
+    for (int i = 0; i <= pointCount; ++i)
+    {
+        float t = static_cast<float>(i) / pointCount;
+        float angle = -halfAngle + mArcAngleRad * t;
+        sf::Vector2f point(std::cos(angle) * effectiveRadius, std::sin(angle) * effectiveRadius);
+        mWedge.setPoint(i + 1, point);
+    }
+    mWedge.setOutlineThickness(1.f); // optional debug help
+    mWedge.setOutlineColor(sf::Color::White);
 }
 
 //------------------------------------------------------------------------------------------------------------------------

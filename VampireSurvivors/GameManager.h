@@ -90,6 +90,7 @@ public:
 	b2World & GetPhysicsWorld();
 
 	void SetPausedState(bool pause);
+	void SetGameState(EGameState state);
 
 	sf::RenderWindow & GetWindow();
 
@@ -103,7 +104,7 @@ private:
 
 	void CleanUpDestroyedGameObjects(BD::Handle rootHandle);
 
-	void RenderImGui();
+	void RenderGameObjectImGui();
 	void RenderConCommands();
 	void DrawPhysicsDebug(sf::RenderTarget & target);
 
@@ -124,6 +125,7 @@ private:
 	bool mSoundPlayed;
 
 	EGameState mGameState;
+	int mNextAbilityScoreThreshold;
 
 	// GameOver
 	sf::Text mGameOverText;

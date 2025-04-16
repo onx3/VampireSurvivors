@@ -108,6 +108,16 @@ void PlayerManager::InitPlayer()
         }
     }
 
+    // Sword Slash Component
+    {
+        auto pSwordSlashComponent = pPlayer->GetComponent<SwordSlashComponent>().lock();
+        if (!pSwordSlashComponent)
+        {
+            auto pSwordSlashComponent = std::make_shared<SwordSlashComponent>(pPlayer, gameManager, 60.f, 100.f, .1f);
+            pPlayer->AddComponent(pSwordSlashComponent);
+        }
+    }
+
     // Add default sword weapon GameObject to display
     {
         BD::Handle playerWeaponHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, pPlayer->GetHandle());
@@ -138,16 +148,6 @@ void PlayerManager::InitPlayer()
             {
                 auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, playerHandle, sf::Vector2f(10, 0));
                 pPlayerWeapon->AddComponent(pWeaponFollowComponent);
-            }
-        }
-
-        // Sword SlashComponent
-        {
-            auto pSwordSlashComponent = pPlayerWeapon->GetComponent<SwordSlashComponent>().lock();
-            if (!pSwordSlashComponent)
-            {
-                auto pSwordSlashComponent = std::make_shared<SwordSlashComponent>(pPlayerWeapon, gameManager, 60.f, 100.f, .1f);
-                pPlayerWeapon->AddComponent(pSwordSlashComponent);
             }
         }
     }

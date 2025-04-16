@@ -19,11 +19,14 @@ public:
     virtual void DebugImGuiComponentInfo() override;
     virtual std::string & GetClassName() override;
 
+    void SetRangeMultiplier(float mult);
 
 private:
     void PerformSlash();
 
     void CleanUpSlashes(float deltaTime);
+
+    void RebuildWedgeShape();
 
     std::vector<Slash> mSlashObjs;
     sf::ConvexShape mWedge;
@@ -36,6 +39,7 @@ private:
     float mTimeSinceLastSlash;
     float mCooldown;
     float mDamagePerSlash;
+    float mRangeMult;
     bool mIsSlashing;
     std::string mName;
 };

@@ -16,10 +16,12 @@
 #include "CameraManager.h"
 #include "BaseManager.h"
 #include "LevelManager.h"
+#include "AbilityUIManager.h"
 
 namespace
 {
     static bool gsDrawHitBoxes = false;
+    static int gsAbilityThreshold = 5000;
 }
 
 GameManager::GameManager(WindowManager & windowManager)
@@ -31,6 +33,7 @@ GameManager::GameManager(WindowManager & windowManager)
     , mManagers()
     , mSoundPlayed(false)
     , mGameState(EGameState::Running)
+    , mNextAbilityScoreThreshold(gsAbilityThreshold)
     , mPhysicsWorld(b2Vec2(0.0f, 0.f))
     , mCollisionListener(this)
     , mPaused(false)
@@ -54,6 +57,7 @@ GameManager::GameManager(WindowManager & windowManager)
         AddManager<EnemyAIManager>();
         AddManager<UIManager>();
         AddManager<DropManager>();
+        AddManager<AbilityUIManager>();
     }
     
 
@@ -155,22 +159,60 @@ void GameManager::Update(float deltaTime)
         mSoundPlayed = true;
     }
 
-    // Physics
+    // Ability Check
     {
-        float timeStep = 1.0f / 60.0f; // 60 Hz
-        int velocityIterations = 8;
-        int positionIterations = 3;
-        mPhysicsWorld.Step(timeStep, velocityIterations, positionIterations);
+        int score = 0;
+        auto * pUIManager = GetManager<UIManager>();
+        if (pUIManager)
+        {
+            score = pUIManager->GetScore();
+        }
+        if (mGameState == EGameState::Running && score >= mNextAbilityScoreThreshold)
+        {
+            mGameState = EGameState::AbilitySelect;
+            mNextAbilityScoreThreshold += gsAbilityThreshold;
+        }
     }
 
-    UpdateGameObjects(deltaTime);
-
-    for (auto & manager : mManagers)
+    switch (mGameState)
     {
-        if (manager.second)
+        case (EGameState::Running):
         {
-            manager.second->Update(deltaTime);
+            // Physics
+            {
+                float timeStep = 1.0f / 60.0f; // 60 Hz
+                int velocityIterations = 8;
+                int positionIterations = 3;
+                mPhysicsWorld.Step(timeStep, velocityIterations, positionIterations);
+            }
+
+            UpdateGameObjects(deltaTime);
+
+            for (auto & manager : mManagers)
+            {
+                if (manager.second)
+                {
+                    manager.second->Update(deltaTime);
+                }
+            }
+            break;
         }
+        case (EGameState::Paused):
+        {
+            break;
+        }
+        case (EGameState::AbilitySelect):
+        {
+            break;
+        }
+        case (EGameState::EndGame):
+        {
+
+            break;
+        }
+
+        default:
+            break;
     }
 }
 
@@ -254,7 +296,7 @@ void GameManager::CleanUpDestroyedGameObjects(BD::Handle rootHandle)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void GameManager::RenderImGui()
+void GameManager::RenderGameObjectImGui()
 {
 #if IMGUI_ENABLED()
     static GameObject * pSelectedGameObject = nullptr;
@@ -372,12 +414,23 @@ void GameManager::Render(float deltaTime)
         }
     }
 
-    // ImGui && Debug mode
+    // GameObject ImGui && Debug mode
     {
         int imGuiTime = int(std::max(deltaTime, 0.0001f));
         ImGui::SFML::Update(*mpWindow, sf::milliseconds(1));
 
-        RenderImGui();
+        RenderGameObjectImGui();
+
+        // Ability ImGui
+        if (mGameState == EGameState::AbilitySelect)
+        {
+            mpWindow->setMouseCursorVisible(true);
+            auto * pAbilityUIManager = GetManager<AbilityUIManager>();
+            if (pAbilityUIManager)
+            {
+                pAbilityUIManager->DrawAbilitySelectionUI(mGameState);
+            }
+        }
 
         // Render ImGui draw data
         ImGui::SFML::Render(*mpWindow);
@@ -494,6 +547,13 @@ b2World & GameManager::GetPhysicsWorld()
 void GameManager::SetPausedState(bool pause)
 {
     mPaused = pause;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void GameManager::SetGameState(EGameState state)
+{
+    mGameState = state;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

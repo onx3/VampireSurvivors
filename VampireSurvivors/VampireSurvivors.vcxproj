@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbilityUIManager.cpp" />
     <ClCompile Include="AIPathComponent.cpp" />
     <ClCompile Include="AISimplePathComponent.cpp" />
     <ClCompile Include="AstroidsPrivate.cpp">
@@ -182,6 +183,7 @@
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbilityUIManager.h" />
     <ClInclude Include="AIPathComponent.h" />
     <ClInclude Include="AISimplePathComponent.h" />
     <ClInclude Include="AstroidsPrivate.h" />

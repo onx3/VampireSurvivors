@@ -124,14 +124,17 @@
     <ClCompile Include="SwordSlashComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyMeleeAttackComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
     <ClCompile Include="DamageComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="AISimplePathComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyMeleeAttackComponent.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="AbilityUIManager.cpp">
+      <Filter>Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -228,11 +231,20 @@
     <ClInclude Include="SwordSlashComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="DamageComponent.h" />
-    <ClInclude Include="AISimplePathComponent.h" />
-    <ClInclude Include="EnemyMeleeAttackComponent.h" />
     <ClInclude Include="Math.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="AISimplePathComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyMeleeAttackComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AbilityUIManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

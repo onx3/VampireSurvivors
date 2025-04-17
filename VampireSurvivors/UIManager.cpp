@@ -49,6 +49,19 @@ void UIManager::Update(float deltaTime)
 
     mHealth = GetPlayerHelath();
     mHealthText.setString("Health: " + std::to_string(int(mHealth)));
+
+    // Damage numbers
+    {
+        for (auto & dn : mDamageNumbers)
+        {
+            dn.Update(deltaTime);
+        }
+
+        mDamageNumbers.erase(
+            std::remove_if(mDamageNumbers.begin(), mDamageNumbers.end(),
+                [](const DamageNumber & dn) { return dn.IsExpired(); }),
+            mDamageNumbers.end());
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -73,6 +86,14 @@ void UIManager::Render(sf::RenderWindow & window)
     for (auto & life : lives)
     {
         window.draw(life);
+    }
+
+    // Damage numbers
+    {
+        for (const auto & dn : mDamageNumbers)
+        {
+            window.draw(dn.text);
+        }
     }
 }
 
@@ -192,6 +213,13 @@ const sf::Text & UIManager::GetRunTimeText()
 float UIManager::GetRunTime() const
 {
     return mRunTime;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void UIManager::AddDamageNumber(const sf::Vector2f & pos, float amount)
+{
+    mDamageNumbers.emplace_back(mFont, pos, amount);
 }
 
 //------------------------------------------------------------------------------------------------------------------------

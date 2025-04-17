@@ -94,6 +94,8 @@ public:
 
 	sf::RenderWindow & GetWindow();
 
+	const sf::Font & GetFont() const;
+
 	std::vector<BD::Handle> GetGameObjectsByTeam(ETeam team);
 
 	// Window

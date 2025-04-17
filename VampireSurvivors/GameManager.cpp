@@ -566,6 +566,13 @@ sf::RenderWindow & GameManager::GetWindow()
 
 //------------------------------------------------------------------------------------------------------------------------
 
+const sf::Font & GameManager::GetFont() const
+{
+    return mFont;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
 std::vector<BD::Handle> GameManager::GetGameObjectsByTeam(ETeam team)
 {
     std::vector<BD::Handle> gameObjectHandles;

@@ -49,7 +49,15 @@ void HealthComponent::LoseHealth(float amount)
         {
             mHealth = 0;
         }
-        mTimeSinceLastHit = 0.0f; // Reset the hit cooldown timer
+
+        // Damage numbers
+        GameManager & gameManager = GetGameManager();
+        auto pUIManager = gameManager.GetManager<UIManager>();
+        if (pUIManager)
+        {
+            pUIManager->AddDamageNumber(GetGameObject().GetPosition(), amount);
+        }
+        mTimeSinceLastHit = 0.0f;
     }
 }
 

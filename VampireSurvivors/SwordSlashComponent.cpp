@@ -4,6 +4,7 @@
 #include "HealthComponent.h"
 #include "CollisionComponent.h"
 #include "DamageComponent.h"
+#include "imgui.h"
 
 SwordSlashComponent::SwordSlashComponent(GameObject * owner, GameManager & gameManager, float arcAngleDeg, float radius, float duration)
 	: GameComponent(owner, gameManager)
@@ -131,6 +132,9 @@ void SwordSlashComponent::draw(sf::RenderTarget & target, sf::RenderStates state
 
 void SwordSlashComponent::DebugImGuiComponentInfo()
 {
+    ImGui::InputFloat("Current Damage per Slash", &mDamagePerSlash);
+    ImGui::InputFloat("Range Multiplier", &mRangeMult);
+    ImGui::Text("Is Slashing: %s", mIsSlashing ? "true" : "false");
 }
 
 //------------------------------------------------------------------------------------------------------------------------

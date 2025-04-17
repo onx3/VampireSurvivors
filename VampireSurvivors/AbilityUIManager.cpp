@@ -4,6 +4,7 @@
 #include <imgui-SFML.h>
 #include "PlayerManager.h"
 #include "SwordSlashComponent.h"
+#include "WandComponent.h"
 
 AbilityUIManager::AbilityUIManager(GameManager * pGameManager)
 	: BaseManager(pGameManager)
@@ -43,27 +44,47 @@ void AbilityUIManager::DrawAbilitySelectionUI(EGameState & gameState)
 void AbilityUIManager::ApplySelectedAbility(int index)
 {
 	auto & gameManager = GetGameManager();
+	auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
+	GameObject * pPlayer = nullptr;
+	if (pPlayerManager)
+	{
+		auto & players = pPlayerManager->GetPlayers();
+		if (!pPlayerManager->GetPlayers().empty())
+		{
+			BD::Handle playerHandle = players[0];
+			pPlayer = gameManager.GetGameObject(playerHandle);
+		}
+	}
+
 	switch (index)
 	{
 		case 0:
 		{
 			mSelectedAbilityOption = EAbilityOptions::SwordRange;
-			auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
-			if (pPlayerManager)
+			if (pPlayer)
 			{
-				auto & players = pPlayerManager->GetPlayers();
-				if (!pPlayerManager->GetPlayers().empty())
+				auto pSwordSlashComp = pPlayer->GetComponent<SwordSlashComponent>().lock();
+				if (pSwordSlashComp)
 				{
-					BD::Handle playerHandle = players[0];
-					auto * pPlayer = gameManager.GetGameObject(playerHandle);
-					if (pPlayer)
-					{
-						auto pSwordSlashComp = pPlayer->GetComponent<SwordSlashComponent>().lock();
-						if (pSwordSlashComp)
-						{
-							pSwordSlashComp->SetRangeMultiplier(1.5f);
-						}
-					}
+					pSwordSlashComp->SetRangeMultiplier(1.5f);
+				}
+			}
+			break;
+		}
+		case (1):
+		{
+			mSelectedAbilityOption = EAbilityOptions::Wand;
+			if (pPlayer)
+			{
+				auto pWandComponent = pPlayer->GetComponent<WandComponent>().lock();
+				if (!pWandComponent)
+				{
+					auto pWandComponent = std::make_shared<WandComponent>(pPlayer, gameManager);
+					pPlayer->AddComponent(pWandComponent);
+				}
+				else
+				{
+					pWandComponent->AddDamage(100.f);
 				}
 			}
 			break;

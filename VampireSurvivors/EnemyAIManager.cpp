@@ -22,7 +22,7 @@
 
 EnemyAIManager::EnemyAIManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
-    , mBaseEnemyCount(5)
+    , mBaseEnemyCount(15)
     , mCurrentMaxEnemies(mBaseEnemyCount)
     , mBaseHealth(100.f)
     , mCurrentHealth(mBaseHealth)

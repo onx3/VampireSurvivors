@@ -21,7 +21,7 @@
 namespace
 {
     static bool gsDrawHitBoxes = false;
-    static int gsAbilityThreshold = 5000;
+    static int gsAbilityThreshold = 10000;
 }
 
 GameManager::GameManager(WindowManager & windowManager)

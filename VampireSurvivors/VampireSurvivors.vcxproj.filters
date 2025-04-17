@@ -136,6 +136,9 @@
     <ClCompile Include="AbilityUIManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="WandComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -246,5 +249,6 @@
     <ClInclude Include="AbilityUIManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
+    <ClInclude Include="WandComponent.h" />
   </ItemGroup>
 </Project>

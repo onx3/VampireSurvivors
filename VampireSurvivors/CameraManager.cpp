@@ -12,7 +12,7 @@ CameraManager::CameraManager(GameManager * pGameManager)
 	ResourceId resourceId("Art/Crosshair.png");
 	auto pTexture = GetGameManager().GetManager<ResourceManager>()->GetTexture(resourceId);
 	mCursorSprite.setTexture(*pTexture);
-	mCursorSprite.setScale(.25f, .25f);
+	mCursorSprite.setScale(.15f, .15f);
 
 	sf::FloatRect localBounds = mCursorSprite.getLocalBounds();
 	mCursorSprite.setOrigin(

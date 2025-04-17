@@ -51,18 +51,21 @@ void EnemyMeleeAttackComponent::Update(float deltaTime)
 
 		case (EAttackState::WindUp):
 		{
-			mTimer -= deltaTime;
-			if (mTimer <= 0.f)
+			if (GetGameObject().IsActive())
 			{
-				if (distanceSquared < mAttackRange * mAttackRange)
+				mTimer -= deltaTime;
+				if (mTimer <= 0.f)
 				{
-					auto pHealthComp = pPlayerObj->GetComponent<HealthComponent>().lock();
-					if (pHealthComp)
+					if (distanceSquared < mAttackRange * mAttackRange)
 					{
-						pHealthComp->LoseHealth(mDamage);
+						auto pHealthComp = pPlayerObj->GetComponent<HealthComponent>().lock();
+						if (pHealthComp)
+						{
+							pHealthComp->LoseHealth(mDamage);
+						}
+						mTimer = mAttackCooldown;
+						mAttackState = EAttackState::Cooldown;
 					}
-					mTimer = mAttackCooldown;
-					mAttackState = EAttackState::Cooldown;
 				}
 			}
 			break;

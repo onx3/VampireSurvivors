@@ -5,6 +5,7 @@
 #include "PlayerManager.h"
 #include "SwordSlashComponent.h"
 #include "WandComponent.h"
+#include "HealthComponent.h"
 
 AbilityUIManager::AbilityUIManager(GameManager * pGameManager)
 	: BaseManager(pGameManager)
@@ -86,6 +87,16 @@ void AbilityUIManager::ApplySelectedAbility(int index)
 				{
 					pWandComponent->AddDamage(100.f);
 				}
+			}
+			break;
+		}
+		
+		case (2):
+		{
+			auto pHealthComponent = pPlayer->GetComponent<HealthComponent>().lock();
+			if (pHealthComponent)
+			{
+				pHealthComponent->AddHealth(20);
 			}
 			break;
 		}

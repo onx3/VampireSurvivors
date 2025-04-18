@@ -33,7 +33,7 @@ void HealthComponent::AddHealth(float amount)
 {
     mHealth += amount;
     if (mHealth > mMaxHealth)
-    {
+    { 
         mHealth = mMaxHealth;
     }
 }
@@ -182,8 +182,8 @@ void HealthComponent::DebugImGuiComponentInfo()
 {
     ImGui::Text("Current amount of lives: %i", mLifeCount);
     ImGui::Text("Max Lives: %i", mMaxLives);
-    ImGui::Text("Current Health: %i", mHealth);
-    ImGui::Text("Max Health: %i", mMaxHealth);
+    ImGui::Text("Current Health: %.3f", mHealth);
+    ImGui::Text("Max Health: %.3f", mMaxHealth);
 }
 
 //------------------------------------------------------------------------------------------------------------------------

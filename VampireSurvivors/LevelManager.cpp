@@ -60,28 +60,23 @@ void LevelManager::Render(sf::RenderWindow & window)
 
 bool LevelManager::IsTileWalkableAI(int x, int y) const
 {
-#if 0
     if (y < 0 || y >= mHeight || x < 0 || x >= mWidth)
         return false;
 
     int tile = mTileData[y][x];
-    return (tile == 70);
-#endif
-    return true;
+    return (tile == 299);
 }
 
 //------------------------------------------------------------------------------------------------------------------------
 
 bool LevelManager::IsTileWalkablePlayer(int x, int y) const
 {
-#if 0
     if (y < 0 || y >= mHeight || x < 0 || x >= mWidth)
         return false;
 
     int tile = mTileData[y][x];
-    return (tile == 7 || tile == 70);
-#endif
-    return true;
+    //return (tile == 131 || tile == 1097);
+    return (true);
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -100,11 +95,14 @@ void LevelManager::ParseTileData(const json & levelData)
     mTileData.clear();
 
     ResourceManager * resourceManager = GetGameManager().GetManager<ResourceManager>();
-    auto resourceID = ResourceId("Art/TileSet.png");
-    auto tilesetTexture = resourceManager->GetTexture(resourceID);
-    if (!tilesetTexture)
+
+    auto tilesetResourceId = ResourceId("Art/TileSet.png");
+    auto waterResourceId = ResourceId("Art/Water.png");
+    auto pTilesetTexture = resourceManager->GetTexture(tilesetResourceId);
+    auto pWaterTexture = resourceManager->GetTexture(waterResourceId);
+    if (!pTilesetTexture || !pWaterTexture)
     {
-        std::cerr << "Failed to load tileset texture." << std::endl;
+        std::cerr << "Failed to load tileset or water texture." << std::endl;
         return;
     }
 
@@ -113,6 +111,10 @@ void LevelManager::ParseTileData(const json & levelData)
         std::cerr << "No layers found in level file." << std::endl;
         return;
     }
+
+    const uint32_t FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
+    const uint32_t FLIPPED_VERTICALLY_FLAG = 0x40000000;
+    const uint32_t FLIPPED_DIAGONALLY_FLAG = 0x20000000;
 
     for (const auto & layer : levelData["layers"])
     {
@@ -131,49 +133,112 @@ void LevelManager::ParseTileData(const json & levelData)
             {
                 for (int x = 0; x < mWidth; ++x)
                 {
-                    int tileID = data[y * mWidth + x].get<int>();
-
-                    // Extract transformation flags
-                    int actualTileID = tileID & 0x1FFFFFFF;
-                    bool flippedHorizontally = (tileID & 0x80000000) != 0;
-                    bool flippedVertically = (tileID & 0x40000000) != 0;
-                    bool flippedDiagonally = (tileID & 0x20000000) != 0;
-
+                    uint32_t tileID = data[y * mWidth + x].get<uint32_t>();
+                    int actualTileID = tileID & ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
                     mTileData[y][x] = actualTileID;
 
-                    if (actualTileID > 0)
+                    if (actualTileID == 0)
+                        continue;
+
+                    bool flipH = (tileID & FLIPPED_HORIZONTALLY_FLAG) != 0;
+                    bool flipV = (tileID & FLIPPED_VERTICALLY_FLAG) != 0;
+                    bool flipD = (tileID & FLIPPED_DIAGONALLY_FLAG) != 0;
+
+                    std::shared_ptr<sf::Texture> texture = pTilesetTexture;
+                    int columns = texture->getSize().x / mTileWidth;
+
+                    int row = (actualTileID - 1) / columns;
+                    int column = (actualTileID - 1) % columns;
+
+                    // Override specific tiles with custom textures and coordinates
+                    switch (actualTileID)
                     {
-                        sf::Sprite sprite;
-                        sprite.setTexture(*tilesetTexture);
+                        case (299): // Cracked ground
+                        {
+                            column = 1;
+                            row = 4;
+                            break;
+                        }
+                            
+                        case 203:
+                        {
+                            [[fallthrough]];
+                        }
+                        case 35:
+                        {
+                            column = 2;
+                            row = 1;
+                            break;
+                        }
 
-                        int columns = tilesetTexture->getSize().x / mTileWidth;
-                        int row = (actualTileID - 1) / columns;
-                        int column = (actualTileID - 1) % columns;
+                        case (1028): // Water tile from Water.png
+                        {
+                            texture = pWaterTexture;
+                            columns = texture->getSize().x / mTileWidth;
+                            column = 2;
+                            row = 1;
+                            break;
+                        }
 
-                        sprite.setTextureRect(sf::IntRect(column * mTileWidth, row * mTileHeight, mTileWidth, mTileHeight));
+                        case (1097): // Ice Bridge tile from Water.png
+                        {
+                            texture = pWaterTexture;
+                            columns = texture->getSize().x / mTileWidth;
+                            column = 0;
+                            row = 6;
+                            break;
+                        }
 
-                        float worldX = static_cast<float>(x * mTileWidth);
-                        float worldY = static_cast<float>(y * mTileHeight);
-                        sprite.setPosition(worldX, worldY);
-
-                        // Apply transformations
-                        sf::Vector2f origin(mTileWidth / 2.0f, mTileHeight / 2.0f);
-                        sprite.setOrigin(origin);
-
-                        if (flippedHorizontally)
-                            sprite.scale(-1.f, 1.f); // Flip horizontally
-                        if (flippedVertically)
-                            sprite.scale(1.f, -1.f); // Flip vertically
-                        if (flippedDiagonally)
-                            sprite.setRotation(90.f); // 90-degree diagonal flip
-
-                        mTileSprites.push_back(sprite);
+                        default:
+                        {
+                            int ii = 0;
+                            ++ii;
+                            break;
+                        }
                     }
+
+                    sf::Sprite sprite;
+                    sprite.setTexture(*texture);
+                    sprite.setTextureRect(sf::IntRect(column * mTileWidth, row * mTileHeight, mTileWidth, mTileHeight));
+                    sprite.setOrigin(mTileWidth / 2.f, mTileHeight / 2.f);
+
+                    float worldX = static_cast<float>(x * mTileWidth);
+                    float worldY = static_cast<float>(y * mTileHeight);
+                    sprite.setPosition(worldX + mTileWidth / 2.f, worldY + mTileHeight / 2.f);
+
+                    if (flipD)
+                    {
+                        if (flipH && flipV)
+                        {
+                            sprite.setRotation(90.f);
+                            sprite.scale(-1.f, 1.f);
+                        }
+                        else if (flipH)
+                        {
+                            sprite.setRotation(270.f);
+                        }
+                        else if (flipV)
+                        {
+                            sprite.setRotation(90.f);
+                        }
+                        else
+                        {
+                            sprite.setRotation(270.f);
+                            sprite.scale(-1.f, 1.f);
+                        }
+                    }
+                    else
+                    {
+                        sprite.setScale(flipH ? -1.f : 1.f, flipV ? -1.f : 1.f);
+                    }
+
+                    mTileSprites.push_back(sprite);
                 }
             }
         }
     }
 }
+
 
 //------------------------------------------------------------------------------------------------------------------------
 // EOF

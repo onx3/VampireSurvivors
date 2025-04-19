@@ -51,7 +51,7 @@ GameManager::GameManager(WindowManager & windowManager)
         //Level Manager
         {
             AddManager<LevelManager>();
-            GetManager<LevelManager>()->LoadLevel("../Levels/Level1.json");
+            GetManager<LevelManager>()->LoadLevel("../Levels/Level3.json");
         }
         AddManager<CameraManager>();
         AddManager<EnemyAIManager>();

@@ -15,11 +15,17 @@
 namespace
 {
     static float sPlayerHealth = 100.f;
+    static sf::Vector2f sPlayerSpawnPos(2584.72f, 1413.59f);
 }
 
 PlayerManager::PlayerManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
     , mPlayerHandles()
+    , mSpawnPos(sPlayerSpawnPos)
+    , mLoseLifeSoundBuffer()
+    , mDeathSoundBuffer()
+    , mLoseLifeSound()
+    , mDeathSound()
     , mSoundPlayed(false)
 {
     InitPlayer();
@@ -54,9 +60,6 @@ void PlayerManager::InitPlayer()
 
     // Sprite Component
     {
-        sf::Vector2u windowSize = gameManager.GetWindow().getSize();
-        sf::Vector2f centerPosition(float(windowSize.x) / 2.0f, float(windowSize.y) / 2.0f);
-
         auto pSpriteComponent = pPlayer->GetComponent<SpriteComponent>().lock();
         if (pSpriteComponent)
         {
@@ -67,7 +70,7 @@ void PlayerManager::InitPlayer()
             if (pTexture)
             {
                 pSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.2f, 1.2f));
-                pSpriteComponent->SetPosition(centerPosition);
+                pSpriteComponent->SetPosition(mSpawnPos);
             }
         }
     }

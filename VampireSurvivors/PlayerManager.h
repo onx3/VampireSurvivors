@@ -21,6 +21,7 @@ public:
 private:
     std::vector<BD::Handle> mPlayerHandles;
 
+    sf::Vector2f mSpawnPos;
     // Audio
     sf::SoundBuffer mLoseLifeSoundBuffer;
     sf::SoundBuffer mDeathSoundBuffer;

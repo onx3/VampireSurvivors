@@ -30,6 +30,9 @@ private:
 	int mTileWidth;
 	int mTileHeight;
 
-	std::vector<sf::Sprite> mTileSprites;
+	sf::VertexArray mTileVertices;
+	sf::VertexArray mWaterTileVertices;
+	std::shared_ptr<sf::Texture> mTilesetTexture;
+	std::shared_ptr<sf::Texture> mWaterTexture;
 };
 

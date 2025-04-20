@@ -36,7 +36,6 @@ public:
 	virtual std::string & GetClassName() override;
 
 private:
-	sf::Texture mTexture;
 	sf::Sprite mSprite;
 	float mRotationSpeed;
 	float mCurrentRotation;

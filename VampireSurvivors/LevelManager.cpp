@@ -11,9 +11,11 @@ LevelManager::LevelManager(GameManager * pGameManager)
 	, mHeight(0)
 	, mTileWidth(0)
 	, mTileHeight(0)
-	, mTileSprites()
+    , mTileVertices()
+    , mWaterTileVertices()
+    , mTilesetTexture()
+    , mWaterTexture()
 {
-
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -50,10 +52,15 @@ bool LevelManager::LoadLevel(const std::string & filePath)
 
 void LevelManager::Render(sf::RenderWindow & window)
 {
-	for (const auto & sprite : mTileSprites)
-	{
-		window.draw(sprite);
-	}
+    if (mTilesetTexture)
+    {
+        window.draw(mTileVertices, mTilesetTexture.get());
+
+    }
+    if (mWaterTexture)
+    {
+        window.draw(mWaterTileVertices, mWaterTexture.get());
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -64,7 +71,7 @@ bool LevelManager::IsTileWalkableAI(int x, int y) const
         return false;
 
     int tile = mTileData[y][x];
-    return (tile == 299);
+    return (tile == 131 || tile == 1097);
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -75,32 +82,39 @@ bool LevelManager::IsTileWalkablePlayer(int x, int y) const
         return false;
 
     int tile = mTileData[y][x];
-    //return (tile == 131 || tile == 1097);
-    return (true);
+    return (tile == 131 || tile == 1097);
 }
 
 //------------------------------------------------------------------------------------------------------------------------
 
 void LevelManager::ClearLevel()
 {
-	mTileData.clear();
-	mTileSprites.clear();
+    mTileData.clear();
+
+    mTileVertices.clear();
+    mTileVertices.resize(0);
+
+    mWaterTileVertices.clear();
+    mWaterTileVertices.resize(0);
 }
 
 //------------------------------------------------------------------------------------------------------------------------
 
 void LevelManager::ParseTileData(const json & levelData)
 {
-    mTileSprites.clear();
     mTileData.clear();
+    mTileVertices.clear();
+    mWaterTileVertices.clear();
 
     ResourceManager * resourceManager = GetGameManager().GetManager<ResourceManager>();
 
     auto tilesetResourceId = ResourceId("Art/TileSet.png");
     auto waterResourceId = ResourceId("Art/Water.png");
-    auto pTilesetTexture = resourceManager->GetTexture(tilesetResourceId);
-    auto pWaterTexture = resourceManager->GetTexture(waterResourceId);
-    if (!pTilesetTexture || !pWaterTexture)
+
+    mTilesetTexture = resourceManager->GetTexture(tilesetResourceId);
+    mWaterTexture = resourceManager->GetTexture(waterResourceId);
+
+    if (!mTilesetTexture || !mWaterTexture)
     {
         std::cerr << "Failed to load tileset or water texture." << std::endl;
         return;
@@ -118,122 +132,83 @@ void LevelManager::ParseTileData(const json & levelData)
 
     for (const auto & layer : levelData["layers"])
     {
-        if (layer["type"] == "tilelayer" && layer.contains("data"))
+        if (layer["type"] != "tilelayer" || !layer.contains("data"))
+            continue;
+
+        const auto & data = layer["data"];
+        if (!data.is_array())
+            continue;
+
+        mTileData.resize(mHeight, std::vector<int>(mWidth));
+        mTileVertices.setPrimitiveType(sf::Quads);
+        mWaterTileVertices.setPrimitiveType(sf::Quads);
+        mTileVertices.resize(mWidth * mHeight * 4);
+        mWaterTileVertices.resize(mWidth * mHeight * 4);
+
+        for (int y = 0; y < mHeight; ++y)
         {
-            const auto & data = layer["data"];
-            if (!data.is_array())
+            for (int x = 0; x < mWidth; ++x)
             {
-                std::cerr << "Invalid layer data." << std::endl;
-                return;
-            }
+                int tileIndex = y * mWidth + x;
+                uint32_t tileID = data[tileIndex].get<uint32_t>();
 
-            mTileData.resize(mHeight, std::vector<int>(mWidth));
+                int actualTileID = tileID & ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
+                mTileData[y][x] = actualTileID;
 
-            for (int y = 0; y < mHeight; ++y)
-            {
-                for (int x = 0; x < mWidth; ++x)
+                if (actualTileID == 0)
+                    continue;
+
+                bool flipH = (tileID & FLIPPED_HORIZONTALLY_FLAG) != 0;
+                bool flipV = (tileID & FLIPPED_VERTICALLY_FLAG) != 0;
+                bool flipD = (tileID & FLIPPED_DIAGONALLY_FLAG) != 0;
+
+                std::shared_ptr<sf::Texture> texture = mTilesetTexture;
+                sf::Vertex * quad = &mTileVertices[tileIndex * 4];
+                int columns = texture->getSize().x / mTileWidth;
+
+                int column = (actualTileID - 1) % columns;
+                int row = (actualTileID - 1) / columns;
+
+                // Optional overrides
+                switch (actualTileID)
                 {
-                    uint32_t tileID = data[y * mWidth + x].get<uint32_t>();
-                    int actualTileID = tileID & ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
-                    mTileData[y][x] = actualTileID;
+                    case 299: // Cracked ground
+                        column = 1; row = 4; break;
 
-                    if (actualTileID == 0)
-                        continue;
+                    case 203:
+                    case 35: // Wall
+                        column = 2; row = 1; break;
 
-                    bool flipH = (tileID & FLIPPED_HORIZONTALLY_FLAG) != 0;
-                    bool flipV = (tileID & FLIPPED_VERTICALLY_FLAG) != 0;
-                    bool flipD = (tileID & FLIPPED_DIAGONALLY_FLAG) != 0;
+                    case 1028: // Water
+                        texture = mWaterTexture;
+                        columns = texture->getSize().x / mTileWidth;
+                        column = 2; row = 1;
+                        quad = &mWaterTileVertices[tileIndex * 4];
+                        break;
 
-                    std::shared_ptr<sf::Texture> texture = pTilesetTexture;
-                    int columns = texture->getSize().x / mTileWidth;
-
-                    int row = (actualTileID - 1) / columns;
-                    int column = (actualTileID - 1) % columns;
-
-                    // Override specific tiles with custom textures and coordinates
-                    switch (actualTileID)
-                    {
-                        case (299): // Cracked ground
-                        {
-                            column = 1;
-                            row = 4;
-                            break;
-                        }
-                            
-                        case 203:
-                        {
-                            [[fallthrough]];
-                        }
-                        case 35:
-                        {
-                            column = 2;
-                            row = 1;
-                            break;
-                        }
-
-                        case (1028): // Water tile from Water.png
-                        {
-                            texture = pWaterTexture;
-                            columns = texture->getSize().x / mTileWidth;
-                            column = 2;
-                            row = 1;
-                            break;
-                        }
-
-                        case (1097): // Ice Bridge tile from Water.png
-                        {
-                            texture = pWaterTexture;
-                            columns = texture->getSize().x / mTileWidth;
-                            column = 0;
-                            row = 6;
-                            break;
-                        }
-
-                        default:
-                        {
-                            int ii = 0;
-                            ++ii;
-                            break;
-                        }
-                    }
-
-                    sf::Sprite sprite;
-                    sprite.setTexture(*texture);
-                    sprite.setTextureRect(sf::IntRect(column * mTileWidth, row * mTileHeight, mTileWidth, mTileHeight));
-                    sprite.setOrigin(mTileWidth / 2.f, mTileHeight / 2.f);
-
-                    float worldX = static_cast<float>(x * mTileWidth);
-                    float worldY = static_cast<float>(y * mTileHeight);
-                    sprite.setPosition(worldX + mTileWidth / 2.f, worldY + mTileHeight / 2.f);
-
-                    if (flipD)
-                    {
-                        if (flipH && flipV)
-                        {
-                            sprite.setRotation(90.f);
-                            sprite.scale(-1.f, 1.f);
-                        }
-                        else if (flipH)
-                        {
-                            sprite.setRotation(270.f);
-                        }
-                        else if (flipV)
-                        {
-                            sprite.setRotation(90.f);
-                        }
-                        else
-                        {
-                            sprite.setRotation(270.f);
-                            sprite.scale(-1.f, 1.f);
-                        }
-                    }
-                    else
-                    {
-                        sprite.setScale(flipH ? -1.f : 1.f, flipV ? -1.f : 1.f);
-                    }
-
-                    mTileSprites.push_back(sprite);
+                    case 1097: // Ice bridge
+                        texture = mWaterTexture;
+                        columns = texture->getSize().x / mTileWidth;
+                        column = 0; row = 6;
+                        quad = &mWaterTileVertices[tileIndex * 4];
+                        break;
                 }
+
+                float xPos = static_cast<float>(x * mTileWidth);
+                float yPos = static_cast<float>(y * mTileHeight);
+
+                quad[0].position = { xPos, yPos };
+                quad[1].position = { xPos + mTileWidth, yPos };
+                quad[2].position = { xPos + mTileWidth, yPos + mTileHeight };
+                quad[3].position = { xPos, yPos + mTileHeight };
+
+                sf::Vector2f texTopLeft = { static_cast<float>(column * mTileWidth), static_cast<float>(row * mTileHeight) };
+                sf::Vector2f texBottomRight = texTopLeft + sf::Vector2f{ static_cast<float>(mTileWidth), static_cast<float>(mTileHeight) };
+
+                quad[0].texCoords = texTopLeft;
+                quad[1].texCoords = { texBottomRight.x, texTopLeft.y };
+                quad[2].texCoords = texBottomRight;
+                quad[3].texCoords = { texTopLeft.x, texBottomRight.y };
             }
         }
     }

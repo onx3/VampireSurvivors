@@ -18,6 +18,7 @@ public:
 	virtual void DebugImGuiComponentInfo() override;
 	virtual std::string & GetClassName() override;
 
+	EAttackState GetAttackState() const;
 private:
 	EAttackState mAttackState;
 	float mAttackRange;

@@ -55,7 +55,14 @@ void HealthComponent::LoseHealth(float amount)
         auto pUIManager = gameManager.GetManager<UIManager>();
         if (pUIManager)
         {
-            pUIManager->AddDamageNumber(GetGameObject().GetPosition(), amount);
+            auto & gameObj = GetGameObject();
+            sf::Color color = sf::Color::White;
+            if (gameObj.GetTeam() == ETeam::Player)
+            {
+                color = sf::Color::Red;
+
+            }
+            pUIManager->AddDamageNumber(GetGameObject().GetPosition(), amount, color);
         }
         mTimeSinceLastHit = 0.0f;
     }

@@ -15,7 +15,8 @@
 namespace
 {
     static float sPlayerHealth = 100.f;
-    static sf::Vector2f sPlayerSpawnPos(2584.72f, 1413.59f);
+    //static sf::Vector2f sPlayerSpawnPos(2584.72f, 1413.59f);
+    static sf::Vector2f sPlayerSpawnPos(1681.339f, 2723.596f);
 }
 
 PlayerManager::PlayerManager(GameManager * pGameManager)

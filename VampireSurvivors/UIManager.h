@@ -11,7 +11,7 @@ struct DamageNumber
     float elapsed;
     float startAlpha;
 
-    DamageNumber(const sf::Font & font, const sf::Vector2f & pos, float amount)
+    DamageNumber(const sf::Font & font, const sf::Vector2f & pos, float amount, sf::Color & color)
         : velocity(0.f, -30.f) // upward
         , lifespan(1.0f)       // total seconds before disappearing
         , elapsed(0.f)
@@ -20,7 +20,7 @@ struct DamageNumber
         text.setFont(font);
         text.setString(std::to_string(int(amount)));
         text.setCharacterSize(24);
-        text.setFillColor(sf::Color::Red);
+        text.setFillColor(color);
         text.setPosition(pos);
     }
 
@@ -61,7 +61,7 @@ public:
 	const sf::Text & GetRunTimeText();
 	float GetRunTime() const;
 
-	void AddDamageNumber(const sf::Vector2f & pos, float amount);
+	void AddDamageNumber(const sf::Vector2f & pos, float amount, sf::Color & color);
 
 private:
 	int mScore;

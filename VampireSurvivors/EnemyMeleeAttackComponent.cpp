@@ -66,6 +66,10 @@ void EnemyMeleeAttackComponent::Update(float deltaTime)
 						mTimer = mAttackCooldown;
 						mAttackState = EAttackState::Cooldown;
 					}
+					else
+					{
+						mAttackState = EAttackState::Idle;
+					}
 				}
 			}
 			break;
@@ -103,6 +107,13 @@ void EnemyMeleeAttackComponent::DebugImGuiComponentInfo()
 std::string & EnemyMeleeAttackComponent::GetClassName()
 {
 	return mName;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+EAttackState EnemyMeleeAttackComponent::GetAttackState() const
+{
+	return mAttackState;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

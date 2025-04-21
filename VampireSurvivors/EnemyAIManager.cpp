@@ -18,6 +18,7 @@
 #include "EnemyBulletComponent.h"
 #include "AISimplePathComponent.h"
 #include "EnemyMeleeAttackComponent.h"
+#include "LevelManager.h"
 
 
 EnemyAIManager::EnemyAIManager(GameManager * pGameManager)
@@ -78,44 +79,46 @@ void EnemyAIManager::Update(float deltaTime)
     }
 	CleanUpDeadEnemies();
 
-    auto pPlayerManager = GetGameManager().GetManager<PlayerManager>();
-    if (!pPlayerManager)
-    {
+    auto pPlayerManager = gameManager.GetManager<PlayerManager>();
+    if (!pPlayerManager || pPlayerManager->GetPlayers().empty())
         return;
-    }
 
-    auto & players = pPlayerManager->GetPlayers();
-    if (players.empty())
-    {
-        return;
-    }
-
-    BD::Handle playerHandle = players[0];
-    GameObject * pPlayer = GetGameManager().GetGameObject(playerHandle);
+    BD::Handle playerHandle = pPlayerManager->GetPlayers()[0];
+    GameObject * pPlayer = gameManager.GetGameObject(playerHandle);
     if (!pPlayer)
-    {
         return;
-    }
 
-    auto playerPos = pPlayer->GetPosition();
-    
-    float minRadius = 600.f; // too close to player
-    float maxRadius = 1000.f; // max spawn range
+    sf::Vector2f playerPos = pPlayer->GetPosition();
+
+    float minRadius = 600.f;
+    float maxRadius = 1000.f;
 
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<float> angleDist(0.f, 2.f * BD::gsPi);
     std::uniform_real_distribution<float> radiusDist(minRadius, maxRadius);
 
-	while (mEnemyHandles.size() < mCurrentMaxEnemies)
-	{
+    auto * pLevelManager = gameManager.GetManager<LevelManager>();
+    if (!pLevelManager)
+        return;
+
+    int attempts = 0;
+    const int maxAttempts = 100;
+
+    while (mEnemyHandles.size() < mCurrentMaxEnemies && attempts < maxAttempts)
+    {
+        ++attempts;
+
         float angle = angleDist(gen);
         float radius = radiusDist(gen);
         sf::Vector2f offset(std::cos(angle) * radius, std::sin(angle) * radius);
         sf::Vector2f spawnPosition = playerPos + offset;
 
-		RespawnEnemy(EEnemy::Ogre, spawnPosition);
-	}
+        if (pLevelManager->IsTileWalkableAI(int(spawnPosition.x / BD::gsPixelCountCellSize) , int(spawnPosition.y / BD::gsPixelCountCellSize)))
+        {
+            RespawnEnemy(EEnemy::Ogre, spawnPosition);
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -275,8 +278,6 @@ void EnemyAIManager::OnDeath(GameObject * pEnemy)
     // Drop Coins
     {
         pDropManager->DropCoins(position);
-        //auto pUIManager = gameManager.GetManager<UIManager>();
-        //pUIManager->AddScore(1000);
     }
     // Drops
     {

@@ -217,9 +217,9 @@ float UIManager::GetRunTime() const
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void UIManager::AddDamageNumber(const sf::Vector2f & pos, float amount)
+void UIManager::AddDamageNumber(const sf::Vector2f & pos, float amount, sf::Color & color)
 {
-    mDamageNumbers.emplace_back(mFont, pos, amount);
+    mDamageNumbers.emplace_back(mFont, pos, amount, color);
 }
 
 //------------------------------------------------------------------------------------------------------------------------

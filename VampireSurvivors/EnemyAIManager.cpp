@@ -220,13 +220,9 @@ void EnemyAIManager::CleanUpDeadEnemies()
     for (BD::Handle enemyHandle : mEnemyHandles)
     {
         GameObject * pEnemy = gameManager.GetGameObject(enemyHandle);
-        if (pEnemy && !pEnemy->IsDestroyed())
+        if (pEnemy && !pEnemy->IsDestroyed() && !pEnemy->IsActive())
         {
-            auto explosionComp = pEnemy->GetComponent<ExplosionComponent>().lock();
-            if (explosionComp && explosionComp->IsAnimationFinished())
-            {
-                pEnemy->Destroy();
-            }
+            pEnemy->Destroy();
         }
     }
 
@@ -273,25 +269,20 @@ const std::vector<BD::Handle> & EnemyAIManager::GetEnemies() const
 void EnemyAIManager::OnDeath(GameObject * pEnemy)
 {
     auto & gameManager = GetGameManager();
-    // Explosion
-    if (!pEnemy->GetComponent<ExplosionComponent>().lock())
+    auto pDropManager = gameManager.GetManager<DropManager>();
+    sf::Vector2f position = pEnemy->GetPosition();
+
+    // Drop Coins
     {
-        auto explosionComp = std::make_shared<ExplosionComponent>(
-            pEnemy, gameManager, "Art/explosion.png", 32, 32, 7, 0.1f, sf::Vector2f(2.f, 2.f), pEnemy->GetPosition());
-        pEnemy->AddComponent(explosionComp);
-    }
-    // Add Score
-    {
-        auto pUIManager = gameManager.GetManager<UIManager>();
-        pUIManager->AddScore(1000);
+        pDropManager->DropCoins(position);
+        //auto pUIManager = gameManager.GetManager<UIManager>();
+        //pUIManager->AddScore(1000);
     }
     // Drops
     {
         EDropType dropType = DetermineDropType();
-        auto pDropManager = gameManager.GetManager<DropManager>();
         if (pDropManager)
         {
-            sf::Vector2f position = pEnemy->GetPosition();
             pDropManager->SpawnDrop(dropType, position);
         }
     }
@@ -303,11 +294,7 @@ EDropType EnemyAIManager::DetermineDropType() const
 {
     int randomValue = rand() % 100;
 
-    if (randomValue < 3)
-    {
-        return EDropType::NukePickup;
-    }
-    else if (randomValue < 7)
+    if (randomValue < 7)
     {
         return EDropType::LifePickup;
     }

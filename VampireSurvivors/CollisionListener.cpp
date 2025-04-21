@@ -5,6 +5,11 @@
 #include "HealthComponent.h"
 #include "DamageComponent.h"
 
+namespace
+{
+    static const int sScorePerCoin = 250;
+}
+
 CollisionListener::CollisionListener(GameManager * pGameManager)
     : mpGameManager(pGameManager)
 {
@@ -110,6 +115,31 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
                 pObjAHealthComp->LoseHealth(damageNumber);
                 pObjB->Destroy();
             }
+        }
+    }
+    // Coin Drop
+    else if (pObjA->GetTeam() == ETeam::Player && pObjB->GetTeam() == ETeam::CoinDrop)
+    {
+        if (pObjA->IsActive() && pObjB->IsActive())
+        {
+            auto pUIManager = pObjA->GetGameManager().GetManager<UIManager>();
+            if (pUIManager)
+            {
+                pUIManager->AddScore(sScorePerCoin);
+            }
+            pObjB->Deactivate();
+        }
+    }
+    else if (pObjA->GetTeam() == ETeam::CoinDrop && pObjB->GetTeam() == ETeam::Player)
+    {
+        if (pObjA->IsActive() && pObjB->IsActive())
+        {
+            auto pUIManager = pObjB->GetGameManager().GetManager<UIManager>();
+            if (pUIManager)
+            {
+                pUIManager->AddScore(sScorePerCoin);
+            }
+            pObjA->Deactivate();
         }
     }
     // Nuke Drop

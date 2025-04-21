@@ -18,6 +18,7 @@ enum class ETeam
     FriendlyFleeting,
     Enemy,
     Neutral,
+    CoinDrop,
     NukeDrop,
     LifeDrop
 };

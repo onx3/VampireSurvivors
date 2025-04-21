@@ -93,12 +93,15 @@ void AbilityUIManager::ApplySelectedAbility(int index)
 		
 		case (2):
 		{
-			auto pHealthComponent = pPlayer->GetComponent<HealthComponent>().lock();
-			if (pHealthComponent)
+			if (pPlayer)
 			{
-				pHealthComponent->AddHealth(20);
+				auto pHealthComponent = pPlayer->GetComponent<HealthComponent>().lock();
+				if (pHealthComponent)
+				{
+					pHealthComponent->AddHealth(20);
+				}
+				break;
 			}
-			break;
 		}
 		default:
 			break;

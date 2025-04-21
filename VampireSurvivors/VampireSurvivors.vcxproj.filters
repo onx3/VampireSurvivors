@@ -136,8 +136,11 @@
     <ClCompile Include="AbilityUIManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="RadiusPickupComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
     <ClCompile Include="WandComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -249,6 +252,11 @@
     <ClInclude Include="AbilityUIManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="WandComponent.h" />
+    <ClInclude Include="RadiusPickupComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="WandComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

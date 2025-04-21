@@ -21,6 +21,8 @@ public:
 
 	void SpawnDrop(EDropType dropType, const sf::Vector2f & position);
 
+	void DropCoins(const sf::Vector2f & position);
+
 private:
 	std::vector<BD::Handle> mDropHandles;
 };

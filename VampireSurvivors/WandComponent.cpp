@@ -47,13 +47,6 @@ void WandComponent::Update(float deltaTime)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void WandComponent::draw(sf::RenderTarget & target, sf::RenderStates states)
-{
-
-}
-
-//------------------------------------------------------------------------------------------------------------------------
-
 void WandComponent::DebugImGuiComponentInfo()
 {
 	ImGui::InputFloat("Raw Damage", &mDamagePerShot);
@@ -126,8 +119,16 @@ void WandComponent::UpdateHomingShots(float deltaTime)
 
 		if (!pTarget || pTarget->IsDestroyed())
 		{
-			pHomingShot->Destroy();
-			continue;
+			GameObject * pNewTarget = FindClosestEnemy();
+			if (pNewTarget)
+			{
+				projectile.enemyHandle = pNewTarget->GetHandle();
+			}
+			else
+			{
+				pHomingShot->Destroy();
+				continue;
+			}
 		}
 
 		// Homing logic
@@ -186,7 +187,7 @@ void WandComponent::PerformHomingShot(GameObject * pEnemy)
 			auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
 			if (pTexture)
 			{
-				pShotSpriteComponent->SetSprite(pTexture, sf::Vector2f(.65f, .65f));
+				pShotSpriteComponent->SetSprite(pTexture, sf::Vector2f(.45f, .45f));
 				pShotObj->SetPosition(GetGameObject().GetPosition());
 			}
 		}

@@ -176,6 +176,7 @@
     <ClCompile Include="ProjectileComponent.cpp" />
     <ClCompile Include="RadiusPickupComponent.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="ThrowingKnife.cpp" />
     <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="SwordSlashComponent.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="ProjectileComponent.h" />
     <ClInclude Include="RadiusPickupComponent.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="ThrowingKnife.h" />
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="SwordSlashComponent.h" />

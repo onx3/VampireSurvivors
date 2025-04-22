@@ -12,6 +12,7 @@
 #include "FollowComponent.h"
 #include "SwordSlashComponent.h"
 #include "LevelManager.h"
+#include "ThrowingKnife.h"
 
 namespace
 {
@@ -158,6 +159,15 @@ void PlayerManager::InitPlayer()
             }
         }
     }
+    // TESTING STUFF
+    /*{
+        auto pThowingKnifeComponent = pPlayer->GetComponent<ThrowingKnifeComponent>().lock();
+        if (!pThowingKnifeComponent)
+        {
+            pThowingKnifeComponent = std::make_shared<ThrowingKnifeComponent>(pPlayer, gameManager);
+            pPlayer->AddComponent(pThowingKnifeComponent);
+        }
+    }*/
 }
 
 //------------------------------------------------------------------------------------------------------------------------

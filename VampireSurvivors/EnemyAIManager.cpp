@@ -54,7 +54,7 @@ void EnemyAIManager::Update(float deltaTime)
             float healthMultiplier = .25f + runTime / 60.f;
             mCurrentHealth = mBaseHealth * std::min(healthMultiplier, 15.f); // Cap at 15x health
 
-            int extraEnemies = int(runTime / 30.f); // +1 every 30s
+            int extraEnemies = int(runTime / 20.f); // +1 every 20s
             mCurrentMaxEnemies = mBaseEnemyCount + extraEnemies;
         }
     }

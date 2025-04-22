@@ -16,7 +16,6 @@ public:
 	~WandComponent();
 
 	virtual void Update(float deltaTime) override;
-	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) override;
 	virtual void DebugImGuiComponentInfo() override;
 	virtual std::string & GetClassName() override;
 

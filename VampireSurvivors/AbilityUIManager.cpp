@@ -6,10 +6,47 @@
 #include "SwordSlashComponent.h"
 #include "WandComponent.h"
 #include "HealthComponent.h"
+#include <random>
+#include "ThrowingKnife.h"
+
+namespace
+{
+	const char * ToString(EAbilityOptions option)
+	{
+		// Must match with EAbilityOptions in AbilityUIManager.h
+		switch (option)
+		{
+			case EAbilityOptions::SwordRange:		return "Sword Range";
+			case EAbilityOptions::Wand:				return "Wand";
+			case EAbilityOptions::Health:			return "Health";
+			case EAbilityOptions::ExtraLife:		return "Extra Life";
+			case EAbilityOptions::ThrowingKnife:	return "ThrowingKnife";
+			default:								return "Unknown";
+		}
+	}
+
+	//------------------------------------------------------------------------------------------------------------------------
+
+	const char * GetAbilityDescription(EAbilityOptions option)
+	{
+		switch (option)
+		{
+			case EAbilityOptions::SwordRange:		return "Increases the range of your sword attack.";
+			case EAbilityOptions::Wand:				return "Adds a magical homing wand shot that scales with damage.";
+			case EAbilityOptions::Health:			return "Restores a portion of your current health.";
+			case EAbilityOptions::ExtraLife:		return "Gives you an extra life.";
+			case EAbilityOptions::ThrowingKnife:	return "Throw a knife where you're aiming that pierces enemies.";
+			default:								return "No description available.";
+		}
+	}
+}
+
+//------------------------------------------------------------------------------------------------------------------------
 
 AbilityUIManager::AbilityUIManager(GameManager * pGameManager)
 	: BaseManager(pGameManager)
 	, mSelectedAbilityOption(EAbilityOptions::Total)
+	, mAbilityUsageCounts()
 {
 
 }
@@ -26,14 +63,42 @@ void AbilityUIManager::DrawAbilitySelectionUI(EGameState & gameState)
 {
 	ImGui::Begin("Choose Your Ability");
 
-	const char * abilityNames[] = { "Sword Range", "Wand", "Health", "Extra Life"};
+	static std::vector<EAbilityOptions> selectedAbilities;
+	static bool initialized = false;
 
-	for (int ii = 0; ii < int(EAbilityOptions::Total); ++ii)
+	if (!initialized)
 	{
-		if (ImGui::Button(abilityNames[ii], ImVec2(200, 40)))
+		static std::random_device rd;
+		static std::mt19937 gen(rd());
+
+		std::vector<EAbilityOptions> allAbilities;
+		for (int i = 0; i < int(EAbilityOptions::Total); ++i)
 		{
-			ApplySelectedAbility(ii);
+			allAbilities.push_back(EAbilityOptions(i));
+		}
+
+		std::shuffle(allAbilities.begin(), allAbilities.end(), gen);
+		selectedAbilities.assign(allAbilities.begin(), allAbilities.begin() + 3);
+
+		initialized = true;
+	}
+
+	for (EAbilityOptions ability : selectedAbilities)
+	{
+		int count = GetAbilityCount(ability);
+		std::string label = std::string(ToString(ability)) + " (" + std::to_string(count) + ")";
+
+		if (ImGui::Button(label.c_str(), ImVec2(200, 40)))
+		{
+			ApplySelectedAbility(ability);
 			gameState = EGameState::Running;
+			initialized = false;
+		}
+
+		// Show tooltip on hover
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("%s", GetAbilityDescription(ability));
 		}
 	}
 
@@ -42,7 +107,7 @@ void AbilityUIManager::DrawAbilitySelectionUI(EGameState & gameState)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void AbilityUIManager::ApplySelectedAbility(int index)
+void AbilityUIManager::ApplySelectedAbility(EAbilityOptions ability)
 {
 	auto & gameManager = GetGameManager();
 	auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
@@ -56,10 +121,17 @@ void AbilityUIManager::ApplySelectedAbility(int index)
 			pPlayer = gameManager.GetGameObject(playerHandle);
 		}
 	}
-
-	switch (index)
+	
+	int index = int(ability);
+	if (index >= 0 && index < int(EAbilityOptions::Total))
 	{
-		case 0:
+		EAbilityOptions ability = EAbilityOptions(index);
+		++mAbilityUsageCounts[ability];
+	}
+
+	switch (ability)
+	{
+		case (EAbilityOptions::SwordRange):
 		{
 			mSelectedAbilityOption = EAbilityOptions::SwordRange;
 			if (pPlayer)
@@ -72,7 +144,7 @@ void AbilityUIManager::ApplySelectedAbility(int index)
 			}
 			break;
 		}
-		case (1):
+		case (EAbilityOptions::Wand):
 		{
 			mSelectedAbilityOption = EAbilityOptions::Wand;
 			if (pPlayer)
@@ -80,7 +152,7 @@ void AbilityUIManager::ApplySelectedAbility(int index)
 				auto pWandComponent = pPlayer->GetComponent<WandComponent>().lock();
 				if (!pWandComponent)
 				{
-					auto pWandComponent = std::make_shared<WandComponent>(pPlayer, gameManager);
+					pWandComponent = std::make_shared<WandComponent>(pPlayer, gameManager);
 					pPlayer->AddComponent(pWandComponent);
 				}
 				else
@@ -90,9 +162,9 @@ void AbilityUIManager::ApplySelectedAbility(int index)
 			}
 			break;
 		}
-		
-		case (2):
+		case (EAbilityOptions::Health):
 		{
+			mSelectedAbilityOption = EAbilityOptions::Health;
 			if (pPlayer)
 			{
 				auto pHealthComponent = pPlayer->GetComponent<HealthComponent>().lock();
@@ -100,12 +172,12 @@ void AbilityUIManager::ApplySelectedAbility(int index)
 				{
 					pHealthComponent->AddHealth(20);
 				}
-				break;
 			}
+			break;
 		}
-
-		case (3):
+		case (EAbilityOptions::ExtraLife):
 		{
+			mSelectedAbilityOption = EAbilityOptions::ExtraLife;
 			if (pPlayer)
 			{
 				auto pHealthComponent = pPlayer->GetComponent<HealthComponent>().lock();
@@ -114,13 +186,44 @@ void AbilityUIManager::ApplySelectedAbility(int index)
 					pHealthComponent->IncreaseMaxLives(1);
 					pHealthComponent->AddLife(1);
 				}
-				break;
 			}
+			break;
+		}
+		case (EAbilityOptions::ThrowingKnife):
+		{
+			mSelectedAbilityOption = EAbilityOptions::ThrowingKnife;
+			if (pPlayer)
+			{
+				auto pThowingKnifeComponent = pPlayer->GetComponent<ThrowingKnifeComponent>().lock();
+				if (!pThowingKnifeComponent)
+				{
+					pThowingKnifeComponent = std::make_shared<ThrowingKnifeComponent>(pPlayer, gameManager);
+					pPlayer->AddComponent(pThowingKnifeComponent);
+				}
+				else
+				{
+					pThowingKnifeComponent->AddDamage(55.f);
+				}
+			}
+			break;
 		}
 		default:
+		{
 			break;
+		}
 	}
+}
 
+//------------------------------------------------------------------------------------------------------------------------
+
+int AbilityUIManager::GetAbilityCount(EAbilityOptions ability) const
+{
+	auto it = mAbilityUsageCounts.find(ability);
+	if (it != mAbilityUsageCounts.end())
+	{
+		return it->second;
+	}
+	return 0;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

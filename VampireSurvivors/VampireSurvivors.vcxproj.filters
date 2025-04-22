@@ -142,6 +142,9 @@
     <ClCompile Include="WandComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="ThrowingKnife.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -256,6 +259,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="WandComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ThrowingKnife.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

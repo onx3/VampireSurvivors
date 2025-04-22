@@ -60,7 +60,6 @@ void HealthComponent::LoseHealth(float amount)
             if (gameObj.GetTeam() == ETeam::Player)
             {
                 color = sf::Color::Red;
-
             }
             pUIManager->AddDamageNumber(GetGameObject().GetPosition(), amount, color);
         }
@@ -167,18 +166,21 @@ void HealthComponent::Update(float deltaTime)
     auto pSpriteComp = pOwner->GetComponent<SpriteComponent>().lock();
     if (pSpriteComp)
     {
+        sf::Color redTint(255, 0, 0, 255);
+        pSpriteComp->GetSprite().setColor(redTint);
+
         if (mTimeSinceLastHit < mHitCooldown)
         {
-            float flicker = std::sin(mTimeSinceLastHit * 10.0f) * 127.5f + 127.5f;
-            sf::Color spriteColor = pSpriteComp->GetSprite().getColor();
-            spriteColor.a = static_cast<sf::Uint8>(flicker);
-            pSpriteComp->GetSprite().setColor(spriteColor);
+            float t = std::sin(mTimeSinceLastHit * 10.0f) * 0.5f + 0.5f; // oscillates between 0 and 1
+            sf::Uint8 r = static_cast<sf::Uint8>(255);
+            sf::Uint8 g = static_cast<sf::Uint8>(255 * (1.0f - t));
+            sf::Uint8 b = static_cast<sf::Uint8>(255 * (1.0f - t));
+            sf::Color flashColor(r, g, b, 255);
+            pSpriteComp->GetSprite().setColor(flashColor);
         }
         else
         {
-            sf::Color spriteColor = pSpriteComp->GetSprite().getColor();
-            spriteColor.a = 255;
-            pSpriteComp->GetSprite().setColor(spriteColor);
+            pSpriteComp->GetSprite().setColor(sf::Color::White);
         }
     }
 }

@@ -23,7 +23,7 @@
 
 EnemyAIManager::EnemyAIManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
-    , mBaseEnemyCount(15)
+    , mBaseEnemyCount(25)
     , mCurrentMaxEnemies(mBaseEnemyCount)
     , mBaseHealth(100.f)
     , mCurrentHealth(mBaseHealth)
@@ -52,7 +52,7 @@ void EnemyAIManager::Update(float deltaTime)
             float runTime = pUIManager->GetRunTime();
 
             float healthMultiplier = .25f + runTime / 60.f;
-            mCurrentHealth = mBaseHealth * std::min(healthMultiplier, 5.f); // Cap at 5x health
+            mCurrentHealth = mBaseHealth * std::min(healthMultiplier, 15.f); // Cap at 15x health
 
             int extraEnemies = int(runTime / 30.f); // +1 every 30s
             mCurrentMaxEnemies = mBaseEnemyCount + extraEnemies;
@@ -116,7 +116,8 @@ void EnemyAIManager::Update(float deltaTime)
 
         if (pLevelManager->IsTileWalkableAI(int(spawnPosition.x / BD::gsPixelCountCellSize) , int(spawnPosition.y / BD::gsPixelCountCellSize)))
         {
-            RespawnEnemy(EEnemy::Ogre, spawnPosition);
+            EEnemy EnemyType = GetEnemyType();
+            RespawnEnemy(EnemyType, spawnPosition);
         }
     }
 }
@@ -253,9 +254,13 @@ std::string EnemyAIManager::GetEnemyFile(EEnemy type)
         {
             return "Art/Enemies/Ogre/ogre_idle_anim_f0.png";
         }
+        case (EEnemy::Chort):
+        {
+            return "Art/Enemies/Chort/chort_run_anim_f0.png";
+        }
 		default:
 		{
-			return "Art/Enemies/Ogre/ogre_idle_anim_f0.png";
+			return "Art/Enemies/Chort/chort_run_anim_f0.png";
 		}
 	}
 }
@@ -331,6 +336,19 @@ void EnemyAIManager::SetUpSprite(SpriteComponent & spriteComp, EEnemy type)
         }
     }
     spriteComp.SetSprite(pTexture, scale);
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+EEnemy EnemyAIManager::GetEnemyType()
+{
+    int enemyCount = int(EEnemy::Total);
+
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(0, enemyCount - 1);
+    int randomIndex = dist(gen);
+    return EEnemy(randomIndex);
 }
 
 //------------------------------------------------------------------------------------------------------------------------

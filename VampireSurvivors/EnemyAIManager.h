@@ -5,10 +5,12 @@
 #include "DropManager.h"
 #include "SpriteComponent.h"
 
-enum class EEnemy
+enum class EEnemy : BD::uint8
 {
 	LizardF,
-	Ogre
+	Ogre,
+	Chort,
+	Total
 };
 
 class EnemyAIManager : public BaseManager
@@ -37,6 +39,8 @@ private:
 	EDropType DetermineDropType() const;
 
 	void SetUpSprite(SpriteComponent & spriteComp, EEnemy type);
+
+	EEnemy GetEnemyType();
 
 	int mBaseEnemyCount;
 	int mCurrentMaxEnemies;

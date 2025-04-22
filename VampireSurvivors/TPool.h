@@ -8,6 +8,7 @@
 
 namespace BD
 {
+    typedef unsigned char uint8;
     typedef unsigned long uint32;
     typedef unsigned long long uint64;
     typedef uint64 Handle;

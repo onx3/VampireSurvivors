@@ -46,13 +46,14 @@ GameManager::GameManager(WindowManager & windowManager)
         InitImGui();
         mRootHandle = CreateNewGameObject(ETeam::Neutral, BD::Handle(0));
 
-        AddManager<PlayerManager>();
-
         //Level Manager
         {
             AddManager<LevelManager>();
-            GetManager<LevelManager>()->LoadLevel("../Levels/Level3.json");
+            GetManager<LevelManager>()->LoadLevel("Levels/Level1.ldtk");
         }
+        AddManager<PlayerManager>();
+
+        
         AddManager<CameraManager>();
         AddManager<EnemyAIManager>();
         AddManager<UIManager>();

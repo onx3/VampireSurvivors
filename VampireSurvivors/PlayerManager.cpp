@@ -11,24 +11,27 @@
 #include "CameraManager.h"
 #include "FollowComponent.h"
 #include "SwordSlashComponent.h"
+#include "LevelManager.h"
 
 namespace
 {
     static float sPlayerHealth = 100.f;
-    //static sf::Vector2f sPlayerSpawnPos(2584.72f, 1413.59f);
-    static sf::Vector2f sPlayerSpawnPos(1681.339f, 2723.596f);
 }
 
 PlayerManager::PlayerManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
     , mPlayerHandles()
-    , mSpawnPos(sPlayerSpawnPos)
     , mLoseLifeSoundBuffer()
     , mDeathSoundBuffer()
     , mLoseLifeSound()
     , mDeathSound()
     , mSoundPlayed(false)
 {
+    auto * pLevelManager = GetGameManager().GetManager<LevelManager>();
+    if (pLevelManager)
+    {
+        mSpawnPos = pLevelManager->GetLevelCenterWorldPos();
+    }
     InitPlayer();
 
     // Sound
@@ -91,7 +94,7 @@ void PlayerManager::InitPlayer()
         auto pHealthComponent = pPlayer->GetComponent<HealthComponent>().lock();
         if (!pHealthComponent)
         {
-            pPlayer->AddComponent(std::make_shared<HealthComponent>(pPlayer, gameManager, sPlayerHealth, sPlayerHealth, 3, 3, .2f));
+            pPlayer->AddComponent(std::make_shared<HealthComponent>(pPlayer, gameManager, sPlayerHealth, sPlayerHealth, 1, 1, .2f));
         }
     }
 

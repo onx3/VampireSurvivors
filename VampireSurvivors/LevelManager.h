@@ -6,6 +6,13 @@
 #include "SFML/Graphics.hpp"
 #include "BaseManager.h"
 
+struct TileLayer
+{
+	std::string name;
+	sf::VertexArray vertices;
+	std::shared_ptr<sf::Texture> texture;
+};
+
 using json = nlohmann::json;
 class LevelManager : public BaseManager
 {
@@ -21,6 +28,8 @@ public:
 	bool IsTileWalkableAI(int x, int y) const;
 	bool IsTileWalkablePlayer(int x, int y) const;
 
+	sf::Vector2f GetLevelCenterWorldPos() const;
+
 private:
 	void ParseTileData(const json & levelData);
 
@@ -30,7 +39,7 @@ private:
 	int mTileWidth;
 	int mTileHeight;
 
-	sf::VertexArray mTileVertices;
+	std::vector<TileLayer> mTileLayers;
 	sf::VertexArray mWaterTileVertices;
 	std::shared_ptr<sf::Texture> mTilesetTexture;
 	std::shared_ptr<sf::Texture> mWaterTexture;

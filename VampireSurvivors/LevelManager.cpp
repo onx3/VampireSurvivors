@@ -5,16 +5,11 @@
 #include <iostream>
 
 LevelManager::LevelManager(GameManager * pGameManager)
-	: BaseManager(pGameManager)
-	, mTileData()
-	, mWidth(0)
-	, mHeight(0)
-	, mTileWidth(0)
-	, mTileHeight(0)
-    , mTileVertices()
-    , mWaterTileVertices()
-    , mTilesetTexture()
-    , mWaterTexture()
+    : BaseManager(pGameManager)
+    , mWidth(0)
+    , mHeight(0)
+    , mTileWidth(0)
+    , mTileHeight(0)
 {
 }
 
@@ -29,37 +24,29 @@ LevelManager::~LevelManager()
 
 bool LevelManager::LoadLevel(const std::string & filePath)
 {
-	std::ifstream file(filePath);
-	if (!file.is_open())
-	{
-		printf("Failed to open file %s, is already open.", filePath.c_str());
-		return false;
-	}
+    std::ifstream file(filePath);
+    if (!file.is_open())
+    {
+        std::cerr << "Failed to open file: " << filePath << std::endl;
+        return false;
+    }
 
-	json levelData;
-	file >> levelData;
-
-	mWidth = levelData["width"];
-	mHeight = levelData["height"];
-	mTileWidth = levelData["tilewidth"];
-	mTileHeight = levelData["tileheight"];
-
-	ParseTileData(levelData);
-	return true;
+    json levelData;
+    file >> levelData;
+    ParseTileData(levelData);
+    return true;
 }
 
 //------------------------------------------------------------------------------------------------------------------------
 
 void LevelManager::Render(sf::RenderWindow & window)
 {
-    if (mTilesetTexture)
+    for (const auto & layer : mTileLayers)
     {
-        window.draw(mTileVertices, mTilesetTexture.get());
-
-    }
-    if (mWaterTexture)
-    {
-        window.draw(mWaterTileVertices, mWaterTexture.get());
+        if (layer.texture)
+        {
+            window.draw(layer.vertices, layer.texture.get());
+        }
     }
 }
 
@@ -68,10 +55,10 @@ void LevelManager::Render(sf::RenderWindow & window)
 bool LevelManager::IsTileWalkableAI(int x, int y) const
 {
     if (y < 0 || y >= mHeight || x < 0 || x >= mWidth)
+    {
         return false;
-
-    int tile = mTileData[y][x];
-    return (tile == 131 || tile == 1097);
+    }
+    return mTileData[y][x] == 0;
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -79,138 +66,134 @@ bool LevelManager::IsTileWalkableAI(int x, int y) const
 bool LevelManager::IsTileWalkablePlayer(int x, int y) const
 {
     if (y < 0 || y >= mHeight || x < 0 || x >= mWidth)
+    {
         return false;
+    }
+    return mTileData[y][x] == 0;
+}
 
-    int tile = mTileData[y][x];
-    return (tile == 131 || tile == 1097);
+//------------------------------------------------------------------------------------------------------------------------
+
+sf::Vector2f LevelManager::GetLevelCenterWorldPos() const
+{
+    return sf::Vector2f(
+        (mWidth * mTileWidth) * 0.5f,
+        (mHeight * mTileHeight) * 0.5f
+    );
 }
 
 //------------------------------------------------------------------------------------------------------------------------
 
 void LevelManager::ClearLevel()
 {
+    mTileLayers.clear();
     mTileData.clear();
-
-    mTileVertices.clear();
-    mTileVertices.resize(0);
-
-    mWaterTileVertices.clear();
-    mWaterTileVertices.resize(0);
 }
 
 //------------------------------------------------------------------------------------------------------------------------
 
 void LevelManager::ParseTileData(const json & levelData)
 {
+    mTileLayers.clear();
     mTileData.clear();
-    mTileVertices.clear();
-    mWaterTileVertices.clear();
 
-    ResourceManager * resourceManager = GetGameManager().GetManager<ResourceManager>();
-
-    auto tilesetResourceId = ResourceId("Art/TileSet.png");
-    auto waterResourceId = ResourceId("Art/Water.png");
-
-    mTilesetTexture = resourceManager->GetTexture(tilesetResourceId);
-    mWaterTexture = resourceManager->GetTexture(waterResourceId);
-
-    if (!mTilesetTexture || !mWaterTexture)
+    if (!levelData.contains("levels") || !levelData["levels"].is_array() || levelData["levels"].empty())
     {
-        std::cerr << "Failed to load tileset or water texture." << std::endl;
+        std::cerr << "No levels found in the LDtk file." << std::endl;
         return;
     }
 
-    if (!levelData.contains("layers") || !levelData["layers"].is_array())
+    const auto & level = levelData["levels"][0]; // Single level support for now
+
+    if (!level.contains("pxWid") || !level.contains("pxHei"))
     {
-        std::cerr << "No layers found in level file." << std::endl;
+        std::cerr << "Missing expected keys in level data." << std::endl;
         return;
     }
 
-    const uint32_t FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
-    const uint32_t FLIPPED_VERTICALLY_FLAG = 0x40000000;
-    const uint32_t FLIPPED_DIAGONALLY_FLAG = 0x20000000;
-
-    for (const auto & layer : levelData["layers"])
+    if (!level.contains("layerInstances") || !level["layerInstances"].is_array() || level["layerInstances"].empty())
     {
-        if (layer["type"] != "tilelayer" || !layer.contains("data"))
-            continue;
+        std::cerr << "No layerInstances found in level." << std::endl;
+        return;
+    }
 
-        const auto & data = layer["data"];
-        if (!data.is_array())
-            continue;
+    const auto & layerInstances = level["layerInstances"];
+    const auto & firstLayer = layerInstances[0];
 
-        mTileData.resize(mHeight, std::vector<int>(mWidth));
-        mTileVertices.setPrimitiveType(sf::Quads);
-        mWaterTileVertices.setPrimitiveType(sf::Quads);
-        mTileVertices.resize(mWidth * mHeight * 4);
-        mWaterTileVertices.resize(mWidth * mHeight * 4);
+    if (!firstLayer.contains("__gridSize"))
+    {
+        std::cerr << "Missing __gridSize in first layer." << std::endl;
+        return;
+    }
 
-        for (int y = 0; y < mHeight; ++y)
+    mTileWidth = firstLayer["__gridSize"].get<int>();
+    mTileHeight = mTileWidth;
+    mWidth = level["pxWid"].get<int>() / mTileWidth;
+    mHeight = level["pxHei"].get<int>() / mTileHeight;
+
+    mTileData.resize(mHeight, std::vector<int>(mWidth, 0));
+
+    for (int i = static_cast<int>(layerInstances.size()) - 1; i >= 0; --i)
+    {
+        const auto & layer = layerInstances[i];
+        if (!layer.contains("gridTiles")) continue;
+
+        TileLayer tileLayer;
+        tileLayer.name = layer["__identifier"];
+
+        if (!layer.contains("__tilesetRelPath"))
         {
-            for (int x = 0; x < mWidth; ++x)
-            {
-                int tileIndex = y * mWidth + x;
-                uint32_t tileID = data[tileIndex].get<uint32_t>();
-
-                int actualTileID = tileID & ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
-                mTileData[y][x] = actualTileID;
-
-                if (actualTileID == 0)
-                    continue;
-
-                bool flipH = (tileID & FLIPPED_HORIZONTALLY_FLAG) != 0;
-                bool flipV = (tileID & FLIPPED_VERTICALLY_FLAG) != 0;
-                bool flipD = (tileID & FLIPPED_DIAGONALLY_FLAG) != 0;
-
-                std::shared_ptr<sf::Texture> texture = mTilesetTexture;
-                sf::Vertex * quad = &mTileVertices[tileIndex * 4];
-                int columns = texture->getSize().x / mTileWidth;
-
-                int column = (actualTileID - 1) % columns;
-                int row = (actualTileID - 1) / columns;
-
-                // Optional overrides
-                switch (actualTileID)
-                {
-                    case 299: // Cracked ground
-                        column = 1; row = 4; break;
-
-                    case 203:
-                    case 35: // Wall
-                        column = 2; row = 1; break;
-
-                    case 1028: // Water
-                        texture = mWaterTexture;
-                        columns = texture->getSize().x / mTileWidth;
-                        column = 2; row = 1;
-                        quad = &mWaterTileVertices[tileIndex * 4];
-                        break;
-
-                    case 1097: // Ice bridge
-                        texture = mWaterTexture;
-                        columns = texture->getSize().x / mTileWidth;
-                        column = 0; row = 6;
-                        quad = &mWaterTileVertices[tileIndex * 4];
-                        break;
-                }
-
-                float xPos = static_cast<float>(x * mTileWidth);
-                float yPos = static_cast<float>(y * mTileHeight);
-
-                quad[0].position = { xPos, yPos };
-                quad[1].position = { xPos + mTileWidth, yPos };
-                quad[2].position = { xPos + mTileWidth, yPos + mTileHeight };
-                quad[3].position = { xPos, yPos + mTileHeight };
-
-                sf::Vector2f texTopLeft = { static_cast<float>(column * mTileWidth), static_cast<float>(row * mTileHeight) };
-                sf::Vector2f texBottomRight = texTopLeft + sf::Vector2f{ static_cast<float>(mTileWidth), static_cast<float>(mTileHeight) };
-
-                quad[0].texCoords = texTopLeft;
-                quad[1].texCoords = { texBottomRight.x, texTopLeft.y };
-                quad[2].texCoords = texBottomRight;
-                quad[3].texCoords = { texTopLeft.x, texBottomRight.y };
-            }
+            std::cerr << "Layer missing tileset path: " << tileLayer.name << std::endl;
+            continue;
         }
+
+        std::string tilesetPath = layer["__tilesetRelPath"];
+        auto resId = ResourceId(tilesetPath);
+        tileLayer.texture = GetGameManager().GetManager<ResourceManager>()->GetTexture(resId);
+        if (!tileLayer.texture)
+        {
+            std::cerr << "Failed to load texture for: " << tilesetPath << std::endl;
+            continue;
+        }
+
+        int tileWidth = mTileWidth;
+        int tileHeight = mTileHeight;
+        const auto & tiles = layer["gridTiles"];
+        tileLayer.vertices.setPrimitiveType(sf::Quads);
+        tileLayer.vertices.resize(tiles.size() * 4);
+
+        for (size_t t = 0; t < tiles.size(); ++t)
+        {
+            int px = tiles[t]["px"][0];
+            int py = tiles[t]["px"][1];
+            int srcX = tiles[t]["src"][0];
+            int srcY = tiles[t]["src"][1];
+
+            int cellX = px / tileWidth;
+            int cellY = py / tileHeight;
+
+            if (tileLayer.name == "Collision")
+            {
+                if (cellY >= 0 && cellY < mHeight && cellX >= 0 && cellX < mWidth)
+                {
+                    mTileData[cellY][cellX] = 1; // Mark unwalkable
+                }
+            }
+
+            sf::Vertex * quad = &tileLayer.vertices[t * 4];
+
+            quad[0].position = sf::Vector2f(float(px), float(py));
+            quad[1].position = sf::Vector2f(float(px + tileWidth), float(py));
+            quad[2].position = sf::Vector2f(float(px + tileWidth), float(py + tileHeight));
+            quad[3].position = sf::Vector2f(float(px), float(py + tileHeight));
+
+            quad[0].texCoords = sf::Vector2f(float(srcX), float(srcY));
+            quad[1].texCoords = sf::Vector2f(float(srcX + tileWidth), float(srcY));
+            quad[2].texCoords = sf::Vector2f(float(srcX + tileWidth), float(srcY + tileHeight));
+            quad[3].texCoords = sf::Vector2f(float(srcX), float(srcY + tileHeight));
+        }
+
+        mTileLayers.push_back(std::move(tileLayer));
     }
 }
 

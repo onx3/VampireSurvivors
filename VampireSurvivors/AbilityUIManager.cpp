@@ -9,7 +9,7 @@
 
 AbilityUIManager::AbilityUIManager(GameManager * pGameManager)
 	: BaseManager(pGameManager)
-	, mSelectedAbilityOption(EAbilityOptions::None)
+	, mSelectedAbilityOption(EAbilityOptions::Total)
 {
 
 }
@@ -26,13 +26,13 @@ void AbilityUIManager::DrawAbilitySelectionUI(EGameState & gameState)
 {
 	ImGui::Begin("Choose Your Ability");
 
-	const char * abilityNames[] = { "Sword Range", "Wand", "Health" };
+	const char * abilityNames[] = { "Sword Range", "Wand", "Health", "Extra Life"};
 
-	for (int i = 0; i < 3; ++i)
+	for (int ii = 0; ii < int(EAbilityOptions::Total); ++ii)
 	{
-		if (ImGui::Button(abilityNames[i], ImVec2(200, 40)))
+		if (ImGui::Button(abilityNames[ii], ImVec2(200, 40)))
 		{
-			ApplySelectedAbility(i);
+			ApplySelectedAbility(ii);
 			gameState = EGameState::Running;
 		}
 	}
@@ -99,6 +99,20 @@ void AbilityUIManager::ApplySelectedAbility(int index)
 				if (pHealthComponent)
 				{
 					pHealthComponent->AddHealth(20);
+				}
+				break;
+			}
+		}
+
+		case (3):
+		{
+			if (pPlayer)
+			{
+				auto pHealthComponent = pPlayer->GetComponent<HealthComponent>().lock();
+				if (pHealthComponent)
+				{
+					pHealthComponent->IncreaseMaxLives(1);
+					pHealthComponent->AddLife(1);
 				}
 				break;
 			}

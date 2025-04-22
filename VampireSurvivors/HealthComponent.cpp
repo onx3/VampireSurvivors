@@ -83,6 +83,13 @@ void HealthComponent::AddLife(int amount)
 
 //------------------------------------------------------------------------------------------------------------------------
 
+void HealthComponent::IncreaseMaxLives(int amount)
+{
+    mMaxLives += amount;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
 float HealthComponent::GetMaxHealth() const
 {
     return mMaxHealth;

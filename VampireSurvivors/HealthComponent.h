@@ -13,6 +13,7 @@ public:
 
 	int GetLives() const;
 	void AddLife(int amount);
+	void IncreaseMaxLives(int amount);
 	void LoseLife();
 
 	float GetMaxHealth() const;

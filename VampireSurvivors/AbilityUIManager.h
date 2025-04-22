@@ -6,7 +6,8 @@ enum class EAbilityOptions
 	SwordRange,
 	Wand,
 	Health,
-	None
+	ExtraLife,
+	Total
 };
 
 class AbilityUIManager : public BaseManager

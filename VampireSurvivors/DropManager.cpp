@@ -10,6 +10,7 @@
 
 DropManager::DropManager(GameManager * pGameManager)
 	: BaseManager(pGameManager)
+    , mRadius(75.f)
     , mDropHandles()
 {
 
@@ -20,24 +21,6 @@ DropManager::DropManager(GameManager * pGameManager)
 void DropManager::Update(float deltaTime)
 {
     CleanUpDrops();
-
-    /*GameManager & gameManager = GetGameManager();
-    for (auto dropHandle : mDropHandles)
-    {
-        auto * pDrop = gameManager.GetGameObject(dropHandle);
-        if (!pDrop->IsActive())
-        {
-            if (!pDrop->GetComponent<ExplosionComponent>().lock())
-            {
-                auto & window = gameManager.GetWindow();
-                sf::Vector2u windowSize = window.getSize();
-                sf::Vector2f centerPosition(float(windowSize.x) / 2.0f, float(windowSize.y) / 2.0f);
-                auto explosionComp = std::make_shared<ExplosionComponent>(
-                    pDrop, gameManager, "Art/explosion.png", 32, 32, 7, 0.1f, sf::Vector2f(50.f, 50.f), centerPosition);
-                pDrop->AddComponent(explosionComp);
-            }
-        }
-    }*/
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -184,12 +167,19 @@ void DropManager::DropCoins(const sf::Vector2f & position)
                 GameObject * pPlayer = gameManager.GetGameObject(playerHandle);
                 if (pPlayer)
                 {
-                    auto pRadiusPickupComponent = std::make_shared<RadiusPickupComponent>(pCoinDrop, gameManager, playerHandle);
+                    auto pRadiusPickupComponent = std::make_shared<RadiusPickupComponent>(pCoinDrop, gameManager, playerHandle, mRadius);
                     pCoinDrop->AddComponent(pRadiusPickupComponent);
                 }
             }
         }
     }
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void DropManager::MultRadius(float mult)
+{
+    mRadius *= mult;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

@@ -5,6 +5,7 @@
 #include "CollisionComponent.h"
 #include "DamageComponent.h"
 #include "imgui.h"
+#include "PlayerStatsComponent.h"
 
 SwordSlashComponent::SwordSlashComponent(GameObject * owner, GameManager & gameManager, float arcAngleDeg, float radius, float duration)
 	: GameComponent(owner, gameManager)
@@ -156,6 +157,7 @@ void SwordSlashComponent::SetRangeMultiplier(float mult)
 void SwordSlashComponent::PerformSlash()
 {
     RebuildWedgeShape();
+    GameObject & gameObj = GetGameObject();
 
     if (mTimeSinceLastSlash < mCooldown || mIsSlashing)
     {
@@ -204,10 +206,16 @@ void SwordSlashComponent::PerformSlash()
     }
     // DamageComponent
     {
+        auto pPlayerStatsComp = gameObj.GetComponent<PlayerStatsComponent>().lock();
+        float overalDamageMult = 0.0f;
+        if (pPlayerStatsComp)
+        {
+            overalDamageMult = pPlayerStatsComp->GetDamageMult();
+        }
         auto pSlashDamageComponent = pSlashObj->GetComponent<DamageComponent>().lock();
         if (!pSlashDamageComponent)
         {
-            auto pSwordSlashComponent = std::make_shared<DamageComponent>(pSlashObj, gameManager, mDamagePerSlash);
+            auto pSwordSlashComponent = std::make_shared<DamageComponent>(pSlashObj, gameManager, mDamagePerSlash * overalDamageMult);
             pSlashObj->AddComponent(pSwordSlashComponent);
         }
     }

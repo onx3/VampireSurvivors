@@ -9,6 +9,8 @@ enum class EAbilityOptions
 	Health,
 	ExtraLife,
 	ThrowingKnife,
+	ExtraPickupRange,
+	IncreaseDamageMult,
 	Total
 };
 

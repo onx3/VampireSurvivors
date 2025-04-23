@@ -173,6 +173,7 @@
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
+    <ClCompile Include="PlayerStatsComponent.cpp" />
     <ClCompile Include="ProjectileComponent.cpp" />
     <ClCompile Include="RadiusPickupComponent.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="PlayerManager.h" />
+    <ClInclude Include="PlayerStatsComponent.h" />
     <ClInclude Include="ProjectileComponent.h" />
     <ClInclude Include="RadiusPickupComponent.h" />
     <ClInclude Include="ResourceManager.h" />

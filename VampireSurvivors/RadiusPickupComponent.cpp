@@ -1,10 +1,10 @@
 #include "AstroidsPrivate.h"
 #include "RadiusPickupComponent.h"
 
-RadiusPickupComponent::RadiusPickupComponent(GameObject * pOwner, GameManager & gameManager, const BD::Handle & followHandle)
+RadiusPickupComponent::RadiusPickupComponent(GameObject * pOwner, GameManager & gameManager, const BD::Handle & followHandle, float radius)
 	: GameComponent(pOwner, gameManager)
 	, mFollowHandle(followHandle)
-	, mRadius(75.f)
+	, mRadius(radius)
 	, mMoveSpeed(200.f)
 	, mStartedToTrack(false)
 	, mName("RadiusPickupComponent")

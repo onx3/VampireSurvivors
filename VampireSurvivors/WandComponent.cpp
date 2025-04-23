@@ -3,6 +3,7 @@
 #include "CollisionComponent.h"
 #include "DamageComponent.h"
 #include "imgui.h"
+#include "PlayerStatsComponent.h"
 
 WandComponent::WandComponent(GameObject * pOwner, GameManager & gameManager)
 	: GameComponent(pOwner, gameManager)
@@ -169,6 +170,7 @@ void WandComponent::PerformHomingShot(GameObject * pEnemy)
 	mElapsedTime = 0.f;
 
 	auto & gameManager = GetGameManager();
+	auto & gameObj = GetGameObject();
 	auto shotHandle = gameManager.CreateNewGameObject(ETeam::FriendlyFleeting, GetGameObject().GetHandle());
 	auto * pShotObj = gameManager.GetGameObject(shotHandle);
 	if (!pShotObj)
@@ -213,10 +215,16 @@ void WandComponent::PerformHomingShot(GameObject * pEnemy)
 
 	// DamageComponent
 	{
+		auto pPlayerStatsComp = gameObj.GetComponent<PlayerStatsComponent>().lock();
+		float overalDamageMult = 0.0f;
+		if (pPlayerStatsComp)
+		{
+			overalDamageMult = pPlayerStatsComp->GetDamageMult();
+		}
 		auto pShotDamageComponent = pShotObj->GetComponent<DamageComponent>().lock();
 		if (!pShotDamageComponent)
 		{
-			auto pShotDamageComponent = std::make_shared<DamageComponent>(pShotObj, gameManager, mDamagePerShot * mDamageMult);
+			auto pShotDamageComponent = std::make_shared<DamageComponent>(pShotObj, gameManager, (mDamagePerShot * mDamageMult * overalDamageMult));
 			pShotObj->AddComponent(pShotDamageComponent);
 		}
 	}

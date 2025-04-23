@@ -13,6 +13,7 @@
 #include "SwordSlashComponent.h"
 #include "LevelManager.h"
 #include "ThrowingKnife.h"
+#include "PlayerStatsComponent.h"
 
 namespace
 {
@@ -123,6 +124,16 @@ void PlayerManager::InitPlayer()
         {
             auto pSwordSlashComponent = std::make_shared<SwordSlashComponent>(pPlayer, gameManager, 60.f, 100.f, .1f);
             pPlayer->AddComponent(pSwordSlashComponent);
+        }
+    }
+
+    // Player Stats Component
+    {
+        auto pPlayerStatsCompoennt = pPlayer->GetComponent<PlayerStatsComponent>().lock();
+        if (!pPlayerStatsCompoennt)
+        {
+            pPlayerStatsCompoennt = std::make_shared<PlayerStatsComponent>(pPlayer, gameManager);
+            pPlayer->AddComponent(pPlayerStatsCompoennt);
         }
     }
 

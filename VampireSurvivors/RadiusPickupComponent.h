@@ -3,7 +3,7 @@
 class RadiusPickupComponent : public GameComponent
 {
 public:
-	RadiusPickupComponent(GameObject * pOwner, GameManager & gameManager, const BD::Handle & followHandle);
+	RadiusPickupComponent(GameObject * pOwner, GameManager & gameManager, const BD::Handle & followHandle, float radius);
 	~RadiusPickupComponent();
 
 	virtual void Update(float deltaTime) override;

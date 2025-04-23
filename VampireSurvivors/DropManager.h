@@ -23,7 +23,10 @@ public:
 
 	void DropCoins(const sf::Vector2f & position);
 
+	void MultRadius(float radius);
+
 private:
+	float mRadius;
 	std::vector<BD::Handle> mDropHandles;
 };
 

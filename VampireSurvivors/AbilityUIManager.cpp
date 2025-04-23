@@ -8,6 +8,7 @@
 #include "HealthComponent.h"
 #include <random>
 #include "ThrowingKnife.h"
+#include "PlayerStatsComponent.h"
 
 namespace
 {
@@ -16,12 +17,14 @@ namespace
 		// Must match with EAbilityOptions in AbilityUIManager.h
 		switch (option)
 		{
-			case EAbilityOptions::SwordRange:		return "Sword Range";
-			case EAbilityOptions::Wand:				return "Wand";
-			case EAbilityOptions::Health:			return "Health";
-			case EAbilityOptions::ExtraLife:		return "Extra Life";
-			case EAbilityOptions::ThrowingKnife:	return "ThrowingKnife";
-			default:								return "Unknown";
+			case EAbilityOptions::SwordRange:			return "Sword Range";
+			case EAbilityOptions::Wand:					return "Wand";
+			case EAbilityOptions::Health:				return "Health";
+			case EAbilityOptions::ExtraLife:			return "Extra Life";
+			case EAbilityOptions::ThrowingKnife:		return "ThrowingKnife";
+			case EAbilityOptions::ExtraPickupRange:		return "Extra Pickup Range";
+			case EAbilityOptions::IncreaseDamageMult:	return "Increase Damage";
+			default:									return "Unknown";
 		}
 	}
 
@@ -29,14 +32,17 @@ namespace
 
 	const char * GetAbilityDescription(EAbilityOptions option)
 	{
+		// Must match with EAbilityOptions in AbilityUIManager.h
 		switch (option)
 		{
-			case EAbilityOptions::SwordRange:		return "Increases the range of your sword attack.";
-			case EAbilityOptions::Wand:				return "Adds a magical homing wand shot that scales with damage.";
-			case EAbilityOptions::Health:			return "Restores a portion of your current health.";
-			case EAbilityOptions::ExtraLife:		return "Gives you an extra life.";
-			case EAbilityOptions::ThrowingKnife:	return "Throw a knife where you're aiming that pierces enemies.";
-			default:								return "No description available.";
+			case EAbilityOptions::SwordRange:			return "Increases the range of your sword attack.";
+			case EAbilityOptions::Wand:					return "Adds a magical homing wand shot that scales with damage.";
+			case EAbilityOptions::Health:				return "Restores a portion of your current health.";
+			case EAbilityOptions::ExtraLife:			return "Gives you an extra life.";
+			case EAbilityOptions::ThrowingKnife:		return "Throw a knife where you're aiming that pierces enemies.";
+			case EAbilityOptions::ExtraPickupRange:		return "Increase range that you attrack coins by 10%.";
+			case EAbilityOptions::IncreaseDamageMult:	return "Increase damage 10%.";
+			default:									return "No description available.";
 		}
 	}
 }
@@ -205,6 +211,31 @@ void AbilityUIManager::ApplySelectedAbility(EAbilityOptions ability)
 					pThowingKnifeComponent->AddDamage(55.f);
 				}
 			}
+			break;
+		}
+		case (EAbilityOptions::ExtraPickupRange):
+		{
+			mSelectedAbilityOption = EAbilityOptions::ExtraPickupRange;
+			auto * pDropManager = GetGameManager().GetManager<DropManager>();
+			if (pDropManager)
+			{
+				pDropManager->MultRadius(1.1f);
+			}
+
+			break;
+		}
+		case (EAbilityOptions::IncreaseDamageMult):
+		{
+			mSelectedAbilityOption = EAbilityOptions::IncreaseDamageMult;
+			if (pPlayer)
+			{
+				auto pPlayerStatsComp = pPlayer->GetComponent<PlayerStatsComponent>().lock();
+				if (pPlayerStatsComp)
+				{
+					pPlayerStatsComp->AddAttackMult(.1f);
+				}
+			}
+
 			break;
 		}
 		default:

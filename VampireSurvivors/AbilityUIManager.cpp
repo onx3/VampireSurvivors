@@ -9,6 +9,7 @@
 #include <random>
 #include "ThrowingKnife.h"
 #include "PlayerStatsComponent.h"
+#include "BoomerangComponent.h"
 
 namespace
 {
@@ -24,6 +25,7 @@ namespace
 			case EAbilityOptions::ThrowingKnife:		return "ThrowingKnife";
 			case EAbilityOptions::ExtraPickupRange:		return "Extra Pickup Range";
 			case EAbilityOptions::IncreaseDamageMult:	return "Increase Damage";
+			case EAbilityOptions::BoomerangAxe:			return "Boomerang Axe";
 			default:									return "Unknown";
 		}
 	}
@@ -42,6 +44,7 @@ namespace
 			case EAbilityOptions::ThrowingKnife:		return "Throw a knife where you're aiming that pierces enemies.";
 			case EAbilityOptions::ExtraPickupRange:		return "Increase range that you attrack coins by 10%.";
 			case EAbilityOptions::IncreaseDamageMult:	return "Increase damage 10%.";
+			case EAbilityOptions::BoomerangAxe:			return "Returns to origin after set distance.";
 			default:									return "No description available.";
 		}
 	}
@@ -233,6 +236,25 @@ void AbilityUIManager::ApplySelectedAbility(EAbilityOptions ability)
 				if (pPlayerStatsComp)
 				{
 					pPlayerStatsComp->AddAttackMult(.1f);
+				}
+			}
+
+			break;
+		}
+		case (EAbilityOptions::BoomerangAxe):
+		{
+			mSelectedAbilityOption = EAbilityOptions::BoomerangAxe;
+			if (pPlayer)
+			{
+				auto pBoomerang = pPlayer->GetComponent<BoomerangComponent>().lock();
+				if (!pBoomerang)
+				{
+					pBoomerang = std::make_shared<BoomerangComponent>(pPlayer, gameManager);
+					pPlayer->AddComponent(pBoomerang);
+				}
+				else
+				{
+					pBoomerang->AddDamage(50.f);
 				}
 			}
 

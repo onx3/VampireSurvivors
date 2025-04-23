@@ -18,6 +18,7 @@ public:
 
     const std::vector<BD::Handle> & GetPlayers() const;
 
+    GameObject * FindClosestEnemy();
 private:
     std::vector<BD::Handle> mPlayerHandles;
 

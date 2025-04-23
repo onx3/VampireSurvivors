@@ -148,6 +148,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="BaseManager.cpp" />
+    <ClCompile Include="BoomerangComponent.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionListener.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="AstroidsPrivate.h" />
     <ClInclude Include="BaseManager.h" />
     <ClInclude Include="BDConfig.h" />
+    <ClInclude Include="BoomerangComponent.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionListener.h" />

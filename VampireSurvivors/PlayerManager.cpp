@@ -14,6 +14,7 @@
 #include "LevelManager.h"
 #include "ThrowingKnife.h"
 #include "PlayerStatsComponent.h"
+#include "BoomerangComponent.h"
 
 namespace
 {
@@ -172,10 +173,10 @@ void PlayerManager::InitPlayer()
     }
     // TESTING STUFF
     /*{
-        auto pThowingKnifeComponent = pPlayer->GetComponent<ThrowingKnifeComponent>().lock();
+        auto pThowingKnifeComponent = pPlayer->GetComponent<BoomerangComponent>().lock();
         if (!pThowingKnifeComponent)
         {
-            pThowingKnifeComponent = std::make_shared<ThrowingKnifeComponent>(pPlayer, gameManager);
+            pThowingKnifeComponent = std::make_shared<BoomerangComponent>(pPlayer, gameManager);
             pPlayer->AddComponent(pThowingKnifeComponent);
         }
     }*/
@@ -268,6 +269,45 @@ void PlayerManager::OnPlayerDeath(GameObject * pPlayer)
 const std::vector<BD::Handle> & PlayerManager::GetPlayers() const
 {
     return mPlayerHandles;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+GameObject * PlayerManager::FindClosestEnemy()
+{
+    if (mPlayerHandles.empty())
+    {
+        return nullptr;
+    }
+    auto * pPlayer = GetGameManager().GetGameObject(mPlayerHandles[0]);
+
+    const auto & myPos = pPlayer->GetPosition();
+    float closestDistSq = std::numeric_limits<float>::max();
+    GameObject * pEnemy = nullptr;
+
+    auto & gameManager = GetGameManager();
+    auto * pEnemyManager = gameManager.GetManager<EnemyAIManager>();
+
+    if (pEnemyManager)
+    {
+        auto & enemies = pEnemyManager->GetEnemies();
+        for (auto enemy : enemies)
+        {
+            auto * pObj = gameManager.GetGameObject(enemy);
+            if (!pObj || pObj->IsDestroyed())
+            {
+                continue;
+            }
+            sf::Vector2f toEnemy = pObj->GetPosition() - myPos;
+            float distSq = BD::Dot(toEnemy, toEnemy); // Gives length squared
+            if (distSq < closestDistSq)
+            {
+                closestDistSq = distSq;
+                pEnemy = pObj;
+            }
+        }
+    }
+    return pEnemy;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

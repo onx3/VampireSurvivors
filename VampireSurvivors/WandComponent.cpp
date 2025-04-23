@@ -4,11 +4,11 @@
 #include "DamageComponent.h"
 #include "imgui.h"
 #include "PlayerStatsComponent.h"
+#include "PlayerManager.h"
 
 WandComponent::WandComponent(GameObject * pOwner, GameManager & gameManager)
 	: GameComponent(pOwner, gameManager)
 	, mHomingShotObjs()
-	, mElapsedTime(0.f)
 	, mTimeSinceLastShot(0.f)
 	, mCooldown(1.5f)
 	, mDamagePerShot(100.f)
@@ -35,14 +35,17 @@ void WandComponent::Update(float deltaTime)
 
 	if (mTimeSinceLastShot >= mCooldown)
 	{
-		pClosestEnemy = FindClosestEnemy();
+		auto * pPlayerManager = GetGameManager().GetManager<PlayerManager>();
+		if (!pPlayerManager)
+		{
+			return;
+		}
+		pClosestEnemy = pPlayerManager->FindClosestEnemy();
 		if (pClosestEnemy)
 		{
-			PerformHomingShot(pClosestEnemy);
+			PerformHomingShot(*pClosestEnemy);
 		}
 	}
-
-	mElapsedTime += deltaTime;
 	UpdateHomingShots(deltaTime);
 }
 
@@ -70,40 +73,6 @@ void WandComponent::AddDamage(float damage)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-GameObject * WandComponent::FindClosestEnemy()
-{
-	const auto & myPos = GetGameObject().GetPosition();
-	float closestDistSq = std::numeric_limits<float>::max();
-	GameObject * pEnemy = nullptr;
-
-	auto & gameManager = GetGameManager();
-	auto * pEnemyManager = gameManager.GetManager<EnemyAIManager>();
-
-	if (pEnemyManager)
-	{
-		auto & enemies = pEnemyManager->GetEnemies();
-		for (auto enemy : enemies)
-		{
-			auto * pObj = gameManager.GetGameObject(enemy);
-			if (!pObj || pObj->IsDestroyed())
-			{
-				continue;
-			}
-			sf::Vector2f toEnemy = pObj->GetPosition() - myPos;
-			float distSq = BD::Dot(toEnemy, toEnemy); // Gives length squared
-			if (distSq < closestDistSq)
-			{
-				closestDistSq = distSq;
-				pEnemy = pObj;
-			}
-		}
-	}
-
-	return pEnemy;
-}
-
-//------------------------------------------------------------------------------------------------------------------------
-
 void WandComponent::UpdateHomingShots(float deltaTime)
 {
 	auto & gameManager = GetGameManager();
@@ -120,7 +89,12 @@ void WandComponent::UpdateHomingShots(float deltaTime)
 
 		if (!pTarget || pTarget->IsDestroyed())
 		{
-			GameObject * pNewTarget = FindClosestEnemy();
+			auto * pPlayerManager = GetGameManager().GetManager<PlayerManager>();
+			if (!pPlayerManager)
+			{
+				return;
+			}
+			GameObject * pNewTarget = pPlayerManager->FindClosestEnemy();
 			if (pNewTarget)
 			{
 				projectile.enemyHandle = pNewTarget->GetHandle();
@@ -155,19 +129,14 @@ void WandComponent::UpdateHomingShots(float deltaTime)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void WandComponent::PerformHomingShot(GameObject * pEnemy)
+void WandComponent::PerformHomingShot(GameObject & enemy)
 {
-	if (!pEnemy)
-	{
-		return;
-	}
 	if (mTimeSinceLastShot < mCooldown)
 	{
 		return;
 	}
 
 	mTimeSinceLastShot = 0.f;
-	mElapsedTime = 0.f;
 
 	auto & gameManager = GetGameManager();
 	auto & gameObj = GetGameObject();
@@ -229,7 +198,7 @@ void WandComponent::PerformHomingShot(GameObject * pEnemy)
 		}
 	}
 
-	HomingShot shot = { shotHandle, pEnemy->GetHandle(), mDamagePerShot * mDamageMult, mSpeed };
+	HomingShot shot = { shotHandle, enemy.GetHandle(), mSpeed };
 	mHomingShotObjs.push_back(shot);
 }
 

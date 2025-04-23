@@ -148,6 +148,9 @@
     <ClCompile Include="PlayerStatsComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="BoomerangComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -267,6 +270,11 @@
     <ClInclude Include="ThrowingKnife.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerStatsComponent.h" />
+    <ClInclude Include="BoomerangComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStatsComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

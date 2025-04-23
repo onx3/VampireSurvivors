@@ -5,7 +5,6 @@ struct HomingShot
 {
 	BD::Handle selfHandle;
 	BD::Handle enemyHandle;
-	float damage;
 	float speed;
 };
 
@@ -22,13 +21,11 @@ public:
 	void AddDamage(float damage);
 
 private:
-	GameObject * FindClosestEnemy();
 	void UpdateHomingShots(float deltaTime);
 
-	void PerformHomingShot(GameObject * pEnemy);
+	void PerformHomingShot(GameObject & pEnemy);
 
 	std::vector<HomingShot> mHomingShotObjs;
-	float mElapsedTime;
 	float mTimeSinceLastShot;
 	float mCooldown;
 	float mDamagePerShot;

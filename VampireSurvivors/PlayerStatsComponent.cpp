@@ -27,8 +27,8 @@ void PlayerStatsComponent::Update(float deltaTime)
 
 void PlayerStatsComponent::DebugImGuiComponentInfo()
 {
-	ImGui::InputFloat("Current Damage per Slash", &mAttackMult);
-	ImGui::InputFloat("Range Multiplier", &mAttackRange);
+	ImGui::InputFloat("Attack Mult", &mAttackMult);
+	ImGui::InputFloat("Range Mult", &mAttackRange);
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -57,6 +57,13 @@ void PlayerStatsComponent::MultAttackRange(float rangeMult)
 float PlayerStatsComponent::GetDamageMult() const
 {
 	return mAttackMult;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+float PlayerStatsComponent::GetRangeMult() const
+{
+	return mAttackRange;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

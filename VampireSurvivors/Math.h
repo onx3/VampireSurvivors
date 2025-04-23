@@ -11,9 +11,24 @@ namespace BD
 
     //------------------------------------------------------------------------------------------------------------------------
 
+    inline float GetMagnitudeSquared(const sf::Vector2f & vec1, const sf::Vector2f & vec2)
+    {
+        sf::Vector2f delta = vec2 - vec1;
+        return delta.x * delta.x + delta.y * delta.y;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------------
+
     inline float GetMagnitude(const sf::Vector2f & vec)
     {
         return std::sqrt(GetMagnitudeSquared(vec));
+    }
+
+    //------------------------------------------------------------------------------------------------------------------------
+
+    inline float GetMagnitude(const sf::Vector2f & vec1, const sf::Vector2f & vec2)
+    {
+        return std::sqrt(GetMagnitudeSquared(vec1, vec2));
     }
 
     //------------------------------------------------------------------------------------------------------------------------

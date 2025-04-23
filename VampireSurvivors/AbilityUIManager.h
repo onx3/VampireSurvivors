@@ -3,7 +3,8 @@
 
 enum class EAbilityOptions
 {
-	// All must match in my ToString function
+	// Must match in ToString function
+	// Must match in GetAbilityDescription function
 	SwordRange,
 	Wand,
 	Health,
@@ -11,6 +12,7 @@ enum class EAbilityOptions
 	ThrowingKnife,
 	ExtraPickupRange,
 	IncreaseDamageMult,
+	BoomerangAxe,
 	Total
 };
 

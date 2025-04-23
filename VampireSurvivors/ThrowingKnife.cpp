@@ -4,6 +4,12 @@
 #include "CollisionComponent.h"
 #include "DamageComponent.h"
 #include "PlayerStatsComponent.h"
+#include <imgui.h>
+
+namespace
+{
+	static const float sThrowingKnifeLifeTime = 3.0f;
+}
 
 ThrowingKnifeComponent::ThrowingKnifeComponent(GameObject * pOwner, GameManager & gameManager)
 	: GameComponent(pOwner, gameManager)
@@ -44,7 +50,8 @@ void ThrowingKnifeComponent::Update(float deltaTime)
 
 void ThrowingKnifeComponent::DebugImGuiComponentInfo()
 {
-
+	ImGui::InputFloat("Raw Damage", &mThrowingKnifeDamagePerShot);
+	ImGui::InputFloat("Damage Multiplier", &mThrowingKnifeDamageMult);
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -142,7 +149,7 @@ void ThrowingKnifeComponent::ThrowKnife()
 		}
 	}
 
-	ThrowingKnife knife = { knifeHandle, 3.0f, direction };
+	ThrowingKnife knife = { knifeHandle, sThrowingKnifeLifeTime, direction };
 	mThrowingKnives.push_back(knife);
 }
 

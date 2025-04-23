@@ -14,6 +14,7 @@ public:
 	void MultAttackRange(float rangeMult);
 
 	float GetDamageMult() const;
+	float GetRangeMult() const;
 
 private:
 	float mAttackMult;

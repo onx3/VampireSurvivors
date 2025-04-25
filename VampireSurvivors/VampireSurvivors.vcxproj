@@ -173,6 +173,7 @@
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="PhantomBladeComponent.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="PlayerStatsComponent.cpp" />
     <ClCompile Include="ProjectileComponent.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Math.h" />
+    <ClInclude Include="PhantomBladeComponent.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="PlayerStatsComponent.h" />
     <ClInclude Include="ProjectileComponent.h" />

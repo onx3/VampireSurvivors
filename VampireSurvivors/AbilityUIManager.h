@@ -13,6 +13,7 @@ enum class EAbilityOptions
 	ExtraPickupRange,
 	IncreaseDamageMult,
 	BoomerangAxe,
+	PhantomBlade,
 	Total
 };
 

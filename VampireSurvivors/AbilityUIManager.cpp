@@ -10,6 +10,7 @@
 #include "ThrowingKnife.h"
 #include "PlayerStatsComponent.h"
 #include "BoomerangComponent.h"
+#include "PhantomBladeComponent.h"
 
 namespace
 {
@@ -26,6 +27,7 @@ namespace
 			case EAbilityOptions::ExtraPickupRange:		return "Extra Pickup Range";
 			case EAbilityOptions::IncreaseDamageMult:	return "Increase Damage";
 			case EAbilityOptions::BoomerangAxe:			return "Boomerang Axe";
+			case EAbilityOptions::PhantomBlade:			return "Phantom Blade";
 			default:									return "Unknown";
 		}
 	}
@@ -45,6 +47,7 @@ namespace
 			case EAbilityOptions::ExtraPickupRange:		return "Increase range that you attrack coins by 10%.";
 			case EAbilityOptions::IncreaseDamageMult:	return "Increase damage 10%.";
 			case EAbilityOptions::BoomerangAxe:			return "Returns to origin after set distance.";
+			case EAbilityOptions::PhantomBlade:			return "Sword that travels between enemies.";
 			default:									return "No description available.";
 		}
 	}
@@ -64,6 +67,7 @@ AbilityUIManager::AbilityUIManager(GameManager * pGameManager)
 
 AbilityUIManager::~AbilityUIManager()
 {
+
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -224,7 +228,6 @@ void AbilityUIManager::ApplySelectedAbility(EAbilityOptions ability)
 			{
 				pDropManager->MultRadius(1.1f);
 			}
-
 			break;
 		}
 		case (EAbilityOptions::IncreaseDamageMult):
@@ -238,7 +241,6 @@ void AbilityUIManager::ApplySelectedAbility(EAbilityOptions ability)
 					pPlayerStatsComp->AddAttackMult(.1f);
 				}
 			}
-
 			break;
 		}
 		case (EAbilityOptions::BoomerangAxe):
@@ -257,7 +259,24 @@ void AbilityUIManager::ApplySelectedAbility(EAbilityOptions ability)
 					pBoomerang->AddDamage(50.f);
 				}
 			}
-
+			break;
+		}
+		case (EAbilityOptions::PhantomBlade):
+		{
+			mSelectedAbilityOption = EAbilityOptions::PhantomBlade;
+			if (pPlayer)
+			{
+				auto pPhantomBlade = pPlayer->GetComponent<PhantomBladeComponent>().lock();
+				if (!pPhantomBlade)
+				{
+					pPhantomBlade = std::make_shared<PhantomBladeComponent>(pPlayer, gameManager);
+					pPlayer->AddComponent(pPhantomBlade);
+				}
+				else
+				{
+					pPhantomBlade->AddDamage(50.f);
+				}
+			}
 			break;
 		}
 		default:

@@ -15,6 +15,7 @@
 #include "ThrowingKnife.h"
 #include "PlayerStatsComponent.h"
 #include "BoomerangComponent.h"
+#include "PhantomBladeComponent.h"
 
 namespace
 {
@@ -172,14 +173,14 @@ void PlayerManager::InitPlayer()
         }
     }
     // TESTING STUFF
-    /*{
-        auto pThowingKnifeComponent = pPlayer->GetComponent<BoomerangComponent>().lock();
+    {
+        auto pThowingKnifeComponent = pPlayer->GetComponent<PhantomBladeComponent>().lock();
         if (!pThowingKnifeComponent)
         {
-            pThowingKnifeComponent = std::make_shared<BoomerangComponent>(pPlayer, gameManager);
+            pThowingKnifeComponent = std::make_shared<PhantomBladeComponent>(pPlayer, gameManager);
             pPlayer->AddComponent(pThowingKnifeComponent);
         }
-    }*/
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

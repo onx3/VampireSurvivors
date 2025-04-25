@@ -85,7 +85,7 @@ void BoomerangComponent::ThrowBoomerang(GameObject & enemy)
 
 	auto & gameManager = GetGameManager();
 	auto & gameObj = GetGameObject();
-	auto boomerangHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, GetGameObject().GetHandle());
+	auto boomerangHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, gameObj.GetHandle());
 	auto * pBoomerangObj = gameManager.GetGameObject(boomerangHandle);
 	if (!pBoomerangObj)
 	{

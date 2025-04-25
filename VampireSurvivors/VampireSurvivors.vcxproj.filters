@@ -151,6 +151,9 @@
     <ClCompile Include="BoomerangComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="PhantomBladeComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -276,5 +279,6 @@
     <ClInclude Include="PlayerStatsComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="PhantomBladeComponent.h" />
   </ItemGroup>
 </Project>

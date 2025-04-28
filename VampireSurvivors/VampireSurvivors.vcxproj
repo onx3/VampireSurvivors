@@ -22,7 +22,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{db39a57c-fe14-4c36-a609-45a1e66bacb6}</ProjectGuid>
-    <RootNamespace>Platformer</RootNamespace>
+    <RootNamespace>VampireSurvivors</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>VampireSurvivors</ProjectName>
   </PropertyGroup>

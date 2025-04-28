@@ -430,8 +430,11 @@ void GameObject::NotifyChildrenToDeactivate()
 {
     for (auto childHandle : mChildHandles)
     {
-        auto pChildObj = GetGameManager().GetGameObject(childHandle);
-        pChildObj->Deactivate();
+        auto * pChildObj = GetGameManager().GetGameObject(childHandle);
+        if (pChildObj)
+        {
+            pChildObj->Deactivate();
+        }
     }
 }
 

@@ -19,7 +19,7 @@ namespace BD {
 AISimplePathComponent::AISimplePathComponent(GameObject * pOwner, GameManager & gameManager, BD::Handle followHandle)
 	: GameComponent(pOwner, gameManager)
 	, mFollowHandle(followHandle)
-	, mMoveSpeed(80.f)
+	, mMoveSpeed(50.f)
 	, mPath()
 	, mPathRecalcInterval(1.f)
 	, mName("AISimplePathComponent")

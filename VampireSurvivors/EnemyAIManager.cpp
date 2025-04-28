@@ -51,11 +51,18 @@ void EnemyAIManager::Update(float deltaTime)
         {
             float runTime = pUIManager->GetRunTime();
 
-            float healthMultiplier = .25f + runTime / 60.f;
+            // Update health scaling
+            float healthMultiplier = 0.25f + runTime / 60.f;
             mCurrentHealth = mBaseHealth * std::min(healthMultiplier, 15.f); // Cap at 15x health
 
-            int extraEnemies = int(runTime / 20.f); // +1 every 20s
-            mCurrentMaxEnemies = mBaseEnemyCount + extraEnemies;
+            float growthRate = 1.0215f;
+            mCurrentMaxEnemies = int(mBaseEnemyCount * std::pow(growthRate, runTime));
+
+            mCurrentMaxEnemies = std::min(mCurrentMaxEnemies, 120);
+            if (mCurrentMaxEnemies == 120)
+            {
+                int ii = 0;
+            }
         }
     }
 

@@ -154,6 +154,9 @@
     <ClCompile Include="PhantomBladeComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteAnimationComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -280,5 +283,6 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="PhantomBladeComponent.h" />
+    <ClInclude Include="SpriteAnimationComponent.h" />
   </ItemGroup>
 </Project>

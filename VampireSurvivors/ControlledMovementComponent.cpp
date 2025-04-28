@@ -8,6 +8,7 @@
 #include "CameraManager.h"
 #include "LevelManager.h"
 #include "imgui.h"
+#include "SpriteAnimationComponent.h"
 
 ControlledMovementComponent::ControlledMovementComponent(GameObject * pOwner, GameManager & gameManager)
     : GameComponent(pOwner, gameManager)
@@ -31,7 +32,7 @@ ControlledMovementComponent::ControlledMovementComponent(GameObject * pOwner, Ga
     , mDeceleration(1000.f)
     , mMaxSpeed(300.f)
     , mVelocityX(veloX)
-	, mVelocityY(veloY)
+	  , mVelocityY(veloY)
     , mTilt(ESpriteTilt::Normal)
 {
 }
@@ -118,6 +119,19 @@ void ControlledMovementComponent::Update(float deltaTime)
              }
         }
         pSpriteComponent->SetPosition(position);
+
+        auto pAnimComponent = GetGameObject().GetComponent<SpriteAnimationComponent>().lock();
+        if (pAnimComponent)
+        {
+            if (std::abs(mVelocity.x) > 0.1f || std::abs(mVelocity.y) > 0.1f)
+            {
+                pAnimComponent->PlayAnimation(EAnimationState::Move);
+            }
+            else
+            {
+                pAnimComponent->PlayAnimation(EAnimationState::Idle);
+            }
+        }
     }
 }
 

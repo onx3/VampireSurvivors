@@ -19,6 +19,7 @@
 #include "AISimplePathComponent.h"
 #include "EnemyMeleeAttackComponent.h"
 #include "LevelManager.h"
+#include "SpriteAnimationComponent.h"
 
 
 EnemyAIManager::EnemyAIManager(GameManager * pGameManager)
@@ -168,7 +169,7 @@ void EnemyAIManager::AddEnemies(int count, EEnemy type, sf::Vector2f pos)
             return;
         }
         // Sprite Comp
-        SetUpSprite(*pSpriteComp, type);
+        SetUpSprite(*pEnemy, *pSpriteComp, type);
         pSpriteComp->SetPosition(pos);
 
         // AI Simple Path Movement
@@ -255,20 +256,20 @@ std::string EnemyAIManager::GetEnemyFile(EEnemy type)
 	{
         case (EEnemy::LizardF):
         {
-            return "Art/Enemies/LizardF/lizard_f_idle_anim_f0.png";
+            return "Art/Enemies/LizardF/LizardFSpriteSheet.png";
         }
         case (EEnemy::Ogre):
         {
-            return "Art/Enemies/Ogre/ogre_idle_anim_f0.png";
+            return "Art/Enemies/Ogre/OgreSpriteSheet.png";
         }
         case (EEnemy::Chort):
         {
-            return "Art/Enemies/Chort/chort_run_anim_f0.png";
+            return "Art/Enemies/Chort/ChortSpriteSheet.png";
         }
-		default:
-		{
-			return "Art/Enemies/Chort/chort_run_anim_f0.png";
-		}
+		    default:
+		    {
+		    	return "Art/Enemies/Chort/ChortSpriteSheet.png";
+		    }
 	}
 }
 
@@ -317,32 +318,65 @@ EDropType EnemyAIManager::DetermineDropType() const
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void EnemyAIManager::SetUpSprite(SpriteComponent & spriteComp, EEnemy type)
+void EnemyAIManager::SetUpSprite(GameObject & gameObj, SpriteComponent & spriteComp, EEnemy type)
 {
     std::string file = GetEnemyFile(type);
     ResourceId resourceId(file);
     auto pTexture = GetGameManager().GetManager<ResourceManager>()->GetTexture(resourceId);
 
-    auto scale = sf::Vector2f();
+    auto scale = sf::Vector2f(1.2f, 1.2f); // Default scale
+
+    int frameWidth = 0;
+    int frameHeight = 0;
+
     switch (type)
     {
         case (EEnemy::LizardF):
         {
             scale = sf::Vector2f(1.2f, 1.2f);
+            frameWidth = 16;
+            frameHeight = 28;
             break;
         }
         case (EEnemy::Ogre):
         {
             scale = sf::Vector2f(1.2f, 1.2f);
+            frameWidth = 32;
+            frameHeight = 35;
             break;
         }
-        default :
+        case (EEnemy::Chort):
+        default:
         {
             scale = sf::Vector2f(1.2f, 1.2f);
+            frameWidth = 16;
+            frameHeight = 22;
             break;
         }
     }
+
     spriteComp.SetSprite(pTexture, scale);
+
+    spriteComp.GetSprite().setOrigin(frameWidth * 0.5f, frameHeight - 12.f); // 12 just seems right
+
+    auto pAnimComponent = gameObj.GetComponent<SpriteAnimationComponent>().lock();
+    if (!pAnimComponent)
+    {
+        pAnimComponent = std::make_shared<SpriteAnimationComponent>(&gameObj, GetGameManager());
+        gameObj.AddComponent(pAnimComponent);
+    }
+
+    // Setup Move animation only
+    Animation moveAnim;
+    moveAnim.frameTime = 0.15f;
+
+    moveAnim.frames = {
+        sf::IntRect(0, 0, frameWidth, frameHeight),
+        sf::IntRect(frameWidth, 0, frameWidth, frameHeight)
+    };
+
+    pAnimComponent->AddAnimation(EAnimationState::Move, moveAnim);
+    pAnimComponent->PlayAnimation(EAnimationState::Move);
 }
 
 //------------------------------------------------------------------------------------------------------------------------

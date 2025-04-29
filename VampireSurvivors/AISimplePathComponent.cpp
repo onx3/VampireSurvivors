@@ -176,9 +176,24 @@ void AISimplePathComponent::Update(float deltaTime)
 
 		if (distance > 0.f)
 		{
-			direction /= distance;
-			sf::Vector2f movement = direction * mMoveSpeed * deltaTime;
-			myGameObj.SetPosition(myPos + movement);
+				direction /= distance;
+
+				auto pSpriteComponent = myGameObj.GetComponent<SpriteComponent>().lock();
+				if (pSpriteComponent)
+				{
+						auto & sprite = pSpriteComponent->GetSprite();
+						if (direction.x > 0.f)
+						{
+								sprite.setScale(std::abs(sprite.getScale().x), sprite.getScale().y);
+						}
+						else if (direction.x < 0.f)
+						{
+								sprite.setScale(-std::abs(sprite.getScale().x), sprite.getScale().y);
+						}
+				}
+
+				sf::Vector2f movement = direction * mMoveSpeed * deltaTime;
+				myGameObj.SetPosition(myPos + movement);
 		}
 	}
 	else
@@ -199,9 +214,24 @@ void AISimplePathComponent::Update(float deltaTime)
 
 			if (dist > 1.f)
 			{
-				dir /= dist;
-				sf::Vector2f movement = dir * mMoveSpeed * deltaTime;
-				myGameObj.SetPosition(myPos + movement);
+					dir /= dist;
+
+					auto pSpriteComponent = myGameObj.GetComponent<SpriteComponent>().lock();
+					if (pSpriteComponent)
+					{
+							auto & sprite = pSpriteComponent->GetSprite();
+							if (dir.x > 0.f)
+							{
+									sprite.setScale(std::abs(sprite.getScale().x), sprite.getScale().y);
+							}
+							else if (dir.x < 0.f)
+							{
+									sprite.setScale(-std::abs(sprite.getScale().x), sprite.getScale().y);
+							}
+					}
+
+					sf::Vector2f movement = dir * mMoveSpeed * deltaTime;
+					myGameObj.SetPosition(myPos + movement);
 			}
 			else
 			{

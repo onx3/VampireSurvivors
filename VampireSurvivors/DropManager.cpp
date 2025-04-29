@@ -7,6 +7,7 @@
 #include "ExplosionComponent.h"
 #include "RadiusPickupComponent.h"
 #include "PlayerManager.h"
+#include "SpriteAnimationComponent.h"
 
 DropManager::DropManager(GameManager * pGameManager)
 	: BaseManager(pGameManager)
@@ -137,39 +138,58 @@ void DropManager::DropCoins(const sf::Vector2f & position)
     {
         return;
     }
-    auto pSpriteComp = pCoinDrop->GetComponent<SpriteComponent>().lock();
 
+    auto pSpriteComp = pCoinDrop->GetComponent<SpriteComponent>().lock();
     if (pSpriteComp)
     {
-        std::string file = "Art/Coins/coin_anim_f0.png";
+        std::string file = "Art/Coins/CoinsSpriteSheet.png";
         auto resourceId = ResourceId(file);
         auto pSpriteTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
         if (pSpriteTexture)
         {
-            pSpriteComp->SetSprite(pSpriteTexture, sf::Vector2f(1, 1));
+            pSpriteComp->SetSprite(pSpriteTexture, sf::Vector2f(1.f, 1.f));
+            pSpriteComp->GetSprite().setTextureRect(sf::IntRect(0, 0, 6, 6));
+            pSpriteComp->GetSprite().setOrigin(3.f, 5.f); // Center horizontally, slightly lower vertically
         }
         pSpriteComp->SetPosition(position);
-        pCoinDrop->AddComponent(pSpriteComp);
 
-        pCoinDrop->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pCoinDrop->GetSize(), true);
-
-        auto pCollisionComp = std::make_shared<CollisionComponent>(
-            pCoinDrop, gameManager, &gameManager.GetPhysicsWorld(), pCoinDrop->GetPhysicsBody(), pCoinDrop->GetSize(), true);
-        pCoinDrop->AddComponent(pCollisionComp);
-
-        auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
-        if (pPlayerManager)
+        auto pAnimComp = pCoinDrop->GetComponent<SpriteAnimationComponent>().lock();
+        if (!pAnimComp)
         {
-            auto & players = pPlayerManager->GetPlayers();
-            if (!pPlayerManager->GetPlayers().empty())
+            pAnimComp = std::make_shared<SpriteAnimationComponent>(pCoinDrop, gameManager);
+            pCoinDrop->AddComponent(pAnimComp);
+        }
+
+        Animation coinSpinAnim;
+        coinSpinAnim.frames = {
+            sf::IntRect(0, 0, 6, 6),
+            sf::IntRect(6, 0, 6, 6),
+            sf::IntRect(12, 0, 6, 6)
+        };
+        coinSpinAnim.frameTime = 0.2f;
+
+        pAnimComp->AddAnimation(EAnimationState::Move, coinSpinAnim);
+        pAnimComp->PlayAnimation(EAnimationState::Move);
+    }
+
+    pCoinDrop->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pCoinDrop->GetSize(), true);
+
+    auto pCollisionComp = std::make_shared<CollisionComponent>(
+        pCoinDrop, gameManager, &gameManager.GetPhysicsWorld(), pCoinDrop->GetPhysicsBody(), pCoinDrop->GetSize(), true);
+    pCoinDrop->AddComponent(pCollisionComp);
+
+    auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
+    if (pPlayerManager)
+    {
+        auto & players = pPlayerManager->GetPlayers();
+        if (!players.empty())
+        {
+            BD::Handle playerHandle = players[0];
+            GameObject * pPlayer = gameManager.GetGameObject(playerHandle);
+            if (pPlayer)
             {
-                BD::Handle playerHandle = players[0];
-                GameObject * pPlayer = gameManager.GetGameObject(playerHandle);
-                if (pPlayer)
-                {
-                    auto pRadiusPickupComponent = std::make_shared<RadiusPickupComponent>(pCoinDrop, gameManager, playerHandle, mRadius);
-                    pCoinDrop->AddComponent(pRadiusPickupComponent);
-                }
+                auto pRadiusPickupComponent = std::make_shared<RadiusPickupComponent>(pCoinDrop, gameManager, playerHandle, mRadius);
+                pCoinDrop->AddComponent(pRadiusPickupComponent);
             }
         }
     }

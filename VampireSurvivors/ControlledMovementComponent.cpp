@@ -132,6 +132,18 @@ void ControlledMovementComponent::Update(float deltaTime)
                 pAnimComponent->PlayAnimation(EAnimationState::Idle);
             }
         }
+
+        // Handle UV Flip
+        auto & sprite = pSpriteComponent->GetSprite();
+
+        if (inputDirection.x > 0.f)
+        {
+            sprite.setScale(std::abs(sprite.getScale().x), sprite.getScale().y);
+        }
+        else if (inputDirection.x < 0.f)
+        {
+            sprite.setScale(-std::abs(sprite.getScale().x), sprite.getScale().y);
+        }
     }
 }
 

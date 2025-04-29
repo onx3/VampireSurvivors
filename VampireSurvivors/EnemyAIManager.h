@@ -38,7 +38,7 @@ private:
 
 	EDropType DetermineDropType() const;
 
-	void SetUpSprite(SpriteComponent & spriteComp, EEnemy type);
+	void SetUpSprite(GameObject & gameObj, SpriteComponent & spriteComp, EEnemy type);
 
 	EEnemy GetEnemyType();
 

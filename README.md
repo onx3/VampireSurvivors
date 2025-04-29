@@ -9,7 +9,8 @@ This project represents an ongoing effort to sharpen my skills in gameplay syste
 ---
 
 ## Screenshots
-*(Placeholder for gameplay screenshots: hordes of enemies, ability upgrades, player attacks)*
+![Gameplay Screenshot](VampireSurvivors/Art/Screenshots/Gameplay1.png)
+![Gameplay Screenshot](VampireSurvivors/Art/Screenshots/Gameplay2.png)
 
 ---
 

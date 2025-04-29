@@ -40,7 +40,7 @@ ExplosionComponent::ExplosionComponent(GameObject * pOwner, GameManager & gameMa
 
     // Sound
     {
-        assert(mSoundBuffer.loadFromFile("Audio/explosion.wav"));
+        assert(mSoundBuffer.loadFromFile("../../VampireSurvivors/Audio/explosion.wav"));
         mSound.setBuffer(mSoundBuffer);
         mSound.setVolume(20.f);
 

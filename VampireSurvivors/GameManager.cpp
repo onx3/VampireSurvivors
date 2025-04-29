@@ -49,7 +49,7 @@ GameManager::GameManager(WindowManager & windowManager)
         //Level Manager
         {
             AddManager<LevelManager>();
-            GetManager<LevelManager>()->LoadLevel("Levels/Level1.ldtk");
+            GetManager<LevelManager>()->LoadLevel("../../VampireSurvivors/Levels/Level1.ldtk");
         }
         AddManager<PlayerManager>();
 
@@ -64,7 +64,7 @@ GameManager::GameManager(WindowManager & windowManager)
 
     // End Game
     {
-        assert(mFont.loadFromFile("Art/font.ttf"));
+        assert(mFont.loadFromFile("../../VampireSurvivors/Art/font.ttf"));
 
         mGameOverText.setFont(mFont);
         mGameOverText.setString("GAME OVER");

@@ -90,7 +90,7 @@ void ThrowingKnifeComponent::ThrowKnife()
 		auto pKnifeSpriteComponent = pKnifeObj->GetComponent<SpriteComponent>().lock();
 		if (pKnifeSpriteComponent)
 		{
-			std::string file = "Art/Weapons/weapon_knife.png";
+			std::string file = "../../VampireSurvivors/Art/Weapons/weapon_knife.png";
 			ResourceId resourceId(file);
 
 			auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);

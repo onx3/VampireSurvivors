@@ -116,7 +116,7 @@ void PhantomBladeComponent::CastPhantomBlade(GameObject & enemy)
 		auto pShotSpriteComponent = pPhantomeBlade->GetComponent<SpriteComponent>().lock();
 		if (pShotSpriteComponent)
 		{
-			std::string file = "Art/Weapons/weapon_knight_sword.png";
+			std::string file = "../../VampireSurvivors/Art/Weapons/weapon_knight_sword.png";
 			ResourceId resourceId(file);
 
 			auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);

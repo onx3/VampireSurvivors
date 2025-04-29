@@ -41,11 +41,11 @@ PlayerManager::PlayerManager(GameManager * pGameManager)
 
     // Sound
     {
-        mLoseLifeSoundBuffer.loadFromFile("Audio/LoseLifeSound.wav");
+        mLoseLifeSoundBuffer.loadFromFile("../../VampireSurvivors/Audio/LoseLifeSound.wav");
         mLoseLifeSound.setBuffer(mLoseLifeSoundBuffer);
         mLoseLifeSound.setVolume(100.f);
         
-        mDeathSoundBuffer.loadFromFile("Audio/Death.flac");
+        mDeathSoundBuffer.loadFromFile("../../VampireSurvivors/Audio/Death.flac");
         mDeathSound.setBuffer(mDeathSoundBuffer);
         mDeathSound.setVolume(50.f);
     }
@@ -72,7 +72,7 @@ void PlayerManager::InitPlayer()
         auto pSpriteComponent = pPlayer->GetComponent<SpriteComponent>().lock();
         if (pSpriteComponent)
         {
-            std::string file = "Art/Player/PlayerSpriteSheet.png";
+            std::string file = "../../VampireSurvivors/Art/Player/PlayerSpriteSheet.png";
             ResourceId resourceId(file);
 
             auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
@@ -189,7 +189,7 @@ void PlayerManager::InitPlayer()
             auto pWeaponSpriteComponent = pPlayerWeapon->GetComponent<SpriteComponent>().lock();
             if (pWeaponSpriteComponent)
             {
-                std::string file = "Art/Weapons/weapon_anime_sword.png";
+                std::string file = "../../VampireSurvivors/Art/Weapons/weapon_anime_sword.png";
                 ResourceId resourceId(file);
 
                 auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
@@ -300,7 +300,7 @@ void PlayerManager::OnPlayerDeath(GameObject * pPlayer)
     if (!pPlayer->GetComponent<ExplosionComponent>().lock())
     {
         auto explosionComp = std::make_shared<ExplosionComponent>(
-            pPlayer, GetGameManager(), "Art/explosion.png", 32, 32, 7, 0.1f, sf::Vector2f(2.f, 2.f), pPlayer->GetPosition());
+            pPlayer, GetGameManager(), "../../VampireSurvivors/Art/explosion.png", 32, 32, 7, 0.1f, sf::Vector2f(2.f, 2.f), pPlayer->GetPosition());
         pPlayer->AddComponent(explosionComp);
     }
 }

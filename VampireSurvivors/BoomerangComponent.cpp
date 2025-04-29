@@ -97,7 +97,7 @@ void BoomerangComponent::ThrowBoomerang(GameObject & enemy)
 		auto pShotSpriteComponent = pBoomerangObj->GetComponent<SpriteComponent>().lock();
 		if (pShotSpriteComponent)
 		{
-			std::string file = "Art/Weapons/weapon_throwing_axe.png";
+			std::string file = "../../VampireSurvivors/Art/Weapons/weapon_throwing_axe.png";
 			ResourceId resourceId(file);
 
 			auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);

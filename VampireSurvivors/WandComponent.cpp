@@ -152,7 +152,7 @@ void WandComponent::PerformHomingShot(GameObject & enemy)
 		auto pShotSpriteComponent = pShotObj->GetComponent<SpriteComponent>().lock();
 		if (pShotSpriteComponent)
 		{
-			std::string file = "Art/laserGreenShot.png";
+			std::string file = "../../VampireSurvivors/Art/laserGreenShot.png";
 			ResourceId resourceId(file);
 
 			auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);

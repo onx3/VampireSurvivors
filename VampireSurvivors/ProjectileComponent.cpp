@@ -40,12 +40,12 @@ std::string ProjectileComponent::GetCorrectProjectileFile()
 		case (EProjectileType::GreenLaser):
 		{
 			mLastUsedProjectile = EProjectileType::RedLaser;
-			return "Art/laserRed.png";
+			return "../../VampireSurvivors/Art/laserRed.png";
 		}
 		default:
 		{
 			mLastUsedProjectile = EProjectileType::GreenLaser;
-			return "Art/laserGreen.png";
+			return "../../VampireSurvivors/Art/laserGreen.png";
 		}
 	}
 }

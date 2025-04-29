@@ -10,7 +10,7 @@ UIManager::UIManager(GameManager * pGameManager)
     , mRunTime(0.f)
 	, mSpriteLives()
 {
-	if (!mFont.loadFromFile("Art/font.ttf")) // Replace with your font path
+	if (!mFont.loadFromFile("../../VampireSurvivors/Art/font.ttf")) // Replace with your font path
 	{
 		assert(false && "Failed to load font");
 	}
@@ -33,7 +33,7 @@ UIManager::UIManager(GameManager * pGameManager)
     mRunTimeText.setOutlineColor(sf::Color::Black);
     mRunTimeText.setString("Time: 0.0s");
 
-	assert(mLifeTexture.loadFromFile("Art/UI/ui_heart_full.png"));
+	assert(mLifeTexture.loadFromFile("../../VampireSurvivors/Art/UI/ui_heart_full.png"));
 	mLifeSprite.setTexture(mLifeTexture);
     mLifeSprite.setScale(sf::Vector2f(1.2f, 1.2f));
 }

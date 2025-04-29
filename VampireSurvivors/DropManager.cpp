@@ -86,7 +86,7 @@ void DropManager::SpawnDrop(EDropType dropType, const sf::Vector2f & position)
         switch (dropType)
         {
             case EDropType::NukePickup:
-                file = "Art/Nuke.png";
+                file = "../../VampireSurvivors/Art/Nuke.png";
                 resourceId = ResourceId(file);
                 pSpriteTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
                 if (pSpriteTexture)
@@ -95,7 +95,7 @@ void DropManager::SpawnDrop(EDropType dropType, const sf::Vector2f & position)
                 }
                 break;
             case EDropType::LifePickup:
-                file = "Art/Life.png";
+                file = "../../VampireSurvivors/Art/Life.png";
                 resourceId = ResourceId(file);
                 pSpriteTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
                 if (pSpriteTexture)
@@ -142,7 +142,7 @@ void DropManager::DropCoins(const sf::Vector2f & position)
     auto pSpriteComp = pCoinDrop->GetComponent<SpriteComponent>().lock();
     if (pSpriteComp)
     {
-        std::string file = "Art/Coins/CoinsSpriteSheet.png";
+        std::string file = "../../VampireSurvivors/Art/Coins/CoinsSpriteSheet.png";
         auto resourceId = ResourceId(file);
         auto pSpriteTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
         if (pSpriteTexture)

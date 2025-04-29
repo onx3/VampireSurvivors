@@ -59,7 +59,7 @@ void EnemyAIManager::Update(float deltaTime)
             float growthRate = 1.0215f;
             mCurrentMaxEnemies = int(mBaseEnemyCount * std::pow(growthRate, runTime));
 
-            mCurrentMaxEnemies = std::min(mCurrentMaxEnemies, 360);
+            mCurrentMaxEnemies = std::min(mCurrentMaxEnemies, 150);
         }
     }
 
@@ -81,7 +81,7 @@ void EnemyAIManager::Update(float deltaTime)
             }
         }
     }
-	CleanUpDeadEnemies();
+    CleanUpDeadEnemies();
 
     auto pPlayerManager = gameManager.GetManager<PlayerManager>();
     if (!pPlayerManager || pPlayerManager->GetPlayers().empty())
@@ -118,7 +118,7 @@ void EnemyAIManager::Update(float deltaTime)
         sf::Vector2f offset(std::cos(angle) * radius, std::sin(angle) * radius);
         sf::Vector2f spawnPosition = playerPos + offset;
 
-        if (pLevelManager->IsTileWalkableAI(int(spawnPosition.x / BD::gsPixelCountCellSize) , int(spawnPosition.y / BD::gsPixelCountCellSize)))
+        if (pLevelManager->IsTileWalkableAI(int(spawnPosition.x / BD::gsPixelCountCellSize), int(spawnPosition.y / BD::gsPixelCountCellSize)))
         {
             EEnemy EnemyType = GetEnemyType();
             RespawnEnemy(EnemyType, spawnPosition);
@@ -144,7 +144,7 @@ void EnemyAIManager::RemoveEnemy(GameObject * pEnemy)
 
 void EnemyAIManager::RespawnEnemy(EEnemy type, sf::Vector2f pos)
 {
-	AddEnemies(1, type, pos);
+    AddEnemies(1, type, pos);
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -248,32 +248,32 @@ void EnemyAIManager::CleanUpDeadEnemies()
 
 std::string EnemyAIManager::GetEnemyFile(EEnemy type)
 {
-	switch (type)
-	{
+    switch (type)
+    {
         case (EEnemy::LizardF):
         {
-            return "Art/Enemies/LizardF/LizardFSpriteSheet.png";
+            return "../../VampireSurvivors/Art/Enemies/LizardF/LizardFSpriteSheet.png";
         }
         case (EEnemy::Ogre):
         {
-            return "Art/Enemies/Ogre/OgreSpriteSheet.png";
+            return "../../VampireSurvivors/Art/Enemies/Ogre/OgreSpriteSheet.png";
         }
         case (EEnemy::Chort):
         {
-            return "Art/Enemies/Chort/ChortSpriteSheet.png";
+            return "../../VampireSurvivors/Art/Enemies/Chort/ChortSpriteSheet.png";
         }
-		    default:
-		    {
-		    	return "Art/Enemies/Chort/ChortSpriteSheet.png";
-		    }
-	}
+        default:
+        {
+            return "../../VampireSurvivors/Art/Enemies/Chort/ChortSpriteSheet.png";
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------
 
 const std::vector<BD::Handle> & EnemyAIManager::GetEnemies() const
 {
-	return mEnemyHandles;
+    return mEnemyHandles;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

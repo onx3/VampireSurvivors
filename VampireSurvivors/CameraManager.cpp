@@ -9,7 +9,7 @@ CameraManager::CameraManager(GameManager * pGameManager)
 	, mCursorSprite()
 	, mPreviousViewCenter()
 {
-	ResourceId resourceId("Art/Crosshair.png");
+	ResourceId resourceId("../../VampireSurvivors/Art/Crosshair.png");
 	auto pTexture = GetGameManager().GetManager<ResourceManager>()->GetTexture(resourceId);
 	mCursorSprite.setTexture(*pTexture);
 	mCursorSprite.setScale(.15f, .15f);

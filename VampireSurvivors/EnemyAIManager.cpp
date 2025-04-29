@@ -59,11 +59,7 @@ void EnemyAIManager::Update(float deltaTime)
             float growthRate = 1.0215f;
             mCurrentMaxEnemies = int(mBaseEnemyCount * std::pow(growthRate, runTime));
 
-            mCurrentMaxEnemies = std::min(mCurrentMaxEnemies, 120);
-            if (mCurrentMaxEnemies == 120)
-            {
-                int ii = 0;
-            }
+            mCurrentMaxEnemies = std::min(mCurrentMaxEnemies, 360);
         }
     }
 

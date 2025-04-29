@@ -46,6 +46,7 @@ The project was developed with the following priorities:
 | **Flexible Ability System** | Built a modular ability selection and upgrade framework, allowing dynamic expansion without major code changes. |
 | **Balancing Gameplay Without Full Content** | Used debugging overlays and parameter tuning tools to rapidly iterate on enemy difficulty curves and upgrade effectiveness. |
 | **Preventing Tight Coupling Across Systems** | Continued to refine the engine's component-based architecture to isolate rendering, physics, input, and gameplay logic cleanly. |
+| **Safe and Efficient GameObject Access** | Developed a custom handle system for GameObjects, enabling safe lookup and passing of references without risking dangling pointers. |
 | **Asset Management and Memory Efficiency** | Implemented resource sharing across GameObjects to reduce memory usage and avoid redundant texture loads. |
 | **Maintaining Smooth Visual Feedback** | Focused on quick, snappy animations and immediate player responses to input and damage to preserve the high-energy feel. |
 

@@ -17,6 +17,7 @@
 #include "BoomerangComponent.h"
 #include "PhantomBladeComponent.h"
 #include "SpriteAnimationComponent.h"
+#include "LightComponent.h"
 
 namespace
 {
@@ -87,41 +88,7 @@ void PlayerManager::InitPlayer()
     }
 
     // Sprite Animation Component
-    {
-        auto pAnimComponent = pPlayer->GetComponent<SpriteAnimationComponent>().lock();
-        if (!pAnimComponent)
-        {
-            pAnimComponent = std::make_shared<SpriteAnimationComponent>(pPlayer, gameManager);
-            pPlayer->AddComponent(pAnimComponent);
-
-            // Create Idle animation (Top row: y = 0)
-            Animation idleAnim;
-            idleAnim.frames = {
-                sf::IntRect(0,   0, 16, 28), // Frame 0
-                sf::IntRect(16,  0, 16, 28), // Frame 1
-                sf::IntRect(32,  0, 16, 28), // Frame 2
-                sf::IntRect(48,  0, 16, 28)  // Frame 3
-            };
-            idleAnim.frameTime = 0.2f;
-
-            // Create Move animation (Second row: y = 28)
-            Animation moveAnim;
-            moveAnim.frames = {
-                sf::IntRect(0,   28, 16, 28), // Frame 0
-                sf::IntRect(16,  28, 16, 28), // Frame 1
-                sf::IntRect(32,  28, 16, 28), // Frame 2
-                sf::IntRect(48,  28, 16, 28)  // Frame 3
-            };
-            moveAnim.frameTime = 0.15f;
-
-            // Register the animations
-            pAnimComponent->AddAnimation(EAnimationState::Idle, idleAnim);
-            pAnimComponent->AddAnimation(EAnimationState::Move, moveAnim);
-
-            // Start playing the Idle animation
-            pAnimComponent->PlayAnimation(EAnimationState::Idle);
-        }
-    }
+    CreateAnimationComponent(*pPlayer);
 
     // Controlled Movement Component
     {
@@ -179,39 +146,19 @@ void PlayerManager::InitPlayer()
         }
     }
 
-    // Add default sword weapon GameObject to display
+    // Light Component
     {
-        BD::Handle playerWeaponHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, pPlayer->GetHandle());
-        GameObject * pPlayerWeapon = gameManager.GetGameObject(playerWeaponHandle);
-
-        // Sword Sprite Component
+        auto pLightComponent = pPlayer->GetComponent<LightComponent>().lock();
+        if (!pLightComponent)
         {
-            auto pWeaponSpriteComponent = pPlayerWeapon->GetComponent<SpriteComponent>().lock();
-            if (pWeaponSpriteComponent)
-            {
-                std::string file = "../../VampireSurvivors/Art/Weapons/weapon_anime_sword.png";
-                ResourceId resourceId(file);
-
-                auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
-                if (pTexture)
-                {
-                    pWeaponSpriteComponent->SetSprite(pTexture, sf::Vector2f(.8f, .8f));
-                    pWeaponSpriteComponent->SetPosition(pPlayer->GetPosition());
-                    pPlayerWeapon->SetRotation(pPlayerWeapon->GetRotationDegrees());
-                }
-            }
-        }
-
-        // Sword Follow Component
-        {
-            auto pWeaponFollowComponent = pPlayerWeapon->GetComponent<FollowComponent>().lock();
-            if (!pWeaponFollowComponent)
-            {
-                auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, playerHandle, sf::Vector2f(10, 0));
-                pPlayerWeapon->AddComponent(pWeaponFollowComponent);
-            }
+            pLightComponent = std::make_shared<LightComponent>(pPlayer, gameManager, 200.f, sf::Color(150, 200, 255, 140));
+            pPlayer->AddComponent(pLightComponent);
         }
     }
+
+    // Add default sword weapon GameObject to display
+    AddSwordGameObject(*pPlayer);
+
     // TESTING STUFF
     {
         auto pThowingKnifeComponent = pPlayer->GetComponent<PhantomBladeComponent>().lock();
@@ -349,6 +296,83 @@ GameObject * PlayerManager::FindClosestEnemy()
         }
     }
     return pEnemy;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void PlayerManager::CreateAnimationComponent(GameObject & player)
+{
+    GameManager & gameManager = GetGameManager();
+    auto pAnimComponent = player.GetComponent<SpriteAnimationComponent>().lock();
+    if (!pAnimComponent)
+    {
+        pAnimComponent = std::make_shared<SpriteAnimationComponent>(&player, gameManager);
+        player.AddComponent(pAnimComponent);
+
+        // Create Idle animation (Top row: y = 0)
+        Animation idleAnim;
+        idleAnim.frames = {
+            sf::IntRect(0,   0, 16, 28), // Frame 0
+            sf::IntRect(16,  0, 16, 28), // Frame 1
+            sf::IntRect(32,  0, 16, 28), // Frame 2
+            sf::IntRect(48,  0, 16, 28)  // Frame 3
+        };
+        idleAnim.frameTime = 0.2f;
+
+        // Create Move animation (Second row: y = 28)
+        Animation moveAnim;
+        moveAnim.frames = {
+            sf::IntRect(0,   28, 16, 28), // Frame 0
+            sf::IntRect(16,  28, 16, 28), // Frame 1
+            sf::IntRect(32,  28, 16, 28), // Frame 2
+            sf::IntRect(48,  28, 16, 28)  // Frame 3
+        };
+        moveAnim.frameTime = 0.15f;
+
+        // Register the animations
+        pAnimComponent->AddAnimation(EAnimationState::Idle, idleAnim);
+        pAnimComponent->AddAnimation(EAnimationState::Move, moveAnim);
+
+        // Start playing the Idle animation
+        pAnimComponent->PlayAnimation(EAnimationState::Idle);
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void PlayerManager::AddSwordGameObject(GameObject & player)
+{
+    GameManager & gameManager = GetGameManager();
+    BD::Handle playerWeaponHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, player.GetHandle());
+    GameObject * pPlayerWeapon = gameManager.GetGameObject(playerWeaponHandle);
+
+    // Sword Sprite Component
+    {
+        auto pWeaponSpriteComponent = pPlayerWeapon->GetComponent<SpriteComponent>().lock();
+        if (pWeaponSpriteComponent)
+        {
+            std::string file = "../../VampireSurvivors/Art/Weapons/weapon_anime_sword.png";
+            ResourceId resourceId(file);
+
+            auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
+            if (pTexture)
+            {
+                pWeaponSpriteComponent->SetSprite(pTexture, sf::Vector2f(.8f, .8f));
+                pWeaponSpriteComponent->SetPosition(player.GetPosition());
+                pPlayerWeapon->SetRotation(pPlayerWeapon->GetRotationDegrees());
+            }
+        }
+    }
+
+    // Sword Follow Component
+    {
+        auto pWeaponFollowComponent = pPlayerWeapon->GetComponent<FollowComponent>().lock();
+        if (!pWeaponFollowComponent)
+        {
+            auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, player.GetHandle(), sf::Vector2f(10, 0));
+            pPlayerWeapon->AddComponent(pWeaponFollowComponent);
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

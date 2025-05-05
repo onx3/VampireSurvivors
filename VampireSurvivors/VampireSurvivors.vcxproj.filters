@@ -151,11 +151,17 @@
     <ClCompile Include="BoomerangComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
     <ClCompile Include="PhantomBladeComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="SpriteAnimationComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LightComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -282,7 +288,17 @@
     <ClInclude Include="PlayerStatsComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="PhantomBladeComponent.h" />
-    <ClInclude Include="SpriteAnimationComponent.h" />
+    <ClInclude Include="LightManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="PhantomBladeComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteAnimationComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LightComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

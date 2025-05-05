@@ -17,6 +17,7 @@
 #include "BaseManager.h"
 #include "LevelManager.h"
 #include "AbilityUIManager.h"
+#include "LightManager.h"
 
 namespace
 {
@@ -59,6 +60,7 @@ GameManager::GameManager(WindowManager & windowManager)
         AddManager<UIManager>();
         AddManager<DropManager>();
         AddManager<AbilityUIManager>();
+        AddManager<LightManager>();
     }
     
 
@@ -390,6 +392,49 @@ void GameManager::RenderConCommands()
 
 //------------------------------------------------------------------------------------------------------------------------
 
+void GameManager::RenderGameWorld()
+{
+    // Order Matters
+    if (auto * pLevel = GetManager<LevelManager>())
+    {
+        pLevel->Render(*mpWindow);
+    }
+    if (auto * pDropManager = GetManager<DropManager>())
+    {
+        pDropManager->Render(*mpWindow);
+    }
+    if (auto * pPlayer = GetManager<PlayerManager>())
+    {
+        pPlayer->Render(*mpWindow);
+    }
+    if (auto * pEnemy = GetManager<EnemyAIManager>())
+    {
+        pEnemy->Render(*mpWindow);
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void GameManager::RenderLighting()
+{
+    if (auto * pLight = GetManager<LightManager>())
+    {
+        pLight->Render(*mpWindow);
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void GameManager::RenderUI()
+{
+    if (auto * pUI = GetManager<UIManager>())
+    {
+        pUI->Render(*mpWindow);
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
 void GameManager::Render(float deltaTime)
 {
     mpWindow->clear();
@@ -402,16 +447,22 @@ void GameManager::Render(float deltaTime)
     }
     else
     {
-        for (auto & pManager : mManagers)
+        // Order Matters
         {
-            pManager.second->Render(*mpWindow);
-        }
+            // Render Game World
+            RenderGameWorld();
 
-        mpWindow->setMouseCursorVisible(mShowImGuiWindow);
+            // Render GameObjects
+            if (auto * pRoot = GetGameObject(mRootHandle))
+            {
+                mpWindow->draw(*pRoot);
+            }
 
-        if (auto * pRoot = GetGameObject(mRootHandle))
-        {
-            mpWindow->draw(*pRoot);
+            // Render Lighting
+            RenderLighting();
+
+            // RenderUI
+            RenderUI();
         }
     }
 
@@ -523,6 +574,33 @@ GameObject * GameManager::GetRootGameObject()
 BD::Handle GameManager::GetRootGameObjectHandle()
 {
     return mRootHandle;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void GameManager::GetAllGameObjects(std::vector<GameObject *> & outObjects)
+{
+    std::stack<BD::Handle> stack;
+    stack.push(mRootHandle);
+
+    while (!stack.empty())
+    {
+        BD::Handle handle = stack.top();
+        stack.pop();
+
+        GameObject * pObj = GetGameObject(handle);
+        if (!pObj || pObj->IsDestroyed())
+        {
+            continue;
+        }
+
+        outObjects.push_back(pObj);
+
+        for (BD::Handle child : pObj->GetChildrenHandles())
+        {
+            stack.push(child);
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

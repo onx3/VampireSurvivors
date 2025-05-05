@@ -85,6 +85,8 @@ public:
 	GameObject * GetRootGameObject();
 	BD::Handle GetRootGameObjectHandle();
 
+    void GetAllGameObjects(std::vector<GameObject *> & outObjects);
+
 	bool IsGameOver() const;
 
 	b2World & GetPhysicsWorld();
@@ -108,6 +110,10 @@ private:
 
 	void RenderGameObjectImGui();
 	void RenderConCommands();
+    void RenderGameWorld();
+    void RenderLighting();
+    void RenderUI();
+
 	void DrawPhysicsDebug(sf::RenderTarget & target);
 
 	void InitWindow();

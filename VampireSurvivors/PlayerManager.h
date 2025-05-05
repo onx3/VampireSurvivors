@@ -20,6 +20,9 @@ public:
 
     GameObject * FindClosestEnemy();
 private:
+    void CreateAnimationComponent(GameObject & player);
+    void AddSwordGameObject(GameObject & player);
+
     std::vector<BD::Handle> mPlayerHandles;
 
     sf::Vector2f mSpawnPos;

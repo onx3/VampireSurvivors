@@ -27,6 +27,8 @@ D:\VampireSurvivors\VampireSurvivors\imgui_draw.cpp;D:\VampireSurvivors\VampireS
 D:\VampireSurvivors\VampireSurvivors\imgui_tables.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\imgui_tables.obj
 D:\VampireSurvivors\VampireSurvivors\imgui_widgets.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\imgui_widgets.obj
 D:\VampireSurvivors\VampireSurvivors\LevelManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\LevelManager.obj
+D:\VampireSurvivors\VampireSurvivors\LightComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\LightComponent.obj
+D:\VampireSurvivors\VampireSurvivors\LightManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\LightManager.obj
 D:\VampireSurvivors\VampireSurvivors\Main.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\Main.obj
 D:\VampireSurvivors\VampireSurvivors\PhantomBladeComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\PhantomBladeComponent.obj
 D:\VampireSurvivors\VampireSurvivors\PlayerManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\PlayerManager.obj

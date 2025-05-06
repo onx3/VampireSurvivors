@@ -9,6 +9,7 @@ D:\VampireSurvivors\VampireSurvivors\CollisionComponent.cpp;D:\VampireSurvivors\
 D:\VampireSurvivors\VampireSurvivors\CollisionListener.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\CollisionListener.obj
 D:\VampireSurvivors\VampireSurvivors\ControlledMovementComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ControlledMovementComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DamageComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DamageComponent.obj
+D:\VampireSurvivors\VampireSurvivors\DamageZoneComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DamageZoneComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DropManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DropManager.obj
 D:\VampireSurvivors\VampireSurvivors\DropMovementComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DropMovementComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DungeonManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DungeonManager.obj
@@ -16,6 +17,7 @@ D:\VampireSurvivors\VampireSurvivors\EnemyAIManager.cpp;D:\VampireSurvivors\Vamp
 D:\VampireSurvivors\VampireSurvivors\EnemyBulletComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\EnemyBulletComponent.obj
 D:\VampireSurvivors\VampireSurvivors\EnemyMeleeAttackComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\EnemyMeleeAttackComponent.obj
 D:\VampireSurvivors\VampireSurvivors\ExplosionComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ExplosionComponent.obj
+D:\VampireSurvivors\VampireSurvivors\FirePotComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\FirePotComponent.obj
 D:\VampireSurvivors\VampireSurvivors\FollowComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\FollowComponent.obj
 D:\VampireSurvivors\VampireSurvivors\GameComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\GameComponent.obj
 D:\VampireSurvivors\VampireSurvivors\GameManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\GameManager.obj

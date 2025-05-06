@@ -18,6 +18,7 @@
 #include "PhantomBladeComponent.h"
 #include "SpriteAnimationComponent.h"
 #include "LightComponent.h"
+#include "FirePotComponent.h"
 
 namespace
 {
@@ -161,10 +162,10 @@ void PlayerManager::InitPlayer()
 
     // TESTING STUFF
     {
-        auto pThowingKnifeComponent = pPlayer->GetComponent<PhantomBladeComponent>().lock();
+        auto pThowingKnifeComponent = pPlayer->GetComponent<FirePotComponent>().lock();
         if (!pThowingKnifeComponent)
         {
-            pThowingKnifeComponent = std::make_shared<PhantomBladeComponent>(pPlayer, gameManager);
+            pThowingKnifeComponent = std::make_shared<FirePotComponent>(pPlayer, gameManager);
             pPlayer->AddComponent(pThowingKnifeComponent);
         }
     }

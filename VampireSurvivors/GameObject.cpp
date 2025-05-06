@@ -136,7 +136,7 @@ bool GameObject::CreateWedgeShapePhysicsBody(b2World * world, float arcAngleRad,
     fixtureDef.shape = &wedgeShape;
     fixtureDef.density = isDynamic ? 1.0f : 0.0f;
     fixtureDef.friction = 0.3f;
-    fixtureDef.isSensor = true; // likely true for slashes
+    fixtureDef.isSensor = true;
 
     mpPhysicsBody->CreateFixture(&fixtureDef);
 
@@ -144,6 +144,38 @@ bool GameObject::CreateWedgeShapePhysicsBody(b2World * world, float arcAngleRad,
     mpPhysicsBody->GetUserData().pointer = reinterpret_cast<uintptr_t>(this);
 
     return true;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void GameObject::CreateCircleShapePhysicsBody(b2World * world, float radiusPixels, bool isSensor, bool isDynamic)
+{
+    // Define the body
+    b2BodyDef bodyDef;
+    bodyDef.type = isDynamic ? b2_dynamicBody : b2_staticBody;
+    bodyDef.position.Set(GetPosition().x / PIXELS_PER_METER, GetPosition().y / PIXELS_PER_METER);
+    bodyDef.bullet = true; // Accurate collision detection
+    bodyDef.awake = true;
+
+    // Create the body in the Box2D world
+    mpPhysicsBody = world->CreateBody(&bodyDef);
+
+    // Define the shape
+    b2CircleShape circleShape;
+    circleShape.m_radius = radiusPixels / PIXELS_PER_METER;
+
+    // Define the fixture
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &circleShape;
+    fixtureDef.density = isDynamic ? 1.0f : 0.0f;
+    fixtureDef.friction = 0.3f;
+    fixtureDef.isSensor = isSensor;
+
+    // Attach the fixture to the body
+    mpPhysicsBody->CreateFixture(&fixtureDef);
+
+    // Set user data
+    mpPhysicsBody->GetUserData().pointer = reinterpret_cast<uintptr_t>(this);
 }
 
 //------------------------------------------------------------------------------------------------------------------------

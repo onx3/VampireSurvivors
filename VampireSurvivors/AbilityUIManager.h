@@ -14,6 +14,7 @@ enum class EAbilityOptions
 	IncreaseDamageMult,
 	BoomerangAxe,
 	PhantomBlade,
+    FirePot,
 	Total
 };
 

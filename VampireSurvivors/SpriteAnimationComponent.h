@@ -7,6 +7,9 @@ enum class EAnimationState
     Move,
     Attack,
     Death,
+    Start,
+    Loop,
+    End,
     TOTAL
 };
 

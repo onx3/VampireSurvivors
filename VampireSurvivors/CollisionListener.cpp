@@ -4,6 +4,7 @@
 #include "ProjectileComponent.h"
 #include "HealthComponent.h"
 #include "DamageComponent.h"
+#include "DamageZoneComponent.h"
 
 namespace
 {
@@ -46,6 +47,14 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
     {
         if (pObjB->IsActive())
         {
+            // Check for Zone Damage
+            auto pZone = pObjA->GetComponent<DamageZoneComponent>().lock();
+            if (pZone)
+            {
+                pZone->OnBeginOverlap(pObjB->GetHandle());
+            }
+
+            // Normal Damage Check
             float damageNumber = 0.f;
             auto pObjADamageComponent = pObjA->GetComponent<DamageComponent>().lock();
             if (pObjADamageComponent)
@@ -64,6 +73,14 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
     {
         if (pObjA->IsActive())
         {
+            // Check for Zone Damage
+            auto pZone = pObjB->GetComponent<DamageZoneComponent>().lock();
+            if (pZone)
+            {
+                pZone->OnBeginOverlap(pObjA->GetHandle());
+            }
+
+            // Normal Damage Check
             float damageNumber = 0.f;
             auto pObjBDamageComponent = pObjB->GetComponent<DamageComponent>().lock();
             if (pObjBDamageComponent)
@@ -190,6 +207,37 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
 
 void CollisionListener::EndContact(b2Contact * contact)
 {
+    GameObject * pObjectA = reinterpret_cast<GameObject *>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
+    GameObject * pObjectB = reinterpret_cast<GameObject *>(contact->GetFixtureB()->GetBody()->GetUserData().pointer);
+
+    if (!pObjectA || !pObjectB || pObjectA->IsDestroyed() || pObjectB->IsDestroyed())
+    {
+        return;
+    }
+
+    // Remove enemy from zone if either side ends contact
+    if (pObjectA->GetTeam() == ETeam::FriendlyPersistant && pObjectB->GetTeam() == ETeam::Enemy)
+    {
+        if (pObjectA->HasComponent<DamageZoneComponent>())
+        {
+            auto pZone = pObjectA->GetComponent<DamageZoneComponent>().lock();
+            if (pZone)
+            {
+                pZone->OnEndOverlap(pObjectB->GetHandle());
+            }
+        }
+    }
+    else if (pObjectA->GetTeam() == ETeam::Enemy && pObjectB->GetTeam() == ETeam::FriendlyPersistant)
+    {
+        if (pObjectB->HasComponent<DamageZoneComponent>())
+        {
+            auto pZone = pObjectB->GetComponent<DamageZoneComponent>().lock();
+            if (pZone)
+            {
+                pZone->OnEndOverlap(pObjectA->GetHandle());
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

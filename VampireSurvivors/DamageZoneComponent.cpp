@@ -10,6 +10,7 @@ DamageZoneComponent::DamageZoneComponent(GameObject * pOwner, GameManager & game
     , mLifetime(duration)
     , mDamageInterval(1.f)
     , mEnemyCooldowns()
+    , mEnemiesInside()
     , mName("DamageZoneComponent")
 {
 }
@@ -26,42 +27,40 @@ void DamageZoneComponent::Update(float deltaTime)
     }
 
     for (auto & [handle, timer] : mEnemyCooldowns)
-    {
         timer -= deltaTime;
-    }
 
-    auto * pManager = GetGameManager().GetManager<EnemyAIManager>();
-    if (!pManager) 
+    for (BD::Handle handle : mEnemiesInside)
     {
-        return;
-    }
+        GameObject * pEnemy = GetGameManager().GetGameObject(handle);
+        if (!pEnemy || pEnemy->IsDestroyed()) continue;
 
-    for (auto & enemyHandle : pManager->GetEnemies())
-    {
-        GameObject * pEnemy = GetGameManager().GetGameObject(enemyHandle);
-        if (!pEnemy || pEnemy->IsDestroyed())
-        {
-            continue;
-        }
-
-        float distSqr = BD::GetMagnitudeSquared(GetGameObject().GetPosition(), pEnemy->GetPosition());
-        float radius = 50.f;
-        if (distSqr > radius * radius)
-        {
-            continue;
-        }
-
-        float & cooldown = mEnemyCooldowns[enemyHandle];
+        float & cooldown = mEnemyCooldowns[handle];
         if (cooldown <= 0.f)
         {
-            auto dmg = pEnemy->GetComponent<HealthComponent>().lock();
-            if (dmg)
+            auto health = pEnemy->GetComponent<HealthComponent>().lock();
+            if (health)
             {
-                dmg->LoseHealth(mDamagePerSecond);
+                health->LoseHealth(mDamagePerSecond);
                 cooldown = mDamageInterval;
             }
         }
     }
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void DamageZoneComponent::OnBeginOverlap(BD::Handle enemyHandle)
+{
+    mEnemiesInside.insert(enemyHandle);
+    mEnemyCooldowns.try_emplace(enemyHandle, 0.f);
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void DamageZoneComponent::OnEndOverlap(BD::Handle enemyHandle)
+{
+    mEnemiesInside.erase(enemyHandle);
+    mEnemyCooldowns.erase(enemyHandle);
 }
 
 //------------------------------------------------------------------------------------------------------------------------

@@ -16,7 +16,7 @@ PhantomBladeComponent::PhantomBladeComponent(GameObject * pOwner, GameManager & 
 	: GameComponent(pOwner, gameManager)
 	, mPhantomBlades()
 	, mGhostTrails()
-	, mTimeSinceLastCast(0.f)
+	, mTimeSinceLastCast(10.f)
 	, mCooldown(skPhantomBladeLifeTime * 2) // Keep uptime at 50%
 	, mDamagePerSlash(200.f)
 	, mDamageMult(1.f)

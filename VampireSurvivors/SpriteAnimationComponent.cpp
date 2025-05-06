@@ -24,7 +24,6 @@ SpriteAnimationComponent::~SpriteAnimationComponent()
 
 void SpriteAnimationComponent::Update(float deltaTime)
 {
-    //auto pSpriteComponent = mpSpriteComponent.lock();
     auto pSpriteComponent = GetGameObject().GetComponent<SpriteComponent>().lock();
     if (!pSpriteComponent || mCurrentAnimation.frames.empty())
     {

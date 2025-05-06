@@ -33,6 +33,7 @@ public:
 
     void CreateBoxShapePhysicsBody(b2World * world, const sf::Vector2f & size, bool isDynamic);
     bool CreateWedgeShapePhysicsBody(b2World * world, float arcAngleRad, float radius, int pointCount, bool isDynamic);
+    void CreateCircleShapePhysicsBody(b2World * world, float radiusPixels, bool isSensor, bool isDynamic);
     void SetPhysicsBody(b2Body * pBody);
 
     void DestroyPhysicsBody(b2World * world);

@@ -93,12 +93,6 @@ void EnemyMeleeAttackComponent::Update(float deltaTime)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void EnemyMeleeAttackComponent::draw(sf::RenderTarget & target, sf::RenderStates states)
-{
-}
-
-//------------------------------------------------------------------------------------------------------------------------
-
 void EnemyMeleeAttackComponent::DebugImGuiComponentInfo()
 {
 }

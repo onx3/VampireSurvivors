@@ -507,7 +507,8 @@ void GameManager::DrawPhysicsDebug(sf::RenderTarget & target)
     {
         for (b2Fixture * fixture = body->GetFixtureList(); fixture; fixture = fixture->GetNext())
         {
-            if (fixture->GetType() == b2Shape::e_polygon)
+            b2Shape::Type shapeType = fixture->GetType();
+            if (shapeType == b2Shape::e_polygon)
             {
                 b2PolygonShape * poly = static_cast<b2PolygonShape *>(fixture->GetShape());
                 sf::ConvexShape shape;
@@ -519,6 +520,20 @@ void GameManager::DrawPhysicsDebug(sf::RenderTarget & target)
                     shape.setPoint(i, sf::Vector2f(point.x * BD::gsPixelsPerMeter, point.y * BD::gsPixelsPerMeter));
                 }
 
+                shape.setFillColor(sf::Color(0, 0, 0, 0));
+                shape.setOutlineColor(sf::Color::Green);
+                shape.setOutlineThickness(1.f);
+                target.draw(shape);
+            }
+            else if (shapeType == b2Shape::e_circle)
+            {
+                b2CircleShape * circle = static_cast<b2CircleShape *>(fixture->GetShape());
+                b2Vec2 center = body->GetWorldPoint(circle->m_p); // local offset
+                float radius = circle->m_radius * BD::gsPixelsPerMeter;
+
+                sf::CircleShape shape(radius);
+                shape.setOrigin(radius, radius);
+                shape.setPosition(center.x * BD::gsPixelsPerMeter, center.y * BD::gsPixelsPerMeter);
                 shape.setFillColor(sf::Color(0, 0, 0, 0));
                 shape.setOutlineColor(sf::Color::Green);
                 shape.setOutlineThickness(1.f);

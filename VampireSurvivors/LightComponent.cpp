@@ -60,13 +60,6 @@ void LightComponent::Update(float deltaTime)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void LightComponent::draw(sf::RenderTarget & target, sf::RenderStates states)
-{
-
-}
-
-//------------------------------------------------------------------------------------------------------------------------
-
 void LightComponent::DebugImGuiComponentInfo()
 {
 

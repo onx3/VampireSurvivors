@@ -3,6 +3,7 @@
 #include "DamageComponent.h"
 #include "PlayerManager.h"
 #include "HealthComponent.h"
+#include "PlayerStatsComponent.h"
 
 DamageZoneComponent::DamageZoneComponent(GameObject * pOwner, GameManager & gameManager, float damagePerSecond, float duration)
     : GameComponent(pOwner, gameManager)
@@ -19,6 +20,7 @@ DamageZoneComponent::DamageZoneComponent(GameObject * pOwner, GameManager & game
 
 void DamageZoneComponent::Update(float deltaTime)
 {
+    GameManager & gameManager = GetGameManager();
     mLifetime -= deltaTime;
     if (mLifetime <= 0.f)
     {
@@ -31,16 +33,40 @@ void DamageZoneComponent::Update(float deltaTime)
 
     for (BD::Handle handle : mEnemiesInside)
     {
-        GameObject * pEnemy = GetGameManager().GetGameObject(handle);
-        if (!pEnemy || pEnemy->IsDestroyed()) continue;
+        GameObject * pEnemy = gameManager.GetGameObject(handle);
+        if (!pEnemy || pEnemy->IsDestroyed())
+        {
+            continue;
+        }
 
         float & cooldown = mEnemyCooldowns[handle];
         if (cooldown <= 0.f)
         {
-            auto health = pEnemy->GetComponent<HealthComponent>().lock();
-            if (health)
+            auto pHealthComponent = pEnemy->GetComponent<HealthComponent>().lock();
+            GameObject * pPlayerObj = nullptr;
+            if (pHealthComponent)
             {
-                health->LoseHealth(mDamagePerSecond);
+                auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
+                if (pPlayerManager)
+                {
+                    auto & players = pPlayerManager->GetPlayers();
+                    if (!players.empty())
+                    {
+                        pPlayerObj = gameManager.GetGameObject(players[0]);
+                    }
+                }
+
+                float overalDamageMult = 1.0f;
+                if (pPlayerObj)
+                {
+                    auto pPlayerStatsComp = pPlayerObj->GetComponent<PlayerStatsComponent>().lock();
+                    if (pPlayerStatsComp)
+                    {
+                        overalDamageMult = pPlayerStatsComp->GetDamageMult();
+                    }
+                }
+
+                pHealthComponent->LoseHealth(mDamagePerSecond * overalDamageMult);
                 cooldown = mDamageInterval;
             }
         }

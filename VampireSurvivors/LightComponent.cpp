@@ -5,6 +5,7 @@ LightComponent::LightComponent(GameObject * pOwner, GameManager & gameManager, f
     : GameComponent(pOwner, gameManager)
     , mRadius(radius)
     , mColor(color)
+    , mName("LightComponent")
 {
 
 }

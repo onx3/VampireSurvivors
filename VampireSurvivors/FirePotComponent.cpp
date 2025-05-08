@@ -24,7 +24,8 @@ FirePotComponent::FirePotComponent(GameObject * pOwner, GameManager & gameManage
     , mCooldown(skCoolDown)
     , mDamagePerSecond(50.f)
     , mDamageMult(1.f)
-    , mSpeed(100.f)
+    , mSpeed(200.f)
+    , mName("FirePotComponent")
 {
 
 }
@@ -93,14 +94,33 @@ void FirePotComponent::CastFirePot(GameObject & enemy)
             if (pTexture)
             {
                 pPotSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.f, 1.f));
-                pPot->SetPosition(gameObj.GetPosition());
             }
+        }
+    }
+
+    // Light Component
+    {
+        auto pLightComponent = pPot->GetComponent<LightComponent>().lock();
+        if (!pLightComponent)
+        {
+            pLightComponent = std::make_shared<LightComponent>(pPot, gameManager, 10.f, sf::Color::White);
+            pPot->AddComponent(pLightComponent);
         }
     }
 
     sf::Vector2f playerPos = GetGameObject().GetPosition();
     sf::Vector2f enemyPos = enemy.GetPosition();
     sf::Vector2f midpoint = (playerPos + enemyPos) * 0.5f;
+
+    sf::View view = gameManager.GetWindow().getView();
+    sf::Vector2f viewCenter = view.getCenter();
+    sf::Vector2f viewSize = view.getSize();
+
+    float aboveScreenOffset = 50.f;
+
+    float viewTop = viewCenter.y - viewSize.y / 2.f;
+
+    pPot->SetPosition(sf::Vector2f(midpoint.x, viewTop - aboveScreenOffset));
 
     FirePot firePot = { potHandle, midpoint, false, skLifeTime};
     mFirePots.push_back(firePot);
@@ -168,14 +188,14 @@ void FirePotComponent::UpdateFirePots(float deltaTime)
 {
     auto & gameManager = GetGameManager();
 
-    for (int i = static_cast<int>(mFirePots.size()) - 1; i >= 0; --i)
+    for (int ii = int(mFirePots.size()) - 1; ii >= 0; --ii)
     {
-        auto & pot = mFirePots[i];
+        auto & pot = mFirePots[ii];
         GameObject * pPot = gameManager.GetGameObject(pot.firePotHandle);
 
         if (!pPot || pPot->IsDestroyed())
         {
-            mFirePots.erase(mFirePots.begin() + i);
+            mFirePots.erase(mFirePots.begin() + ii);
             continue;
         }
 
@@ -190,6 +210,21 @@ void FirePotComponent::UpdateFirePots(float deltaTime)
                 sf::Vector2f dir = toTarget / dist;
                 sf::Vector2f newPos = currentPos + dir * mSpeed * deltaTime;
                 pPot->SetPosition(newPos);
+
+                // Rotate while falling
+                {
+                    auto pSpriteComponent = pPot->GetComponent<SpriteComponent>().lock();
+                    if (pSpriteComponent)
+                    {
+                        float currentRotation = pSpriteComponent->GetRotation();
+                        currentRotation += 360.f * deltaTime;
+                        if (currentRotation > 360.f)
+                        {
+                            currentRotation -= 360.f;
+                        }
+                        pSpriteComponent->SetRotation(currentRotation);
+                    }
+                }
             }
             else
             {
@@ -218,6 +253,7 @@ void FirePotComponent::UpdateFirePots(float deltaTime)
                 auto pSprite = pPot->GetComponent<SpriteComponent>().lock();
                 if (pSprite)
                 {
+                    pSprite->SetRotation(0.f); // Spawn fire upright
                     auto * pResMgr = GetGameManager().GetManager<ResourceManager>();
                     if (pResMgr)
                     {
@@ -234,10 +270,10 @@ void FirePotComponent::UpdateFirePots(float deltaTime)
                 // Light Component
                 {
                     auto pLightComponent = pPot->GetComponent<LightComponent>().lock();
-                    if (!pLightComponent)
+                    if (pLightComponent)
                     {
-                        pLightComponent = std::make_shared<LightComponent>(pPot, gameManager, 50.f, sf::Color(255, 140, 0, 180));
-                        pPot->AddComponent(pLightComponent);
+                        pLightComponent->SetColor(sf::Color(255, 140, 0, 180));
+                        pLightComponent->SetRadius(50.f);
                     }
                 }
 
@@ -254,7 +290,7 @@ void FirePotComponent::UpdateFirePots(float deltaTime)
             if (pot.timeLeft <= 0.f)
             {
                 pPot->Destroy();
-                mFirePots.erase(mFirePots.begin() + i);
+                mFirePots.erase(mFirePots.begin() + ii);
                 continue;
             }
         }

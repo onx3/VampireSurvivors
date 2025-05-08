@@ -8,6 +8,7 @@
 #include "RadiusPickupComponent.h"
 #include "PlayerManager.h"
 #include "SpriteAnimationComponent.h"
+#include "LightComponent.h"
 
 DropManager::DropManager(GameManager * pGameManager)
 	: BaseManager(pGameManager)
@@ -60,7 +61,10 @@ void DropManager::CleanUpDrops()
 
 void DropManager::SpawnDrop(EDropType dropType, const sf::Vector2f & position)
 {
-    if (dropType == EDropType::None) return;
+    if (dropType == EDropType::None)
+    {
+        return;
+    }
 
     auto & gameManager = GetGameManager();
     BD::Handle dropHandle;
@@ -192,6 +196,13 @@ void DropManager::DropCoins(const sf::Vector2f & position)
                 pCoinDrop->AddComponent(pRadiusPickupComponent);
             }
         }
+    }
+
+    auto pLightComponent = pCoinDrop->GetComponent<LightComponent>().lock();
+    if (!pLightComponent)
+    {
+        pLightComponent = std::make_shared<LightComponent>(pCoinDrop, gameManager, 5.f, sf::Color(255, 215, 0, 180));
+        pCoinDrop->AddComponent(pLightComponent);
     }
 }
 

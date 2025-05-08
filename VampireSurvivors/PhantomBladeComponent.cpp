@@ -148,7 +148,7 @@ void PhantomBladeComponent::CastPhantomBlade(GameObject & enemy)
 
 	// DamageComponent
 	auto pPlayerStatsComp = gameObj.GetComponent<PlayerStatsComponent>().lock();
-	float overalDamageMult = 0.0f;
+	float overalDamageMult = 1.0f;
 	if (pPlayerStatsComp)
 	{
 		overalDamageMult = pPlayerStatsComp->GetDamageMult();

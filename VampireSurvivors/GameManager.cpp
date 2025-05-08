@@ -50,7 +50,7 @@ GameManager::GameManager(WindowManager & windowManager)
         //Level Manager
         {
             AddManager<LevelManager>();
-            GetManager<LevelManager>()->LoadLevel("../../VampireSurvivors/Levels/Level1.ldtk");
+            GetManager<LevelManager>()->LoadLevel("../../VampireSurvivors/Levels/Level2.ldtk");
         }
         AddManager<PlayerManager>();
 

@@ -288,14 +288,6 @@ void EnemyAIManager::OnDeath(GameObject * pEnemy)
     {
         pDropManager->DropCoins(position);
     }
-    // Drops
-    {
-        EDropType dropType = DetermineDropType();
-        if (pDropManager)
-        {
-            pDropManager->SpawnDrop(dropType, position);
-        }
-    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

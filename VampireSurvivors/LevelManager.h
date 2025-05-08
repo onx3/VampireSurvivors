@@ -33,6 +33,8 @@ public:
 private:
 	void ParseTileData(const json & levelData);
 
+    void CreateTorchAnimation(GameObject & pot);
+
 	std::vector<std::vector<int>> mTileData;
 	int mWidth;
 	int mHeight;

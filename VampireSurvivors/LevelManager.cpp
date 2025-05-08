@@ -3,6 +3,8 @@
 #include "ResourceManager.h"
 #include <fstream>
 #include <iostream>
+#include "LightComponent.h"
+#include "SpriteAnimationComponent.h"
 
 LevelManager::LevelManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
@@ -97,6 +99,8 @@ void LevelManager::ParseTileData(const json & levelData)
     mTileLayers.clear();
     mTileData.clear();
 
+    GameManager & gameManager = GetGameManager();
+
     if (!levelData.contains("levels") || !levelData["levels"].is_array() || levelData["levels"].empty())
     {
         std::cerr << "No levels found in the LDtk file." << std::endl;
@@ -133,23 +137,32 @@ void LevelManager::ParseTileData(const json & levelData)
 
     mTileData.resize(mHeight, std::vector<int>(mWidth, 0));
 
-    for (int i = static_cast<int>(layerInstances.size()) - 1; i >= 0; --i)
+    for (int i = int(layerInstances.size()) - 1; i >= 0; --i)
     {
         const auto & layer = layerInstances[i];
-        if (!layer.contains("gridTiles")) continue;
+
+        if (!layer.contains("__type") || layer["__type"] != "Tiles")
+        {
+            continue;
+        }
+
+        if (!layer.contains("gridTiles"))
+        {
+            continue;
+        }
 
         TileLayer tileLayer;
         tileLayer.name = layer["__identifier"];
 
-        if (!layer.contains("__tilesetRelPath"))
+        if (!layer.contains("__tilesetRelPath") || layer["__tilesetRelPath"].is_null())
         {
-            std::cerr << "Layer missing tileset path: " << tileLayer.name << std::endl;
+            std::cerr << "Layer missing or null tileset path: " << tileLayer.name << std::endl;
             continue;
         }
 
         std::string tilesetPath = layer["__tilesetRelPath"];
         auto resId = ResourceId(tilesetPath);
-        tileLayer.texture = GetGameManager().GetManager<ResourceManager>()->GetTexture(resId);
+        tileLayer.texture = gameManager.GetManager<ResourceManager>()->GetTexture(resId);
         if (!tileLayer.texture)
         {
             std::cerr << "Failed to load texture for: " << tilesetPath << std::endl;
@@ -194,6 +207,80 @@ void LevelManager::ParseTileData(const json & levelData)
         }
 
         mTileLayers.push_back(std::move(tileLayer));
+    }
+
+    // === ENTITY CREATION SUPPORT ===
+    for (const auto & layer : layerInstances)
+    {
+        if (!layer.contains("entityInstances")) continue;
+
+        const auto & entities = layer["entityInstances"];
+        for (const auto & entity : entities)
+        {
+            std::string entityName = entity["__identifier"];
+            int px = entity["px"][0];
+            int py = entity["px"][1];
+
+            BD::Handle objHandle = gameManager.CreateNewGameObject(ETeam::Neutral, gameManager.GetRootGameObjectHandle());
+            GameObject * pObj = gameManager.GetGameObject(objHandle);
+            if (pObj)
+            {
+                pObj->SetPosition(sf::Vector2f(float(px), float(py)));
+
+                if (entityName == "Torch")
+                {
+                    auto pSpriteComponent = pObj->GetComponent<SpriteComponent>().lock();
+                    if (pSpriteComponent)
+                    {
+                        ResourceId resId = ResourceId("../../VampireSurvivors/Art/Torch/TorchYellow.png");
+                        auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resId);
+                        if (pTexture)
+                        {
+                            pSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.2f, 1.2f));
+                            pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 16, 28));
+                            pSpriteComponent->GetSprite().setOrigin(8.f, 14.f);
+                        }
+                    }
+                    auto pLightComponent = pObj->GetComponent<LightComponent>().lock();
+                    if (!pLightComponent)
+                    {
+                        pLightComponent = std::make_shared<LightComponent>(pObj, gameManager, 100.f, sf::Color(255, 140, 0, 180));
+                        pObj->AddComponent(pLightComponent);
+                    }
+                    CreateTorchAnimation(*pObj);
+                }
+            }
+        }
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void LevelManager::CreateTorchAnimation(GameObject & obj)
+{
+    GameManager & gameManager = GetGameManager();
+    auto pAnimComponent = obj.GetComponent<SpriteAnimationComponent>().lock();
+    if (!pAnimComponent)
+    {
+        pAnimComponent = std::make_shared<SpriteAnimationComponent>(&obj, gameManager);
+        obj.AddComponent(pAnimComponent);
+
+        // Create Start animation (Top row: y = 0)
+        Animation startAnimation;
+        startAnimation.frames = {
+            sf::IntRect(0,   0, 16, 16), // Frame 0
+            sf::IntRect(16,  0, 16, 16), // Frame 1
+            sf::IntRect(32,  0, 16, 16), // Frame 2
+            sf::IntRect(48,  0, 16, 16),  // Frame 3
+            sf::IntRect(64,  0, 16, 16),  // Frame 4
+            sf::IntRect(80,  0, 16, 16),  // Frame 5
+            sf::IntRect(96,  0, 16, 16),  // Frame 6
+            sf::IntRect(112,  0, 16, 16),  // Frame 7
+        };
+        startAnimation.frameTime = 0.2f;
+
+        pAnimComponent->AddAnimation(EAnimationState::Start, startAnimation);
+        pAnimComponent->PlayAnimation(EAnimationState::Start);
     }
 }
 

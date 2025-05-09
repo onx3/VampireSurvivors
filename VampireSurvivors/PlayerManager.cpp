@@ -80,7 +80,7 @@ void PlayerManager::InitPlayer()
             auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
             if (pTexture)
             {
-                pSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.2f, 1.2f));
+                pSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.0f, 1.0f));
                 pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 16, 28));
                 pSpriteComponent->GetSprite().setOrigin(8.f, 14.f);
                 pSpriteComponent->SetPosition(mSpawnPos);
@@ -128,12 +128,22 @@ void PlayerManager::InitPlayer()
     }
 
     // Sword Slash Component
-    {
+    /*{
         auto pSwordSlashComponent = pPlayer->GetComponent<SwordSlashComponent>().lock();
         if (!pSwordSlashComponent)
         {
             auto pSwordSlashComponent = std::make_shared<SwordSlashComponent>(pPlayer, gameManager, 60.f, 100.f, .1f);
             pPlayer->AddComponent(pSwordSlashComponent);
+        }
+    }*/
+
+    // Projectile Component
+    {
+        auto pProjectileComponent = pPlayer->GetComponent<ProjectileComponent>().lock();
+        if (!pProjectileComponent)
+        {
+            pProjectileComponent = std::make_shared<ProjectileComponent>(pPlayer, gameManager);
+            pPlayer->AddComponent(pProjectileComponent);
         }
     }
 
@@ -152,7 +162,7 @@ void PlayerManager::InitPlayer()
         auto pLightComponent = pPlayer->GetComponent<LightComponent>().lock();
         if (!pLightComponent)
         {
-            pLightComponent = std::make_shared<LightComponent>(pPlayer, gameManager, 100.f, sf::Color(150, 200, 255, 180));
+            pLightComponent = std::make_shared<LightComponent>(pPlayer, gameManager, 75.f, sf::Color(150, 200, 255, 180));
             pPlayer->AddComponent(pLightComponent);
         }
     }

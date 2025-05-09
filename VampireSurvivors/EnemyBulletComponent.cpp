@@ -95,7 +95,7 @@ void EnemyBulletComponent::Shoot()
 			true
 		);
 		pBullet->AddComponent(pCollisionComponent);
-		mBullets.push_back({ bulletHandle, skBulletLifeTime, skBulletDamage, directionVec });
+		mBullets.push_back({ bulletHandle, skBulletLifeTime, directionVec });
 	}
 }
 

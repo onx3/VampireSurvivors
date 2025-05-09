@@ -244,7 +244,7 @@ void LevelManager::ParseTileData(const json & levelData)
                     auto pLightComponent = pObj->GetComponent<LightComponent>().lock();
                     if (!pLightComponent)
                     {
-                        pLightComponent = std::make_shared<LightComponent>(pObj, gameManager, 100.f, sf::Color(255, 140, 0, 180));
+                        pLightComponent = std::make_shared<LightComponent>(pObj, gameManager, 200.f, sf::Color(255, 140, 0, 180));
                         pObj->AddComponent(pLightComponent);
                     }
                     CreateTorchAnimation(*pObj);

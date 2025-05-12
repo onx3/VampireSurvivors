@@ -13,6 +13,12 @@ struct TileLayer
 	std::shared_ptr<sf::Texture> texture;
 };
 
+struct LevelData
+{
+    sf::Vector2f playerSpawnPosition;
+    std::vector<sf::Vector2f> enemySpawnPositions;
+};
+
 using json = nlohmann::json;
 class LevelManager : public BaseManager
 {
@@ -29,6 +35,7 @@ public:
 	bool IsTileWalkablePlayer(int x, int y) const;
 
 	sf::Vector2f GetLevelCenterWorldPos() const;
+    const LevelData & GetLevelData() const;
 
 private:
 	void ParseTileData(const json & levelData);
@@ -45,5 +52,7 @@ private:
 	sf::VertexArray mWaterTileVertices;
 	std::shared_ptr<sf::Texture> mTilesetTexture;
 	std::shared_ptr<sf::Texture> mWaterTexture;
+
+    LevelData mLevelData;
 };
 

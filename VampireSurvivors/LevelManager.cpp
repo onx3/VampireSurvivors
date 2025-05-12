@@ -5,6 +5,8 @@
 #include <iostream>
 #include "LightComponent.h"
 #include "SpriteAnimationComponent.h"
+#include "DoorComponent.h"
+#include "CollisionComponent.h"
 
 LevelManager::LevelManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
@@ -12,6 +14,7 @@ LevelManager::LevelManager(GameManager * pGameManager)
     , mHeight(0)
     , mTileWidth(0)
     , mTileHeight(0)
+    , mLevelData()
 {
 }
 
@@ -82,6 +85,13 @@ sf::Vector2f LevelManager::GetLevelCenterWorldPos() const
         (mWidth * mTileWidth) * 0.5f,
         (mHeight * mTileHeight) * 0.5f
     );
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+const LevelData & LevelManager::GetLevelData() const
+{
+    return mLevelData;
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -248,6 +258,48 @@ void LevelManager::ParseTileData(const json & levelData)
                         pObj->AddComponent(pLightComponent);
                     }
                     CreateTorchAnimation(*pObj);
+                }
+                else if (entityName == "PlayerSpawnPosition")
+                {
+                    mLevelData.playerSpawnPosition = sf::Vector2f(float(px), float(py));
+                }
+                else if (entityName == "EnemySpawnPosition")
+                {
+                    mLevelData.enemySpawnPositions.emplace_back(sf::Vector2f(float(px), float(py)));
+                }
+                else if (entityName == "Door")
+                {
+                    auto pSpriteComponent = pObj->GetComponent<SpriteComponent>().lock();
+                    if (pSpriteComponent)
+                    {
+                        ResourceId closedResId = ResourceId("../../VampireSurvivors/Art/Door/DoorClosed.png");
+                        auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(closedResId);
+                        if (pTexture)
+                        {
+                            // Set the sprite to span the full door size
+                            pSpriteComponent->SetSprite(pTexture);
+                            pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 32, 48)); // or whatever size
+                        }
+                    }
+
+                    //Add a DoorComponent to track state
+                    auto pDoorComp = std::make_shared<DoorComponent>(pObj, gameManager);
+                    pObj->AddComponent(pDoorComp);
+
+                    // Collision Component
+                    auto pCollisionComponent = pObj->GetComponent<CollisionComponent>().lock();
+                    if (!pCollisionComponent)
+                    {
+                        pObj->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pObj->GetSize(), false /*IsDynamic*/, false /*IsSensor*/);
+                        pObj->AddComponent(std::make_shared<CollisionComponent>(
+                            pObj,
+                            gameManager,
+                            &gameManager.GetPhysicsWorld(),
+                            pObj->GetPhysicsBody(),
+                            pObj->GetSize(),
+                            true
+                        ));
+                    }
                 }
             }
         }

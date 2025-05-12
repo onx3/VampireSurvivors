@@ -155,6 +155,7 @@
     <ClCompile Include="ControlledMovementComponent.cpp" />
     <ClCompile Include="DamageComponent.cpp" />
     <ClCompile Include="DamageZoneComponent.cpp" />
+    <ClCompile Include="DoorComponent.cpp" />
     <ClCompile Include="DropManager.cpp" />
     <ClCompile Include="DropMovementComponent.cpp" />
     <ClCompile Include="DungeonManager.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="ProjectileComponent.cpp" />
     <ClCompile Include="RadiusPickupComponent.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="SpawnFromGroundEffectComponent.cpp" />
     <ClCompile Include="SpriteAnimationComponent.cpp" />
     <ClCompile Include="ThrowingKnife.cpp" />
     <ClCompile Include="UIManager.cpp" />
@@ -207,6 +209,7 @@
     <ClInclude Include="ControlledMovementComponent.h" />
     <ClInclude Include="DamageComponent.h" />
     <ClInclude Include="DamageZoneComponent.h" />
+    <ClInclude Include="DoorComponent.h" />
     <ClInclude Include="DropManager.h" />
     <ClInclude Include="DropMovementComponent.h" />
     <ClInclude Include="DungeonManager.h" />
@@ -230,6 +233,7 @@
     <ClInclude Include="ProjectileComponent.h" />
     <ClInclude Include="RadiusPickupComponent.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="SpawnFromGroundEffectComponent.h" />
     <ClInclude Include="SpriteAnimationComponent.h" />
     <ClInclude Include="ThrowingKnife.h" />
     <ClInclude Include="UIManager.h" />

@@ -2,11 +2,12 @@
 #include "CollisionComponent.h"
 #include "box2d/box2d.h"
 
-CollisionComponent::CollisionComponent(GameObject * pOwner, GameManager & gameManager, b2World * pWorld, b2Body * pBody, sf::Vector2f size, bool isDynamic)
+CollisionComponent::CollisionComponent(GameObject * pOwner, GameManager & gameManager, b2World * pWorld, b2Body * pBody, sf::Vector2f size, bool isDynamic, bool isActive)
     : GameComponent(pOwner, gameManager)
     , mpWorld(pWorld)
     , mpBody(pBody)
     , mSize(size)
+    , mIsActive(isActive)
     , mName("CollisionComponent")
 {
     mpBody->SetSleepingAllowed(false);
@@ -23,22 +24,26 @@ CollisionComponent::~CollisionComponent()
 
 void CollisionComponent::Update(float deltaTime)
 {
+    if (!mIsActive || !mpBody)
+    {
+        return;
+    }
+
     GameObject * pOwner = GetGameManager().GetGameObject(mOwnerHandle);
-    if (!pOwner || !pOwner->IsActive() || !mpBody)
+    if (!pOwner || !pOwner->IsActive())
     {
         return;
     }
 
     float scale = pOwner->PIXELS_PER_METER;
-    auto spritePos = pOwner->GetPosition();
-    b2Vec2 box2dPosition(spritePos.x / scale, spritePos.y / scale);
-    auto rotation = pOwner->GetRotationDegrees() * (b2_pi / 180.0f);
+    b2Vec2 bodyPos = mpBody->GetPosition();
+    float angleRadians = mpBody->GetAngle();
 
-    // Only update if there's a difference
-    if (box2dPosition != mpBody->GetPosition() || rotation != mpBody->GetAngle())
-    {
-        mpBody->SetTransform(box2dPosition, rotation);
-    }
+    sf::Vector2f spritePos(bodyPos.x * scale, bodyPos.y * scale);
+    float angleDegrees = angleRadians * (180.f / b2_pi);
+
+    pOwner->SetPosition(spritePos);
+    pOwner->SetRotation(angleDegrees);
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -53,6 +58,13 @@ void CollisionComponent::DebugImGuiComponentInfo()
 std::string & CollisionComponent::GetClassName()
 {
     return mName;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void CollisionComponent::SetActive(bool active)
+{
+    mIsActive = active;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

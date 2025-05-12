@@ -20,6 +20,7 @@
 #include "EnemyMeleeAttackComponent.h"
 #include "LevelManager.h"
 #include "SpriteAnimationComponent.h"
+#include "SpawnFromGroundEffectComponent.h"
 
 
 EnemyAIManager::EnemyAIManager(GameManager * pGameManager)
@@ -56,10 +57,11 @@ void EnemyAIManager::Update(float deltaTime)
             float healthMultiplier = 0.25f + runTime / 60.f;
             mCurrentHealth = mBaseHealth * std::min(healthMultiplier, 15.f); // Cap at 15x health
 
-            float growthRate = 1.0215f;
+            //float growthRate = 1.0215f;
+            float growthRate = 1.015f;
             mCurrentMaxEnemies = int(mBaseEnemyCount * std::pow(growthRate, runTime));
 
-            mCurrentMaxEnemies = std::min(mCurrentMaxEnemies, 150);
+            mCurrentMaxEnemies = std::min(mCurrentMaxEnemies, 30);
         }
     }
 
@@ -83,40 +85,22 @@ void EnemyAIManager::Update(float deltaTime)
     }
     CleanUpDeadEnemies();
 
-    auto pPlayerManager = gameManager.GetManager<PlayerManager>();
-    if (!pPlayerManager || pPlayerManager->GetPlayers().empty())
-        return;
-
-    BD::Handle playerHandle = pPlayerManager->GetPlayers()[0];
-    GameObject * pPlayer = gameManager.GetGameObject(playerHandle);
-    if (!pPlayer)
-        return;
-
-    sf::Vector2f playerPos = pPlayer->GetPosition();
-
-    float minRadius = 600.f;
-    float maxRadius = 1000.f;
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> angleDist(0.f, 2.f * BD::gsPi);
-    std::uniform_real_distribution<float> radiusDist(minRadius, maxRadius);
-
     auto * pLevelManager = gameManager.GetManager<LevelManager>();
     if (!pLevelManager)
-        return;
-
-    int attempts = 0;
-    const int maxAttempts = 100;
-
-    while (mEnemyHandles.size() < mCurrentMaxEnemies && attempts < maxAttempts)
     {
-        ++attempts;
+        return;
+    }
 
-        float angle = angleDist(gen);
-        float radius = radiusDist(gen);
-        sf::Vector2f offset(std::cos(angle) * radius, std::sin(angle) * radius);
-        sf::Vector2f spawnPosition = playerPos + offset;
+    const LevelData & levelData = pLevelManager->GetLevelData();
+
+    while (mEnemyHandles.size() < mCurrentMaxEnemies)
+    {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dist(0, int(levelData.enemySpawnPositions.size()) - 1);
+        int randomIndex = dist(gen);
+
+        sf::Vector2f spawnPosition = levelData.enemySpawnPositions[randomIndex];
 
         if (pLevelManager->IsTileWalkableAI(int(spawnPosition.x / BD::gsPixelCountCellSize), int(spawnPosition.y / BD::gsPixelCountCellSize)))
         {
@@ -158,17 +142,6 @@ void EnemyAIManager::AddEnemies(int count, EEnemy type, sf::Vector2f pos)
         auto * pEnemy = gameManager.GetGameObject(enemyHandle);
         mEnemyHandles.push_back(enemyHandle);
 
-        auto pSpriteComp = pEnemy->GetComponent<SpriteComponent>().lock();
-
-        if (!pSpriteComp)
-        {
-            return;
-        }
-        // Sprite Comp
-        SetUpSprite(*pEnemy, *pSpriteComp, type);
-        pSpriteComp->SetPosition(pos);
-
-        // AI Simple Path Movement
         BD::Handle playerHandle;
         {
             auto pPlayerManager = gameManager.GetManager<PlayerManager>();
@@ -178,33 +151,22 @@ void EnemyAIManager::AddEnemies(int count, EEnemy type, sf::Vector2f pos)
                 if (!players.empty())
                 {
                     playerHandle = players[0];
-                    auto pAISimplePathComponentComp = std::make_shared<AISimplePathComponent>(pEnemy, gameManager, playerHandle);
-                    pEnemy->AddComponent(pAISimplePathComponentComp);
                 }
             }
         }
 
-        // Health Component
-        auto pHealthComponent = std::make_shared<HealthComponent>(pEnemy, gameManager, mCurrentHealth, mCurrentHealth, 1, 1);
-        pEnemy->AddComponent(pHealthComponent);
+        auto pSpawnFromGroundEffectComponent = std::make_shared<SpawnFromGroundEffectComponent>(pEnemy, gameManager, type, playerHandle, mCurrentHealth);
+        pEnemy->AddComponent(pSpawnFromGroundEffectComponent);
 
-        // MeleeAttackComponent
-        auto pMeleeAttackComponent = std::make_shared<EnemyMeleeAttackComponent>(pEnemy, gameManager, playerHandle);
-        pEnemy->AddComponent(pMeleeAttackComponent);
+        auto pSpriteComp = pEnemy->GetComponent<SpriteComponent>().lock();
 
-        // Physics and Collision
+        if (!pSpriteComp)
         {
-            pEnemy->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pEnemy->GetSize(), true);
-            auto pCollisionComp = std::make_shared<CollisionComponent>(
-                pEnemy,
-                gameManager,
-                &gameManager.GetPhysicsWorld(),
-                pEnemy->GetPhysicsBody(),
-                pEnemy->GetSize(),
-                true
-            );
-            pEnemy->AddComponent(pCollisionComp);
+            return;
         }
+        // Sprite Comp
+        SetUpSprite(*pEnemy, *pSpriteComp, type);
+        pSpriteComp->SetPosition(pos);
     }
 }
 
@@ -312,7 +274,7 @@ void EnemyAIManager::SetUpSprite(GameObject & gameObj, SpriteComponent & spriteC
     ResourceId resourceId(file);
     auto pTexture = GetGameManager().GetManager<ResourceManager>()->GetTexture(resourceId);
 
-    auto scale = sf::Vector2f(1.2f, 1.2f); // Default scale
+    auto scale = sf::Vector2f(0.f, 0.f); // Default scale
 
     int frameWidth = 0;
     int frameHeight = 0;

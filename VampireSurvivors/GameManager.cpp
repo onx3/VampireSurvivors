@@ -311,6 +311,7 @@ void GameManager::RenderGameObjectImGui()
 
     if (mShowImGuiWindow && GetGameObject(mRootHandle))
     {
+        mpWindow->setMouseCursorVisible(true);
         ImGui::Begin("Game Objects", &mShowImGuiWindow, ImGuiWindowFlags_NoCollapse);
 
         ImGui::Columns(2, "GameObjectsColumns", true);
@@ -431,6 +432,10 @@ void GameManager::RenderUI()
     {
         pUI->Render(*mpWindow);
     }
+    if (auto * pCameraManager = GetManager<CameraManager>())
+    {
+        pCameraManager->Render(*mpWindow);
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -438,6 +443,7 @@ void GameManager::RenderUI()
 void GameManager::Render(float deltaTime)
 {
     mpWindow->clear();
+    mpWindow->setMouseCursorVisible(false);
 
     if (mGameState == EGameState::EndGame)
     {

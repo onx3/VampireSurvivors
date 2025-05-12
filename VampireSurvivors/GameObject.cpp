@@ -67,7 +67,7 @@ bool GameObject::IsDestroyed() const
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void GameObject::CreateBoxShapePhysicsBody(b2World * world, const sf::Vector2f & size, bool isDynamic)
+void GameObject::CreateBoxShapePhysicsBody(b2World * world, const sf::Vector2f & size, bool isDynamic, bool isSensor)
 {
     // Define the body
     b2BodyDef bodyDef;
@@ -88,6 +88,7 @@ void GameObject::CreateBoxShapePhysicsBody(b2World * world, const sf::Vector2f &
     fixtureDef.shape = &boxShape;
     fixtureDef.density = isDynamic ? 1.0f : 0.0f;
     fixtureDef.friction = 0.3f;
+    fixtureDef.isSensor = isSensor;
 
     // Attach the fixture to the body
     mpPhysicsBody->CreateFixture(&fixtureDef);

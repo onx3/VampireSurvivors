@@ -8,7 +8,7 @@ public:
 	SpriteComponent(GameObject * pOwner, GameManager & gameManager);
 	~SpriteComponent();
 	
-	void SetSprite(std::shared_ptr<sf::Texture> pTexture, const sf::Vector2f & scale);
+	void SetSprite(std::shared_ptr<sf::Texture> pTexture, const sf::Vector2f & scale = sf::Vector2f(1.f, 1.f));
 	sf::Sprite & GetSprite();
 
 	sf::Vector2f GetPosition() const;
@@ -25,6 +25,9 @@ public:
 
 	void SetRotation(float angle);
 	float GetRotation() const;
+
+    void SetScale(const sf::Vector2f & scale);
+    const sf::Vector2f & GetScale() const;
 
 	void SetOriginToCenter();
 	sf::Vector2f GetOrigin();

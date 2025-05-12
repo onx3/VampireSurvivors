@@ -37,7 +37,7 @@ PlayerManager::PlayerManager(GameManager * pGameManager)
     auto * pLevelManager = GetGameManager().GetManager<LevelManager>();
     if (pLevelManager)
     {
-        mSpawnPos = pLevelManager->GetLevelCenterWorldPos();
+        mSpawnPos = pLevelManager->GetLevelData().playerSpawnPosition;
     }
     InitPlayer();
 
@@ -115,7 +115,7 @@ void PlayerManager::InitPlayer()
         auto pCollisionComponent = pPlayer->GetComponent<CollisionComponent>().lock();
         if (!pCollisionComponent)
         {
-            pPlayer->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pPlayer->GetSize(), true);
+            pPlayer->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pPlayer->GetSize(), true /*isDynamic*/, false /*isSensor*/);
             pPlayer->AddComponent(std::make_shared<CollisionComponent>(
                 pPlayer,
                 gameManager,
@@ -126,16 +126,6 @@ void PlayerManager::InitPlayer()
             ));
         }
     }
-
-    // Sword Slash Component
-    /*{
-        auto pSwordSlashComponent = pPlayer->GetComponent<SwordSlashComponent>().lock();
-        if (!pSwordSlashComponent)
-        {
-            auto pSwordSlashComponent = std::make_shared<SwordSlashComponent>(pPlayer, gameManager, 60.f, 100.f, .1f);
-            pPlayer->AddComponent(pSwordSlashComponent);
-        }
-    }*/
 
     // Projectile Component
     {

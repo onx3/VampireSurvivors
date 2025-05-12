@@ -10,6 +10,7 @@ D:\VampireSurvivors\VampireSurvivors\CollisionListener.cpp;D:\VampireSurvivors\V
 D:\VampireSurvivors\VampireSurvivors\ControlledMovementComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ControlledMovementComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DamageComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DamageComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DamageZoneComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DamageZoneComponent.obj
+D:\VampireSurvivors\VampireSurvivors\DoorComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DoorComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DropManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DropManager.obj
 D:\VampireSurvivors\VampireSurvivors\DropMovementComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DropMovementComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DungeonManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DungeonManager.obj
@@ -38,6 +39,7 @@ D:\VampireSurvivors\VampireSurvivors\PlayerStatsComponent.cpp;D:\VampireSurvivor
 D:\VampireSurvivors\VampireSurvivors\ProjectileComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ProjectileComponent.obj
 D:\VampireSurvivors\VampireSurvivors\RadiusPickupComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\RadiusPickupComponent.obj
 D:\VampireSurvivors\VampireSurvivors\ResourceManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ResourceManager.obj
+D:\VampireSurvivors\VampireSurvivors\SpawnFromGroundEffectComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\SpawnFromGroundEffectComponent.obj
 D:\VampireSurvivors\VampireSurvivors\SpriteAnimationComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\SpriteAnimationComponent.obj
 D:\VampireSurvivors\VampireSurvivors\ThrowingKnife.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ThrowingKnife.obj
 D:\VampireSurvivors\VampireSurvivors\UIManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\UIManager.obj

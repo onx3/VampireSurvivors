@@ -21,7 +21,7 @@ ProjectileComponent::ProjectileComponent(GameObject * pOwner, GameManager & game
     , mCooldown(.2f)
     , mTimeSinceLastShot(1.f)
     , mLastUsedProjectile(EProjectileType::GreenLaser)
-    , mDamagePerShot(15.f)
+    , mDamagePerShot(25.f)
     , mName("ProjectileComponent")
 {
 

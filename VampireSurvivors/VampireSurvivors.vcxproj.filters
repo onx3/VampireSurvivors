@@ -169,6 +169,12 @@
     <ClCompile Include="DamageZoneComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SpawnFromGroundEffectComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DoorComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -308,5 +314,7 @@
     </ClInclude>
     <ClInclude Include="FirePotComponent.h" />
     <ClInclude Include="DamageZoneComponent.h" />
+    <ClInclude Include="SpawnFromGroundEffectComponent.h" />
+    <ClInclude Include="DoorComponent.h" />
   </ItemGroup>
 </Project>

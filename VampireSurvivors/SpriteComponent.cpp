@@ -108,6 +108,20 @@ float SpriteComponent::GetRotation() const
 
 //------------------------------------------------------------------------------------------------------------------------
 
+void SpriteComponent::SetScale(const sf::Vector2f & scale)
+{
+    mSprite.setScale(scale);
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+const sf::Vector2f & SpriteComponent::GetScale() const
+{
+    return mSprite.getScale();
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
 void SpriteComponent::SetOriginToCenter()
 {
     sf::FloatRect localBounds = mSprite.getLocalBounds(); // Unscaled, uncropped size of the sprite

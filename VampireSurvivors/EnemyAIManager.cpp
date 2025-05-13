@@ -167,6 +167,28 @@ void EnemyAIManager::AddEnemies(int count, EEnemy type, sf::Vector2f pos)
         // Sprite Comp
         SetUpSprite(*pEnemy, *pSpriteComp, type);
         pSpriteComp->SetPosition(pos);
+        sf::Vector2f fullSize = sf::Vector2f(
+            float(pSpriteComp->GetSprite().getTextureRect().width),
+            float(pSpriteComp->GetSprite().getTextureRect().height)
+        );
+
+        // Health
+        auto pHealth = std::make_shared<HealthComponent>(pEnemy, gameManager, mCurrentHealth, mCurrentHealth, 1, 1);
+        pEnemy->AddComponent(pHealth);
+
+        // Physics and Collision
+        {
+            pEnemy->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), fullSize, true);
+            auto pCollisionComp = std::make_shared<CollisionComponent>(
+                pEnemy,
+                gameManager,
+                &gameManager.GetPhysicsWorld(),
+                pEnemy->GetPhysicsBody(),
+                fullSize,
+                true
+            );
+            pEnemy->AddComponent(pCollisionComp);
+        }
     }
 }
 

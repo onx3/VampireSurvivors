@@ -116,14 +116,17 @@ void PlayerManager::InitPlayer()
         if (!pCollisionComponent)
         {
             pPlayer->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pPlayer->GetSize(), true /*isDynamic*/, false /*isSensor*/);
+            auto * pBody = pPlayer->GetPhysicsBody();
+            pBody->SetFixedRotation(true);
             pPlayer->AddComponent(std::make_shared<CollisionComponent>(
                 pPlayer,
                 gameManager,
                 &gameManager.GetPhysicsWorld(),
-                pPlayer->GetPhysicsBody(),
+                pBody,
                 pPlayer->GetSize(),
                 true
             ));
+
         }
     }
 

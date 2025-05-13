@@ -103,7 +103,9 @@ bool GameObject::CreateWedgeShapePhysicsBody(b2World * world, float arcAngleRad,
 {
     pointCount = std::min(pointCount, b2_maxPolygonVertices - 1);
     if (pointCount < 2)
+    {
         return false;
+    }
 
     // Define the body
     b2BodyDef bodyDef;

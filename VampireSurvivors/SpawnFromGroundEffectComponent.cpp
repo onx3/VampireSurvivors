@@ -69,10 +69,6 @@ void SpawnFromGroundEffectComponent::AddLogicComponents()
     auto & gm = GetGameManager();
     auto * pEnemy = &GetGameObject();
 
-    // Health
-    auto pHealth = std::make_shared<HealthComponent>(pEnemy, gm, mHealth, mHealth, 1, 1);
-    pEnemy->AddComponent(pHealth);
-
     // AI
     auto pAI = std::make_shared<AISimplePathComponent>(pEnemy, gm, mTargetHandle);
     pEnemy->AddComponent(pAI);
@@ -80,20 +76,6 @@ void SpawnFromGroundEffectComponent::AddLogicComponents()
     // Melee
     auto pMelee = std::make_shared<EnemyMeleeAttackComponent>(pEnemy, gm, mTargetHandle);
     pEnemy->AddComponent(pMelee);
-
-    // Physics and Collision
-    {
-        pEnemy->CreateBoxShapePhysicsBody(&gm.GetPhysicsWorld(), pEnemy->GetSize(), true);
-        auto pCollisionComp = std::make_shared<CollisionComponent>(
-            pEnemy,
-            gm,
-            &gm.GetPhysicsWorld(),
-            pEnemy->GetPhysicsBody(),
-            pEnemy->GetSize(),
-            true
-        );
-        pEnemy->AddComponent(pCollisionComp);
-    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

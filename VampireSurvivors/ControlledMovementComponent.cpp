@@ -15,7 +15,7 @@ ControlledMovementComponent::ControlledMovementComponent(GameObject * pOwner, Ga
     , mVelocity(3.f, 3.f)
     , mAcceleration(800.f)
     , mDeceleration(1000.f)
-    , mMaxSpeed(25.f)
+    , mMaxSpeed(30.f)
     , mVelocityX(0.f)
     , mVelocityY(0.f)
     , mName("ControlledMovementComponent")
@@ -30,7 +30,7 @@ ControlledMovementComponent::ControlledMovementComponent(GameObject * pOwner, Ga
     , mVelocity(3.f, 3.f)
     , mAcceleration(800.f)
     , mDeceleration(1000.f)
-    , mMaxSpeed(35.f)
+    , mMaxSpeed(30.f)
     , mVelocityX(veloX)
     , mVelocityY(veloY)
     , mTilt(ESpriteTilt::Normal)
@@ -134,9 +134,13 @@ void ControlledMovementComponent::Update(float deltaTime)
     {
         auto & sprite = pSpriteComponent->GetSprite();
         if (inputDirection.x > 0.f)
+        {
             sprite.setScale(std::abs(sprite.getScale().x), sprite.getScale().y);
+        }
         else if (inputDirection.x < 0.f)
+        {
             sprite.setScale(-std::abs(sprite.getScale().x), sprite.getScale().y);
+        }
     }
 }
 

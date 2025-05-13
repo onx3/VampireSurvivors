@@ -199,7 +199,38 @@ void LevelManager::ParseTileData(const json & levelData)
             {
                 if (cellY >= 0 && cellY < mHeight && cellX >= 0 && cellX < mWidth)
                 {
-                    mTileData[cellY][cellX] = 1; // Mark unwalkable
+                    mTileData[cellY][cellX] = 1; // Optional: still useful for pathfinding
+
+                    // Create a non-visible GameObject with collision only
+                    BD::Handle handle = gameManager.CreateNewGameObject(ETeam::Neutral, gameManager.GetRootGameObjectHandle());
+                    GameObject * pTileObj = gameManager.GetGameObject(handle);
+                    if (!pTileObj)
+                    {
+                        continue;
+                    }
+                    sf::Vector2f tileCenter = sf::Vector2f(
+                        float(px + tileWidth / 2),
+                        float(py + tileHeight / 2)
+                    );
+                    pTileObj->SetPosition(tileCenter);
+
+                    // Create static, non-sensor physics body
+                    pTileObj->CreateBoxShapePhysicsBody(
+                        &gameManager.GetPhysicsWorld(),
+                        sf::Vector2f(float(tileWidth), float(tileHeight)),
+                        false, // static
+                        false  // not a sensor
+                    );
+
+                    auto pCollision = std::make_shared<CollisionComponent>(
+                        pTileObj,
+                        gameManager,
+                        &gameManager.GetPhysicsWorld(),
+                        pTileObj->GetPhysicsBody(),
+                        sf::Vector2f(float(tileWidth), float(tileHeight)),
+                        false // not a sensor
+                    );
+                    pTileObj->AddComponent(pCollision);
                 }
             }
 
@@ -282,8 +313,26 @@ void LevelManager::ParseTileData(const json & levelData)
                         }
                     }
 
+                    int price = -1;
+
+                    if (entity.contains("fieldInstances"))
+                    {
+                        const auto & fields = entity["fieldInstances"];
+                        for (const auto & field : fields)
+                        {
+                            if (field.contains("__identifier") && field["__identifier"] == "Price")
+                            {
+                                if (field.contains("__value") && field["__value"].is_number_integer())
+                                {
+                                    price = field["__value"];
+                                }
+                                break;
+                            }
+                        }
+                    }
+
                     //Add a DoorComponent to track state
-                    auto pDoorComp = std::make_shared<DoorComponent>(pObj, gameManager);
+                    auto pDoorComp = std::make_shared<DoorComponent>(pObj, gameManager, price);
                     pObj->AddComponent(pDoorComp);
 
                     // Collision Component

@@ -3,7 +3,7 @@
 class DoorComponent : public GameComponent
 {
 public:
-    DoorComponent(GameObject * pOwner, GameManager & gameManager);
+    DoorComponent(GameObject * pOwner, GameManager & gameManager, int doorCost);
 
     virtual void Update(float deltaTime) override;
     virtual void DebugImGuiComponentInfo() override;
@@ -15,6 +15,7 @@ public:
 
 private:
     bool mIsOpen;
+    int mDoorCost;
     std::string mName;
 };
 

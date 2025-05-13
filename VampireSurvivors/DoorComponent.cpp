@@ -2,9 +2,10 @@
 #include "DoorComponent.h"
 #include "CollisionComponent.h"
 
-DoorComponent::DoorComponent(GameObject * pOwner, GameManager & gameManager)
+DoorComponent::DoorComponent(GameObject * pOwner, GameManager & gameManager, int doorCost)
     : GameComponent(pOwner, gameManager)
     , mIsOpen(false)
+    , mDoorCost(doorCost)
     , mName("DoorComponent")
 {
 }

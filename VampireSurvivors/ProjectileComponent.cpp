@@ -17,7 +17,7 @@
 ProjectileComponent::ProjectileComponent(GameObject * pOwner, GameManager & gameManager)
     : GameComponent(pOwner, gameManager)
     , mProjectiles()
-    , mSpeed(700.f)
+    , mSpeed(50.f)
     , mCooldown(.2f)
     , mTimeSinceLastShot(1.f)
     , mLastUsedProjectile(EProjectileType::GreenLaser)
@@ -69,51 +69,59 @@ void ProjectileComponent::Shoot()
     auto pProjectileSpriteComponent = pProjectile->GetComponent<SpriteComponent>().lock();
     if (pProjectileSpriteComponent)
     {
+        // Load texture
         auto file = GetCorrectProjectileFile();
         ResourceId resourceId(file);
-        auto pTexture = GetGameManager().GetManager<ResourceManager>()->GetTexture(resourceId);
+        auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
+        pProjectileSpriteComponent->SetSprite(pTexture, sf::Vector2f(.85f, .85f));
 
-        pProjectileSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.05f, 1.05f));
-
-        // Get ship's position, size
+        // Get player position
         sf::Vector2f playerPosition = pOwnerGameObj->GetPosition();
-        sf::Vector2f playerSize = pOwnerGameObj->GetSize();
+        auto crosshairPosition = gameManager.GetManager<CameraManager>()->GetCrosshairPosition();
 
-        auto crosshairPosition = GetGameObject().GetGameManager().GetManager<CameraManager>()->GetCrosshairPosition();
         sf::Vector2f direction = crosshairPosition - playerPosition;
         float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-        if (length != 0)
+        if (length > 0.f)
         {
-            direction /= length; // Normalize
+            direction /= length;
         }
 
-        // Calculate angle in degrees
-        float angleDegrees = std::atan2(direction.y, direction.x) * (180.f / BD::gsPi);
+        // Set rotation angle
+        float angleRadians = std::atan2(direction.y, direction.x);
+        float angleDegrees = angleRadians * (180.f / BD::gsPi);
 
-        // Set projectile position and rotation
+        // Set sprite visual rotation and position
+        pProjectileSpriteComponent->SetRotation(angleDegrees + 90.f); // adjust based on sprite orientation
         pProjectileSpriteComponent->SetPosition(playerPosition);
-        pProjectileSpriteComponent->SetRotation(angleDegrees + 90.f); // Adjust rotation for sprite alignment
+
+        // Create physics body (non-sensor, dynamic)
+        pProjectile->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pProjectile->GetSize(), true /* dynamic */, true /* not a sensor */);
+
+        // Optionally rotate the Box2D body
+        b2Body * pBody = pProjectile->GetPhysicsBody();
+        if (pBody)
+        {
+            b2Vec2 startPos(playerPosition.x / pProjectile->PIXELS_PER_METER, playerPosition.y / pProjectile->PIXELS_PER_METER);
+            float correctedAngle = angleRadians + (BD::gsPi / 2.f);
+            pBody->SetTransform(startPos, correctedAngle); // Apply rotation to physics body
+        }
 
         // Add Collision Component
-        {
-            pProjectile->CreateBoxShapePhysicsBody(&pOwnerGameObj->GetGameManager().GetPhysicsWorld(), pProjectile->GetSize(), true);
-            auto pCollisionComponent = std::make_shared<CollisionComponent>(
-                pProjectile,
-                gameManager,
-                &pOwnerGameObj->GetGameManager().GetPhysicsWorld(),
-                pProjectile->GetPhysicsBody(),
-                pProjectile->GetSize(),
-                true
-            );
-            pProjectile->AddComponent(pCollisionComponent);
-        }
+        auto pCollisionComponent = std::make_shared<CollisionComponent>(
+            pProjectile,
+            gameManager,
+            &gameManager.GetPhysicsWorld(),
+            pProjectile->GetPhysicsBody(),
+            pProjectile->GetSize(),
+            true // NOT a sensor if it should hit things
+        );
+        pProjectile->AddComponent(pCollisionComponent);
 
         // Add Damage Component
-        {
-            auto pDamageComponent = std::make_shared<DamageComponent>(pProjectile, gameManager, mDamagePerShot);
-            pProjectile->AddComponent(pDamageComponent);
-        }
-        
+        auto pDamageComponent = std::make_shared<DamageComponent>(pProjectile, gameManager, mDamagePerShot);
+        pProjectile->AddComponent(pDamageComponent);
+
+        // Track projectile
         mProjectiles.push_back({ projectileHandle, 5.f, direction });
     }
 }
@@ -169,9 +177,16 @@ void ProjectileComponent::UpdateProjectiles(float deltaTime)
         GameObject * pProjectile = gameManager.GetGameObject(projectile.handle);
         if (pProjectile && !pProjectile->IsDestroyed())
         {
-            sf::Vector2f currentPosition = pProjectile->GetPosition();
-            sf::Vector2f newPosition = currentPosition + (projectile.direction * mSpeed * deltaTime);
-            pProjectile->SetPosition(newPosition);
+            b2Body * pBody = pProjectile->GetPhysicsBody();
+            if (pBody)
+            {
+                // Use physics velocity
+                b2Vec2 velocity(
+                    projectile.direction.x * mSpeed / pProjectile->PIXELS_PER_METER,
+                    projectile.direction.y * mSpeed / pProjectile->PIXELS_PER_METER
+                );
+                pBody->SetLinearVelocity(velocity);
+            }
 
             projectile.lifespan -= deltaTime;
         }

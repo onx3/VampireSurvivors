@@ -11,6 +11,7 @@
 #include "PlayerStatsComponent.h"
 #include "BoomerangComponent.h"
 #include "PhantomBladeComponent.h"
+#include "FirePotComponent.h"
 
 namespace
 {
@@ -286,7 +287,12 @@ void AbilityUIManager::ApplySelectedAbility(EAbilityOptions ability)
             mSelectedAbilityOption = EAbilityOptions::FirePot;
             if (pPlayer)
             {
-
+                auto pFirePot = pPlayer->GetComponent<FirePotComponent>().lock();
+                if (!pFirePot)
+                {
+                    pFirePot = std::make_shared<FirePotComponent>(pPlayer, gameManager);
+                    pPlayer->AddComponent(pFirePot);
+                }
             }
             break;
         }

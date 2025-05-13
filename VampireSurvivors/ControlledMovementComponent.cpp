@@ -15,7 +15,7 @@ ControlledMovementComponent::ControlledMovementComponent(GameObject * pOwner, Ga
     , mVelocity(3.f, 3.f)
     , mAcceleration(800.f)
     , mDeceleration(1000.f)
-    , mMaxSpeed(35.f)
+    , mMaxSpeed(25.f)
     , mVelocityX(0.f)
     , mVelocityY(0.f)
     , mName("ControlledMovementComponent")
@@ -62,10 +62,22 @@ void ControlledMovementComponent::Update(float deltaTime)
     sf::Vector2f inputDirection = { 0.f, 0.f };
 
     // Input handling
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) inputDirection.y -= 1.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) inputDirection.y += 1.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) inputDirection.x -= 1.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) inputDirection.x += 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) 
+    {
+        inputDirection.y -= 1.f;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) 
+    {
+        inputDirection.y += 1.f;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    {
+        inputDirection.x -= 1.f;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    {
+        inputDirection.x += 1.f;
+    }
 
     // Normalize to prevent diagonal speed boost
     if (inputDirection.x != 0.f || inputDirection.y != 0.f)

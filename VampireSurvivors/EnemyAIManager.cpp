@@ -178,7 +178,16 @@ void EnemyAIManager::AddEnemies(int count, EEnemy type, sf::Vector2f pos)
 
         // Physics and Collision
         {
-            pEnemy->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), fullSize, true);
+            pEnemy->CreateBoxShapePhysicsBody(
+                &gameManager.GetPhysicsWorld(),
+                fullSize,
+                true,                // isDynamic
+                false                // isSensor
+            );
+
+            auto * pBody = pEnemy->GetPhysicsBody();
+            pBody->SetFixedRotation(true);
+
             auto pCollisionComp = std::make_shared<CollisionComponent>(
                 pEnemy,
                 gameManager,

@@ -4,29 +4,29 @@
 
 enum class EDropType
 {
-	None,
-	NukePickup,
-	LifePickup
+    None,
+    NukePickup,
+    LifePickup
 };
 
 class DropManager : public BaseManager
 {
 public:
-	DropManager(GameManager * pGameManager);
+    DropManager(GameManager * pGameManager);
 
-	virtual void Update(float deltaTime) override;
-	virtual void OnGameEnd() override;
+    virtual void Update(float deltaTime) override;
+    virtual void OnGameEnd() override;
 
-	void CleanUpDrops();
+    void CleanUpDrops();
 
-	void SpawnDrop(EDropType dropType, const sf::Vector2f & position);
+    //void SpawnDrop(EDropType dropType, const sf::Vector2f & position);
 
-	void DropCoins(const sf::Vector2f & position);
+    void DropCoins(const sf::Vector2f & position);
 
-	void MultRadius(float radius);
+    void MultRadius(float radius);
 
 private:
-	float mRadius;
-	std::vector<BD::Handle> mDropHandles;
+    float mRadius;
+    std::vector<BD::Handle> mDropHandles;
 };
 

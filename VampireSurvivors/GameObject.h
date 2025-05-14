@@ -19,9 +19,61 @@ enum class ETeam
     Enemy,
     Neutral,
     CoinDrop,
-    NukeDrop,
-    LifeDrop
 };
+
+enum ECollisionCategory : uint16
+{
+    CATEGORY_NONE = 0x0000,
+    CATEGORY_PLAYER = 0x0001,
+    CATEGORY_FRIENDLY = 0x0002,
+    CATEGORY_ENEMY = 0x0004,
+    CATEGORY_NEUTRAL = 0x0008,
+    CATEGORY_PICKUP = 0x0020,
+    CATEGORY_PROJECTILE = 0x0040,
+};
+
+struct CollisionRule
+{
+    uint16_t categoryBits;
+    uint16_t maskBits;
+};
+
+inline CollisionRule GetCollisionRuleForTeam(ETeam team)
+{
+    switch (team)
+    {
+        case ETeam::Player:
+        {
+            return { CATEGORY_PLAYER, CATEGORY_NEUTRAL | CATEGORY_PICKUP };
+        }
+
+        case ETeam::FriendlyPersistant:
+        case ETeam::FriendlyFleeting:
+        {
+            return { CATEGORY_FRIENDLY, CATEGORY_NEUTRAL | CATEGORY_ENEMY };
+        }
+
+        case ETeam::Enemy:
+        {
+            return { CATEGORY_ENEMY, CATEGORY_NEUTRAL | CATEGORY_FRIENDLY };
+        }
+
+        case ETeam::Neutral:
+        {
+            return { CATEGORY_NEUTRAL, CATEGORY_PLAYER | CATEGORY_ENEMY | CATEGORY_FRIENDLY | CATEGORY_PROJECTILE };
+        }
+
+        case (ETeam::CoinDrop):
+        {
+            return { CATEGORY_PICKUP, CATEGORY_PLAYER };
+        }
+
+        default:
+        {
+            return { CATEGORY_NONE, CATEGORY_NONE };
+        }
+    }
+}
 
 class GameObject : public sf::Drawable
 {

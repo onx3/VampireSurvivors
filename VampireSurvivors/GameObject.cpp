@@ -90,6 +90,10 @@ void GameObject::CreateBoxShapePhysicsBody(b2World * world, const sf::Vector2f &
     fixtureDef.friction = 0.3f;
     fixtureDef.isSensor = isSensor;
 
+    CollisionRule rule = GetCollisionRuleForTeam(mTeam);
+    fixtureDef.filter.categoryBits = rule.categoryBits;
+    fixtureDef.filter.maskBits = rule.maskBits;
+
     // Attach the fixture to the body
     mpPhysicsBody->CreateFixture(&fixtureDef);
 

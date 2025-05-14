@@ -133,7 +133,12 @@ void PhantomBladeComponent::CastPhantomBlade(GameObject & enemy)
 		auto pShotCollisionComponent = pPhantomeBlade->GetComponent<CollisionComponent>().lock();
 		if (!pShotCollisionComponent)
 		{
-			pPhantomeBlade->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pPhantomeBlade->GetSize(), true);
+            pPhantomeBlade->CreateBoxShapePhysicsBody(
+                &gameManager.GetPhysicsWorld(),
+                pPhantomeBlade->GetSize(),
+                true,                   // isDynamic
+                true                   // isSensor
+            );
 
 			pPhantomeBlade->AddComponent(std::make_shared<CollisionComponent>(
 				pPhantomeBlade,

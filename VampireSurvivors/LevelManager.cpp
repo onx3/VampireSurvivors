@@ -199,7 +199,7 @@ void LevelManager::ParseTileData(const json & levelData)
             {
                 if (cellY >= 0 && cellY < mHeight && cellX >= 0 && cellX < mWidth)
                 {
-                    mTileData[cellY][cellX] = 1; // Optional: still useful for pathfinding
+                    mTileData[cellY][cellX] = 1;
 
                     // Create a non-visible GameObject with collision only
                     BD::Handle handle = gameManager.CreateNewGameObject(ETeam::Neutral, gameManager.GetRootGameObjectHandle());
@@ -218,8 +218,8 @@ void LevelManager::ParseTileData(const json & levelData)
                     pTileObj->CreateBoxShapePhysicsBody(
                         &gameManager.GetPhysicsWorld(),
                         sf::Vector2f(float(tileWidth), float(tileHeight)),
-                        false, // static
-                        false  // not a sensor
+                        false,                  // isDynamic = false
+                        false                   // isSensor
                     );
 
                     auto pCollision = std::make_shared<CollisionComponent>(
@@ -339,7 +339,13 @@ void LevelManager::ParseTileData(const json & levelData)
                     auto pCollisionComponent = pObj->GetComponent<CollisionComponent>().lock();
                     if (!pCollisionComponent)
                     {
-                        pObj->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pObj->GetSize(), false /*IsDynamic*/, false /*IsSensor*/);
+                        pObj->CreateBoxShapePhysicsBody(
+                            &gameManager.GetPhysicsWorld(),
+                            pObj->GetSize(),
+                            false,                          // isDynamic (static)
+                            false                           // isSensor
+                        );
+
                         pObj->AddComponent(std::make_shared<CollisionComponent>(
                             pObj,
                             gameManager,

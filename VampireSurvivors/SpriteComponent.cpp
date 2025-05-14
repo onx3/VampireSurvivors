@@ -5,6 +5,8 @@
 
 SpriteComponent::SpriteComponent(GameObject * pOwner, GameManager & gameManager)
     : GameComponent(pOwner, gameManager)
+    , mSprite()
+    , mSize()
     , mRotationSpeed(3.f)
     , mCurrentRotation(0.f)
     , mName("SpriteComponent")
@@ -104,6 +106,22 @@ void SpriteComponent::SetRotation(float angle)
 float SpriteComponent::GetRotation() const
 {
     return mSprite.getRotation();
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void SpriteComponent::SetSize(sf::Vector2f vec)
+{
+    mSize = vec;
+
+    sf::FloatRect localBounds = mSprite.getLocalBounds();
+    if (localBounds.width > 0.f && localBounds.height > 0.f)
+    {
+        mSprite.setScale(
+            vec.x / localBounds.width,
+            vec.y / localBounds.height
+        );
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

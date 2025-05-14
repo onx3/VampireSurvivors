@@ -174,6 +174,7 @@
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_tables.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
+    <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="LightComponent.cpp" />
     <ClCompile Include="LightManager.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="HealthComponent.h" />
+    <ClInclude Include="InputHandler.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="LightComponent.h" />
     <ClInclude Include="LightManager.h" />

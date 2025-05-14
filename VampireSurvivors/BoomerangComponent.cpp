@@ -111,20 +111,25 @@ void BoomerangComponent::ThrowBoomerang(GameObject & enemy)
 
 	// Collision Component
 	{
-		auto pShotCollisionComponent = pBoomerangObj->GetComponent<CollisionComponent>().lock();
-		if (!pShotCollisionComponent)
-		{
-			pBoomerangObj->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pBoomerangObj->GetSize(), true);
+        auto pShotCollisionComponent = pBoomerangObj->GetComponent<CollisionComponent>().lock();
+        if (!pShotCollisionComponent)
+        {
+            pBoomerangObj->CreateBoxShapePhysicsBody(
+                &gameManager.GetPhysicsWorld(),
+                pBoomerangObj->GetSize(),
+                true,                  // isDynamic
+                true                  // isSensor
+            );
 
-			pBoomerangObj->AddComponent(std::make_shared<CollisionComponent>(
-				pBoomerangObj,
-				gameManager,
-				&gameManager.GetPhysicsWorld(),
-				pBoomerangObj->GetPhysicsBody(),
-				pBoomerangObj->GetSize(),
-				true
-			));
-		}
+            pBoomerangObj->AddComponent(std::make_shared<CollisionComponent>(
+                pBoomerangObj,
+                gameManager,
+                &gameManager.GetPhysicsWorld(),
+                pBoomerangObj->GetPhysicsBody(),
+                pBoomerangObj->GetSize(),
+                true
+            ));
+        }
 	}
 
 	// DamageComponent

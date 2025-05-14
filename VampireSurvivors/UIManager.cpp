@@ -203,6 +203,13 @@ int UIManager::GetScore() const
 
 //------------------------------------------------------------------------------------------------------------------------
 
+void UIManager::RemoveScore(int removeScore)
+{
+    mScore -= removeScore;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
 const sf::Text & UIManager::GetRunTimeText()
 {
     return mRunTimeText;

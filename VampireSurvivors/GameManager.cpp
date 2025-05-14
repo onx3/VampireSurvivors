@@ -314,72 +314,77 @@ void GameManager::RenderGameObjectImGui()
         mpWindow->setMouseCursorVisible(true);
         ImGui::Begin("Game Objects", &mShowImGuiWindow, ImGuiWindowFlags_NoCollapse);
 
-        ImGui::Columns(2, "GameObjectsColumns", true);
+        float childWidth = ImGui::GetContentRegionAvail().x * 0.5f;
+        float childHeight = ImGui::GetContentRegionAvail().y;
 
-        // LEFT SIDE: GameObject Tree
-        RenderConCommands();
-
-        ImGui::Text("GameObject Tree");
-        ImGui::Separator();
-
-        std::stack<std::pair<GameObject *, int>> stack; // GameObject* + Depth
-        stack.push({ GetGameObject(mRootHandle), 0 });
-
-        while (!stack.empty())
+        // LEFT: GameObject Tree
+        ImGui::BeginChild("GameObjectTree", ImVec2(childWidth, childHeight), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
         {
-            auto [pGameObject, depth] = stack.top();
-            stack.pop();
+            ImGui::Text("GameObject Tree");
+            ImGui::Separator();
 
-            if (!pGameObject || pGameObject->IsDestroyed())
-                continue;
+            std::stack<std::pair<GameObject *, int>> stack;
+            stack.push({ GetGameObject(mRootHandle), 0 });
 
-            ImGui::Indent(depth * 10.0f);
-
-            std::string label = "GameObject " + std::to_string(reinterpret_cast<std::uintptr_t>(pGameObject));
-            if (ImGui::Selectable(label.c_str(), pSelectedGameObject == pGameObject))
+            while (!stack.empty())
             {
-                pSelectedGameObject = pGameObject;
-            }
+                auto [pGameObject, depth] = stack.top();
+                stack.pop();
 
-            std::vector<GameObject *> childObjs;
-            pGameObject->GetChildren(childObjs);
-            for (auto * child : childObjs)
-            {
-                stack.push({ child, depth + 1 });
-            }
+                if (!pGameObject || pGameObject->IsDestroyed())
+                    continue;
 
-            ImGui::Unindent(depth * 10.0f);
-        }
+                ImGui::Indent(depth * 10.0f);
 
-        ImGui::NextColumn();
-
-        // RIGHT SIDE: Components of the Selected GameObject
-        ImGui::Text("Components");
-        ImGui::Separator();
-
-        if (pSelectedGameObject && !pSelectedGameObject->IsDestroyed())
-        {
-            ImGui::Text("GameObject %p", pSelectedGameObject);
-
-            for (auto * pComponent : pSelectedGameObject->GetAllComponents())
-            {
-                std::string componentLabel = "" + pComponent->GetClassName();
-
-                if (ImGui::CollapsingHeader(componentLabel.c_str()))
+                std::string label = "GameObject " + std::to_string(reinterpret_cast<std::uintptr_t>(pGameObject));
+                if (ImGui::Selectable(label.c_str(), pSelectedGameObject == pGameObject))
                 {
-                    pComponent->DebugImGuiComponentInfo();
+                    pSelectedGameObject = pGameObject;
+                }
+
+                std::vector<GameObject *> childObjs;
+                pGameObject->GetChildren(childObjs);
+                for (auto * child : childObjs)
+                {
+                    stack.push({ child, depth + 1 });
+                }
+
+                ImGui::Unindent(depth * 10.0f);
+            }
+        }
+        ImGui::EndChild();
+
+        ImGui::SameLine();
+
+        // RIGHT: Component Panel
+        ImGui::BeginChild("ComponentPanel", ImVec2(0, childHeight), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+        {
+            ImGui::Text("Components");
+            ImGui::Separator();
+
+            if (pSelectedGameObject && !pSelectedGameObject->IsDestroyed())
+            {
+                ImGui::Text("GameObject %p", pSelectedGameObject);
+
+                for (auto * pComponent : pSelectedGameObject->GetAllComponents())
+                {
+                    std::string componentLabel = pComponent->GetClassName();
+
+                    if (ImGui::CollapsingHeader(componentLabel.c_str()))
+                    {
+                        pComponent->DebugImGuiComponentInfo();
+                    }
                 }
             }
+            else
+            {
+                ImGui::Text("No GameObject selected or it has been deleted.");
+                pSelectedGameObject = nullptr;
+            }
         }
-        else
-        {
-            ImGui::Text("No GameObject selected or it has been deleted.");
-            pSelectedGameObject = nullptr;
-        }
+        ImGui::EndChild();
 
-        ImGui::Columns(1);
-
-        ImGui::End();
+        ImGui::End(); // Main window
     }
 #endif
 }

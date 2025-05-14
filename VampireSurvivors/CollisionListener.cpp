@@ -159,48 +159,6 @@ void CollisionListener::HandleCollision(GameObject * pObjA, GameObject * pObjB)
             pObjA->Deactivate();
         }
     }
-    // Nuke Drop
-    else if (pObjA->GetTeam() == ETeam::Player && pObjB->GetTeam() == ETeam::NukeDrop)
-    {
-        if (pObjA->IsActive() && pObjB->IsActive())
-        {
-            mpGameManager->GetManager<EnemyAIManager>()->DestroyAllEnemies();
-            pObjB->Deactivate();
-        }
-    }
-    else if (pObjA->GetTeam() == ETeam::NukeDrop && pObjB->GetTeam() == ETeam::Player)
-    {
-        if (pObjA->IsActive() && pObjB->IsActive())
-        {
-            mpGameManager->GetManager<EnemyAIManager>()->DestroyAllEnemies();
-            pObjB->Deactivate();
-        }
-    }
-    // Life Drop
-    else if (pObjA->GetTeam() == ETeam::Player && pObjB->GetTeam() == ETeam::LifeDrop)
-    {
-        if (pObjA->IsActive() && pObjB->IsActive())
-        {
-            auto pObjAHealthComp = pObjA->GetComponent<HealthComponent>().lock();
-            if (pObjAHealthComp)
-            {
-                pObjAHealthComp->AddLife(1);
-            }
-            pObjB->Destroy();
-        }
-    }
-    else if (pObjA->GetTeam() == ETeam::LifeDrop && pObjB->GetTeam() == ETeam::Player)
-    {
-        if (pObjA->IsActive() && pObjB->IsActive())
-        {
-            auto pObjBHealthComp = pObjB->GetComponent<HealthComponent>().lock();
-            if (pObjBHealthComp)
-            {
-                pObjBHealthComp->AddLife(1);
-            }
-            pObjA->Destroy();
-        }
-    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

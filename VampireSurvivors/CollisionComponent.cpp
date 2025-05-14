@@ -65,6 +65,13 @@ std::string & CollisionComponent::GetClassName()
 void CollisionComponent::SetActive(bool active)
 {
     mIsActive = active;
+    if (mpBody)
+    {
+        for (b2Fixture * pFixture = mpBody->GetFixtureList(); pFixture; pFixture = pFixture->GetNext())
+        {
+            pFixture->SetSensor(!active); // true = sensor = no collision resolution
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

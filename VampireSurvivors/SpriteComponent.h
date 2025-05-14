@@ -26,6 +26,8 @@ public:
 	void SetRotation(float angle);
 	float GetRotation() const;
 
+    void SetSize(sf::Vector2f vec);
+
     void SetScale(const sf::Vector2f & scale);
     const sf::Vector2f & GetScale() const;
 
@@ -40,6 +42,7 @@ public:
 
 private:
 	sf::Sprite mSprite;
+    sf::Vector2f mSize;
 	float mRotationSpeed;
 	float mCurrentRotation;
 	std::string mName;

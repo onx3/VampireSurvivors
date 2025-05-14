@@ -95,7 +95,12 @@ void ProjectileComponent::Shoot()
         pProjectileSpriteComponent->SetPosition(playerPosition);
 
         // Create physics body (non-sensor, dynamic)
-        pProjectile->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pProjectile->GetSize(), true /* dynamic */, true /* not a sensor */);
+        pProjectile->CreateBoxShapePhysicsBody(
+            &gameManager.GetPhysicsWorld(),
+            pProjectile->GetSize(),
+            true,                   // isDynamic
+            true                    // isSensor
+        );
 
         // Optionally rotate the Box2D body
         b2Body * pBody = pProjectile->GetPhysicsBody();

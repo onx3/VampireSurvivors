@@ -29,6 +29,7 @@ D:\VampireSurvivors\VampireSurvivors\imgui.cpp;D:\VampireSurvivors\VampireSurviv
 D:\VampireSurvivors\VampireSurvivors\imgui_draw.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\imgui_draw.obj
 D:\VampireSurvivors\VampireSurvivors\imgui_tables.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\imgui_tables.obj
 D:\VampireSurvivors\VampireSurvivors\imgui_widgets.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\imgui_widgets.obj
+D:\VampireSurvivors\VampireSurvivors\InputHandler.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\InputHandler.obj
 D:\VampireSurvivors\VampireSurvivors\LevelManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\LevelManager.obj
 D:\VampireSurvivors\VampireSurvivors\LightComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\LightComponent.obj
 D:\VampireSurvivors\VampireSurvivors\LightManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\LightManager.obj

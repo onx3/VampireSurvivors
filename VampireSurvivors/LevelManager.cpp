@@ -262,14 +262,13 @@ void LevelManager::ParseTileData(const json & levelData)
             int px = entity["px"][0];
             int py = entity["px"][1];
 
-            BD::Handle objHandle = gameManager.CreateNewGameObject(ETeam::Neutral, gameManager.GetRootGameObjectHandle());
-            GameObject * pObj = gameManager.GetGameObject(objHandle);
-            if (pObj)
+            if (entityName == "Torch")
             {
-                pObj->SetPosition(sf::Vector2f(float(px), float(py)));
-
-                if (entityName == "Torch")
+                BD::Handle objHandle = gameManager.CreateNewGameObject(ETeam::Neutral, gameManager.GetRootGameObjectHandle());
+                GameObject * pObj = gameManager.GetGameObject(objHandle);
+                if (pObj)
                 {
+                    pObj->SetPosition(sf::Vector2f(float(px), float(py)));
                     auto pSpriteComponent = pObj->GetComponent<SpriteComponent>().lock();
                     if (pSpriteComponent)
                     {
@@ -290,15 +289,83 @@ void LevelManager::ParseTileData(const json & levelData)
                     }
                     CreateTorchAnimation(*pObj);
                 }
-                else if (entityName == "PlayerSpawnPosition")
+            }
+            else if (entityName == "PlayerSpawnPosition")
+            {
+                mLevelData.playerSpawnPosition = sf::Vector2f(float(px), float(py));
+            }
+            else if (entityName == "EnemySpawnPosition")
+            {
+                mLevelData.enemySpawnPositions.emplace_back(sf::Vector2f(float(px), float(py)));
+            }
+            else if (entityName == "AbilityStatue")
+            {
+                BD::Handle objHandle = gameManager.CreateNewGameObject(ETeam::Neutral, gameManager.GetRootGameObjectHandle());
+                GameObject * pObj = gameManager.GetGameObject(objHandle);
+                if (pObj)
                 {
-                    mLevelData.playerSpawnPosition = sf::Vector2f(float(px), float(py));
+                    auto pSpriteComponent = pObj->GetComponent<SpriteComponent>().lock();
+                    if (pSpriteComponent)
+                    {
+                        ResourceId closedResId = ResourceId("../../VampireSurvivors/Art/Door/DoorClosed.png");
+                        auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(closedResId);
+                        if (pTexture)
+                        {
+                            // Set the sprite to span the full door size
+                            pSpriteComponent->SetSprite(pTexture);
+                            pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 32, 48)); // or whatever size
+                        }
+                    }
+
+                    int price = -1;
+
+                    if (entity.contains("fieldInstances"))
+                    {
+                        const auto & fields = entity["fieldInstances"];
+                        for (const auto & field : fields)
+                        {
+                            if (field.contains("__identifier") && field["__identifier"] == "Price")
+                            {
+                                if (field.contains("__value") && field["__value"].is_number_integer())
+                                {
+                                    price = field["__value"];
+                                }
+                                break;
+                            }
+                        }
+                    }
+
+                    //Add a DoorComponent to track state
+                    auto pDoorComp = std::make_shared<DoorComponent>(pObj, gameManager, price);
+                    pObj->AddComponent(pDoorComp);
+
+                    // Collision Component
+                    auto pCollisionComponent = pObj->GetComponent<CollisionComponent>().lock();
+                    if (!pCollisionComponent)
+                    {
+                        pObj->CreateBoxShapePhysicsBody(
+                            &gameManager.GetPhysicsWorld(),
+                            pObj->GetSize(),
+                            false,                          // isDynamic (static)
+                            false                           // isSensor
+                        );
+
+                        pObj->AddComponent(std::make_shared<CollisionComponent>(
+                            pObj,
+                            gameManager,
+                            &gameManager.GetPhysicsWorld(),
+                            pObj->GetPhysicsBody(),
+                            pObj->GetSize(),
+                            true
+                        ));
+                    }
                 }
-                else if (entityName == "EnemySpawnPosition")
-                {
-                    mLevelData.enemySpawnPositions.emplace_back(sf::Vector2f(float(px), float(py)));
-                }
-                else if (entityName == "Door")
+            }
+            else if (entityName == "Door")
+            {
+                BD::Handle objHandle = gameManager.CreateNewGameObject(ETeam::Neutral, gameManager.GetRootGameObjectHandle());
+                GameObject * pObj = gameManager.GetGameObject(objHandle);
+                if (pObj)
                 {
                     auto pSpriteComponent = pObj->GetComponent<SpriteComponent>().lock();
                     if (pSpriteComponent)

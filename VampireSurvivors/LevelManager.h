@@ -13,10 +13,20 @@ struct TileLayer
 	std::shared_ptr<sf::Texture> texture;
 };
 
+struct RoomData
+{
+    std::string name;
+    sf::FloatRect bounds;
+    std::vector<sf::Vector2f> enemySpawnPositions;
+
+    sf::Vector2f center;
+    std::vector<size_t> neighborIndices;
+};
+
 struct LevelData
 {
     sf::Vector2f playerSpawnPosition;
-    std::vector<sf::Vector2f> enemySpawnPositions;
+    std::vector<RoomData> rooms;
 };
 
 using json = nlohmann::json;
@@ -36,6 +46,8 @@ public:
 
 	sf::Vector2f GetLevelCenterWorldPos() const;
     const LevelData & GetLevelData() const;
+
+    const RoomData * GetRoomAtPosition(const sf::Vector2f & pos) const;
 
 private:
 	void ParseTileData(const json & levelData);

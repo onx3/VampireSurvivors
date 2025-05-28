@@ -3,7 +3,7 @@
 class SpawnFromGroundEffectComponent : public GameComponent
 {
 public:
-    SpawnFromGroundEffectComponent(GameObject * pOwner, GameManager & gameManager, EEnemy enemyType, BD::Handle targetHandle, float health, float duration = 5.5f);
+    SpawnFromGroundEffectComponent(GameObject * pOwner, GameManager & gameManager, EEnemy enemyType, BD::Handle targetHandle, float health, float duration = 2.5f);
 
     virtual void Update(float deltaTime) override;
     virtual void DebugImGuiComponentInfo() override;

@@ -7,6 +7,7 @@
 #include "SpriteAnimationComponent.h"
 #include "DoorComponent.h"
 #include "CollisionComponent.h"
+#include "AbilitySelectionComponent.h"
 
 LevelManager::LevelManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
@@ -92,6 +93,20 @@ sf::Vector2f LevelManager::GetLevelCenterWorldPos() const
 const LevelData & LevelManager::GetLevelData() const
 {
     return mLevelData;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+const RoomData * LevelManager::GetRoomAtPosition(const sf::Vector2f & pos) const
+{
+    for (const auto & room : mLevelData.rooms)
+    {
+        if (room.bounds.contains(pos))
+        {
+            return &room;
+        }
+    }
+    return nullptr;
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -250,6 +265,248 @@ void LevelManager::ParseTileData(const json & levelData)
         mTileLayers.push_back(std::move(tileLayer));
     }
 
+    // === FIRST PASS: COLLECT ROOMS ===
+    for (const auto & layer : layerInstances)
+    {
+        if (!layer.contains("entityInstances")) continue;
+        const auto & entities = layer["entityInstances"];
+
+        for (const auto & entity : entities)
+        {
+            std::string entityName = entity["__identifier"];
+            if (entityName != "Room") continue;
+
+            int px = entity["px"][0];
+            int py = entity["px"][1];
+
+            sf::FloatRect roomBounds;
+            roomBounds.left = float(px);
+            roomBounds.top = float(py);
+            roomBounds.width = float(entity["width"]);
+            roomBounds.height = float(entity["height"]);
+
+            float centerX = (roomBounds.left + roomBounds.width) / 2;
+            float centerY = (roomBounds.top + roomBounds.height) / 2;
+            
+            std::string roomName;
+
+            if (entity.contains("fieldInstances"))
+            {
+                const auto & fields = entity["fieldInstances"];
+                for (const auto & field : fields)
+                {
+                    if (field.contains("__identifier") && field["__identifier"] == "RoomName" &&
+                        field.contains("__value") && field["__value"].is_string())
+                    {
+                        roomName = field["__value"];
+                        break;
+                    }
+                }
+            }
+
+            mLevelData.rooms.push_back({ roomName, roomBounds, {}, sf::Vector2f{centerX, centerY} });
+        }
+    }
+
+    // === SECOND PASS: ALL OTHER ENTITIES ===
+    for (const auto & layer : layerInstances)
+    {
+        if (!layer.contains("entityInstances")) continue;
+        const auto & entities = layer["entityInstances"];
+
+        for (const auto & entity : entities)
+        {
+            std::string entityName = entity["__identifier"];
+            if (entityName == "Room") continue; // skip, already processed
+
+            int px = entity["px"][0];
+            int py = entity["px"][1];
+            sf::Vector2f pos = sf::Vector2f(float(px), float(py));
+
+            if (entityName == "EnemySpawnPosition")
+            {
+                // Assign enemy to the first room that contains it
+                for (auto & room : mLevelData.rooms)
+                {
+                    if (room.bounds.contains(pos.x, pos.y))
+                    {
+                        room.enemySpawnPositions.push_back(pos);
+                        break;
+                    }
+                }
+            }
+            else if (entityName == "PlayerSpawnPosition")
+            {
+                mLevelData.playerSpawnPosition = pos;
+            }
+            else if (entityName == "Torch")
+            {
+                BD::Handle objHandle = gameManager.CreateNewGameObject(ETeam::Neutral, gameManager.GetRootGameObjectHandle());
+                GameObject * pObj = gameManager.GetGameObject(objHandle);
+                if (pObj)
+                {
+                    pObj->SetPosition(sf::Vector2f(float(px), float(py)));
+                    auto pSpriteComponent = pObj->GetComponent<SpriteComponent>().lock();
+                    if (pSpriteComponent)
+                    {
+                        ResourceId resId = ResourceId("../../VampireSurvivors/Art/Torch/TorchYellow.png");
+                        auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resId);
+                        if (pTexture)
+                        {
+                            pSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.2f, 1.2f));
+                            pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 16, 28));
+                            pSpriteComponent->GetSprite().setOrigin(8.f, 14.f);
+                        }
+                    }
+                    auto pLightComponent = pObj->GetComponent<LightComponent>().lock();
+                    if (!pLightComponent)
+                    {
+                        pLightComponent = std::make_shared<LightComponent>(pObj, gameManager, 200.f, sf::Color(255, 140, 0, 180));
+                        pObj->AddComponent(pLightComponent);
+                    }
+                    CreateTorchAnimation(*pObj);
+                }
+            }
+            else if (entityName == "AbilityStatue")
+            {
+                BD::Handle objHandle = gameManager.CreateNewGameObject(ETeam::Neutral, gameManager.GetRootGameObjectHandle());
+                GameObject * pObj = gameManager.GetGameObject(objHandle);
+                if (pObj)
+                {
+                    pObj->SetPosition(sf::Vector2f(float(px), float(py)));
+                    int price = -1;
+                    if (entity.contains("fieldInstances"))
+                    {
+                        const auto & fields = entity["fieldInstances"];
+                        for (const auto & field : fields)
+                        {
+                            if (field.contains("__identifier") && field["__identifier"] == "Price")
+                            {
+                                if (field.contains("__value") && field["__value"].is_number_integer())
+                                {
+                                    price = field["__value"];
+                                }
+                                break;
+                            }
+                        }
+                    }
+
+                    //Add an AbilitySelectionComponent to track state
+                    auto pDoorComp = std::make_shared<AbilitySelectionComponent>(pObj, gameManager);
+                    pObj->AddComponent(pDoorComp);
+                }
+            }
+            else if (entityName == "Door")
+            {
+                BD::Handle objHandle = gameManager.CreateNewGameObject(ETeam::Neutral, gameManager.GetRootGameObjectHandle());
+                GameObject * pObj = gameManager.GetGameObject(objHandle);
+                if (pObj)
+                {
+                    pObj->SetPosition(sf::Vector2f(float(px), float(py)));
+                    auto pSpriteComponent = pObj->GetComponent<SpriteComponent>().lock();
+                    if (pSpriteComponent)
+                    {
+                        ResourceId closedResId = ResourceId("../../VampireSurvivors/Art/Door/DoorClosed.png");
+                        auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(closedResId);
+                        if (pTexture)
+                        {
+                            // Set the sprite to span the full door size
+                            pSpriteComponent->SetSprite(pTexture);
+                            pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 32, 48)); // or whatever size
+                        }
+                    }
+                    int price = -1;
+                    if (entity.contains("fieldInstances"))
+                    {
+                        const auto & fields = entity["fieldInstances"];
+                        for (const auto & field : fields)
+                        {
+                            if (field.contains("__identifier") && field["__identifier"] == "Price")
+                            {
+                                if (field.contains("__value") && field["__value"].is_number_integer())
+                                {
+                                    price = field["__value"];
+                                }
+                                break;
+                            }
+                        }
+                    }
+
+                    //Add a DoorComponent to track state
+                    auto pDoorComp = std::make_shared<DoorComponent>(pObj, gameManager, price);
+                    pObj->AddComponent(pDoorComp);
+
+                    // Collision Component
+                    auto pCollisionComponent = pObj->GetComponent<CollisionComponent>().lock();
+                    if (!pCollisionComponent)
+                    {
+                        pObj->CreateBoxShapePhysicsBody(
+                            &gameManager.GetPhysicsWorld(),
+                            pObj->GetSize(),
+                            false,                          // isDynamic (static)
+                            false                           // isSensor
+                        );
+
+                        pObj->AddComponent(std::make_shared<CollisionComponent>(
+                            pObj,
+                            gameManager,
+                            &gameManager.GetPhysicsWorld(),
+                            pObj->GetPhysicsBody(),
+                            pObj->GetSize(),
+                            true
+                        ));
+                    }
+                }
+            }
+            else if (entityName == "RoomConnection")
+            {
+                std::string roomA, roomB;
+
+                if (entity.contains("fieldInstances"))
+                {
+                    const auto & fields = entity["fieldInstances"];
+                    for (const auto & field : fields)
+                    {
+                        if (field["__identifier"] == "RoomA" && field["__value"].is_string())
+                            roomA = field["__value"];
+                        else if (field["__identifier"] == "RoomB" && field["__value"].is_string())
+                            roomB = field["__value"];
+                    }
+                }
+
+                if (!roomA.empty() && !roomB.empty())
+                {
+                    int idxA = -1;
+                    int idxB = -1;
+
+                    for (size_t i = 0; i < mLevelData.rooms.size(); ++i)
+                    {
+                        if (mLevelData.rooms[i].name == roomA) idxA = int(i);
+                        if (mLevelData.rooms[i].name == roomB) idxB = int(i);
+                    }
+
+                    if (idxA != -1 && idxB != -1)
+                    {
+                        auto & roomRefA = mLevelData.rooms[idxA];
+                        auto & roomRefB = mLevelData.rooms[idxB];
+
+                        if (std::find(roomRefA.neighborIndices.begin(), roomRefA.neighborIndices.end(), idxB) == roomRefA.neighborIndices.end())
+                            roomRefA.neighborIndices.push_back(idxB);
+
+                        if (std::find(roomRefB.neighborIndices.begin(), roomRefB.neighborIndices.end(), idxA) == roomRefB.neighborIndices.end())
+                            roomRefB.neighborIndices.push_back(idxA);
+                    }
+                    else
+                    {
+                        std::cerr << "Warning: RoomConnection failed. Could not find one or both rooms: "
+                            << roomA << " or " << roomB << std::endl;
+                    }
+                }
+                }
+        }
+    }
+
+#if 0
     // === ENTITY CREATION SUPPORT ===
     for (const auto & layer : layerInstances)
     {
@@ -304,21 +561,8 @@ void LevelManager::ParseTileData(const json & levelData)
                 GameObject * pObj = gameManager.GetGameObject(objHandle);
                 if (pObj)
                 {
-                    auto pSpriteComponent = pObj->GetComponent<SpriteComponent>().lock();
-                    if (pSpriteComponent)
-                    {
-                        ResourceId closedResId = ResourceId("../../VampireSurvivors/Art/Door/DoorClosed.png");
-                        auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(closedResId);
-                        if (pTexture)
-                        {
-                            // Set the sprite to span the full door size
-                            pSpriteComponent->SetSprite(pTexture);
-                            pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 32, 48)); // or whatever size
-                        }
-                    }
-
+                    pObj->SetPosition(sf::Vector2f(float(px), float(py)));
                     int price = -1;
-
                     if (entity.contains("fieldInstances"))
                     {
                         const auto & fields = entity["fieldInstances"];
@@ -335,31 +579,10 @@ void LevelManager::ParseTileData(const json & levelData)
                         }
                     }
 
-                    //Add a DoorComponent to track state
-                    auto pDoorComp = std::make_shared<DoorComponent>(pObj, gameManager, price);
+                    //Add an AbilitySelectionComponent to track state
+                    auto pDoorComp = std::make_shared<AbilitySelectionComponent>(pObj, gameManager);
                     pObj->AddComponent(pDoorComp);
-
-                    // Collision Component
-                    auto pCollisionComponent = pObj->GetComponent<CollisionComponent>().lock();
-                    if (!pCollisionComponent)
-                    {
-                        pObj->CreateBoxShapePhysicsBody(
-                            &gameManager.GetPhysicsWorld(),
-                            pObj->GetSize(),
-                            false,                          // isDynamic (static)
-                            false                           // isSensor
-                        );
-
-                        pObj->AddComponent(std::make_shared<CollisionComponent>(
-                            pObj,
-                            gameManager,
-                            &gameManager.GetPhysicsWorld(),
-                            pObj->GetPhysicsBody(),
-                            pObj->GetSize(),
-                            true
-                        ));
                     }
-                }
             }
             else if (entityName == "Door")
             {
@@ -367,6 +590,7 @@ void LevelManager::ParseTileData(const json & levelData)
                 GameObject * pObj = gameManager.GetGameObject(objHandle);
                 if (pObj)
                 {
+                    pObj->SetPosition(sf::Vector2f(float(px), float(py)));
                     auto pSpriteComponent = pObj->GetComponent<SpriteComponent>().lock();
                     if (pSpriteComponent)
                     {
@@ -379,9 +603,7 @@ void LevelManager::ParseTileData(const json & levelData)
                             pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 32, 48)); // or whatever size
                         }
                     }
-
                     int price = -1;
-
                     if (entity.contains("fieldInstances"))
                     {
                         const auto & fields = entity["fieldInstances"];
@@ -424,8 +646,34 @@ void LevelManager::ParseTileData(const json & levelData)
                     }
                 }
             }
+            else if (entityName == "Room")
+            {
+                sf::FloatRect roomBounds;
+                roomBounds.left = float(px);
+                roomBounds.top = float(py);
+                roomBounds.width = float(entity["width"]);
+                roomBounds.height = float(entity["height"]);
+
+                std::string roomName;
+                if (entity.contains("fieldInstances"))
+                {
+                    const auto & fields = entity["fieldInstances"];
+                    for (const auto & field : fields)
+                    {
+                        if (field.contains("__identifier") && field["__identifier"] == "RoomName")
+                        {
+                            if (field.contains("__value") && field["__value"].is_string())
+                            {
+                                roomName = field["__value"];
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
+#endif
 }
 
 //------------------------------------------------------------------------------------------------------------------------

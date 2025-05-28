@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseManager.h"
+#include "LevelManager.h"
 
 class PlayerManager : public BaseManager
 {
@@ -19,6 +20,8 @@ public:
     const std::vector<BD::Handle> & GetPlayers() const;
 
     GameObject * FindClosestEnemy();
+
+    const RoomData * GetCurrentRoom() const;
 private:
     void CreateAnimationComponent(GameObject & player);
     void AddSwordGameObject(GameObject & player);
@@ -26,6 +29,7 @@ private:
     std::vector<BD::Handle> mPlayerHandles;
 
     sf::Vector2f mSpawnPos;
+    const RoomData * mpCurrentRoom;
     // Audio
     sf::SoundBuffer mLoseLifeSoundBuffer;
     sf::SoundBuffer mDeathSoundBuffer;

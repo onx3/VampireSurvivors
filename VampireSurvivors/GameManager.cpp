@@ -491,7 +491,7 @@ void GameManager::Render(float deltaTime)
             auto * pAbilityUIManager = GetManager<AbilityUIManager>();
             if (pAbilityUIManager)
             {
-                pAbilityUIManager->DrawAbilitySelectionUI(mGameState);
+                pAbilityUIManager->DrawAbilitySelectionUI();
             }
         }
 

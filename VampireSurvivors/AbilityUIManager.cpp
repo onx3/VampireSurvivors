@@ -75,8 +75,9 @@ AbilityUIManager::~AbilityUIManager()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void AbilityUIManager::DrawAbilitySelectionUI(EGameState & gameState)
+void AbilityUIManager::DrawAbilitySelectionUI()
 {
+    GameManager & gameManager = GetGameManager();
     ImGui::Begin("Choose Your Ability");
 
     static std::vector<EAbilityOptions> selectedAbilities;
@@ -107,7 +108,7 @@ void AbilityUIManager::DrawAbilitySelectionUI(EGameState & gameState)
         if (ImGui::Button(label.c_str(), ImVec2(200, 40)))
         {
             ApplySelectedAbility(ability);
-            gameState = EGameState::Running;
+            gameManager.SetGameState(EGameState::Running);
             initialized = false;
         }
 

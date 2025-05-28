@@ -28,6 +28,8 @@ namespace
 PlayerManager::PlayerManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
     , mPlayerHandles()
+    , mSpawnPos()
+    , mpCurrentRoom(nullptr)
     , mLoseLifeSoundBuffer()
     , mDeathSoundBuffer()
     , mLoseLifeSound()
@@ -38,6 +40,7 @@ PlayerManager::PlayerManager(GameManager * pGameManager)
     if (pLevelManager)
     {
         mSpawnPos = pLevelManager->GetLevelData().playerSpawnPosition;
+        assert(!pLevelManager->GetLevelData().rooms.empty() && "No Rooms in current level");
     }
     InitPlayer();
 
@@ -200,6 +203,13 @@ void PlayerManager::Update(float deltaTime)
         {
             GameObject * pPlayer = gameManager.GetGameObject(playerHandle);
 
+            // Set correct room
+            auto pLevelManager = gameManager.GetManager<LevelManager>();
+            if (pLevelManager)
+            {
+                mpCurrentRoom = pLevelManager->GetRoomAtPosition(pPlayer->GetPosition());
+            }
+
             // Destroy the player after the explosion animation finishes
             auto explosionComp = pPlayer->GetComponent<ExplosionComponent>().lock();
             if (explosionComp && explosionComp->IsAnimationFinished())
@@ -309,6 +319,13 @@ GameObject * PlayerManager::FindClosestEnemy()
         }
     }
     return pEnemy;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+const RoomData * PlayerManager::GetCurrentRoom() const
+{
+    return mpCurrentRoom;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

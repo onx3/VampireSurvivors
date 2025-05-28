@@ -178,6 +178,9 @@
     <ClCompile Include="InputHandler.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="AbilitySelectionComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -329,6 +332,9 @@
     </ClInclude>
     <ClInclude Include="InputHandler.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="AbilitySelectionComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

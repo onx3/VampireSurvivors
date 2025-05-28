@@ -90,17 +90,28 @@ void EnemyAIManager::Update(float deltaTime)
     {
         return;
     }
+    auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
+    if (!pPlayerManager)
+    {
+        return;
+    }
 
     const LevelData & levelData = pLevelManager->GetLevelData();
+    const RoomData * pRoomData = pPlayerManager->GetCurrentRoom();
+
+    if (!pRoomData)
+    {
+        return;
+    }
 
     while (mEnemyHandles.size() < mCurrentMaxEnemies)
     {
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dist(0, int(levelData.enemySpawnPositions.size()) - 1);
+        std::uniform_int_distribution<> dist(0, int(pRoomData->enemySpawnPositions.size()) - 1);
         int randomIndex = dist(gen);
 
-        sf::Vector2f spawnPosition = levelData.enemySpawnPositions[randomIndex];
+        sf::Vector2f spawnPosition = pRoomData->enemySpawnPositions[randomIndex];
 
         if (pLevelManager->IsTileWalkableAI(int(spawnPosition.x / BD::gsPixelCountCellSize), int(spawnPosition.y / BD::gsPixelCountCellSize)))
         {

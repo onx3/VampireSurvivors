@@ -29,4 +29,3 @@ private:
     float mRadius;
     std::vector<BD::Handle> mDropHandles;
 };
-

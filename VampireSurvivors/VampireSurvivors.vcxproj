@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbilitySelectionComponent.cpp" />
     <ClCompile Include="AbilityUIManager.cpp" />
     <ClCompile Include="AIPathComponent.cpp" />
     <ClCompile Include="AISimplePathComponent.cpp" />
@@ -197,6 +198,7 @@
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbilitySelectionComponent.h" />
     <ClInclude Include="AbilityUIManager.h" />
     <ClInclude Include="AIPathComponent.h" />
     <ClInclude Include="AISimplePathComponent.h" />

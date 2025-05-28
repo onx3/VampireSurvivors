@@ -67,7 +67,7 @@ bool GameObject::IsDestroyed() const
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void GameObject::CreateBoxShapePhysicsBody(b2World * world, const sf::Vector2f & size, bool isDynamic)
+void GameObject::CreateBoxShapePhysicsBody(b2World * world, const sf::Vector2f & size, bool isDynamic, bool isSensor)
 {
     // Define the body
     b2BodyDef bodyDef;
@@ -88,6 +88,11 @@ void GameObject::CreateBoxShapePhysicsBody(b2World * world, const sf::Vector2f &
     fixtureDef.shape = &boxShape;
     fixtureDef.density = isDynamic ? 1.0f : 0.0f;
     fixtureDef.friction = 0.3f;
+    fixtureDef.isSensor = isSensor;
+
+    CollisionRule rule = GetCollisionRuleForTeam(mTeam);
+    fixtureDef.filter.categoryBits = rule.categoryBits;
+    fixtureDef.filter.maskBits = rule.maskBits;
 
     // Attach the fixture to the body
     mpPhysicsBody->CreateFixture(&fixtureDef);
@@ -102,7 +107,9 @@ bool GameObject::CreateWedgeShapePhysicsBody(b2World * world, float arcAngleRad,
 {
     pointCount = std::min(pointCount, b2_maxPolygonVertices - 1);
     if (pointCount < 2)
+    {
         return false;
+    }
 
     // Define the body
     b2BodyDef bodyDef;

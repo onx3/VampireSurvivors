@@ -24,7 +24,7 @@ public:
 	AbilityUIManager(GameManager * pGameManager);
 	~AbilityUIManager();
 
-	void DrawAbilitySelectionUI(EGameState & gameState);
+	void DrawAbilitySelectionUI();
 
 private:
 	void ApplySelectedAbility(EAbilityOptions ability);

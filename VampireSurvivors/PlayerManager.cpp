@@ -28,6 +28,8 @@ namespace
 PlayerManager::PlayerManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
     , mPlayerHandles()
+    , mSpawnPos()
+    , mpCurrentRoom(nullptr)
     , mLoseLifeSoundBuffer()
     , mDeathSoundBuffer()
     , mLoseLifeSound()
@@ -37,7 +39,8 @@ PlayerManager::PlayerManager(GameManager * pGameManager)
     auto * pLevelManager = GetGameManager().GetManager<LevelManager>();
     if (pLevelManager)
     {
-        mSpawnPos = pLevelManager->GetLevelCenterWorldPos();
+        mSpawnPos = pLevelManager->GetLevelData().playerSpawnPosition;
+        assert(!pLevelManager->GetLevelData().rooms.empty() && "No Rooms in current level");
     }
     InitPlayer();
 
@@ -80,10 +83,11 @@ void PlayerManager::InitPlayer()
             auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
             if (pTexture)
             {
-                pSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.2f, 1.2f));
-                pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 16, 28));
+                pSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.0f, 1.0f));
+                pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 16, 16));
                 pSpriteComponent->GetSprite().setOrigin(8.f, 14.f);
                 pSpriteComponent->SetPosition(mSpawnPos);
+                pSpriteComponent->SetSize(sf::Vector2f(16.f, 16.f));
             }
         }
     }
@@ -115,25 +119,34 @@ void PlayerManager::InitPlayer()
         auto pCollisionComponent = pPlayer->GetComponent<CollisionComponent>().lock();
         if (!pCollisionComponent)
         {
-            pPlayer->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pPlayer->GetSize(), true);
+            pPlayer->CreateBoxShapePhysicsBody(
+                &gameManager.GetPhysicsWorld(),
+                pPlayer->GetSize(),
+                true,                  // isDynamic
+                false                  // isSensor
+            );
+
+            auto * pBody = pPlayer->GetPhysicsBody();
+            pBody->SetFixedRotation(true);
+
             pPlayer->AddComponent(std::make_shared<CollisionComponent>(
                 pPlayer,
                 gameManager,
                 &gameManager.GetPhysicsWorld(),
-                pPlayer->GetPhysicsBody(),
+                pBody,
                 pPlayer->GetSize(),
                 true
             ));
         }
     }
 
-    // Sword Slash Component
+    // Projectile Component
     {
-        auto pSwordSlashComponent = pPlayer->GetComponent<SwordSlashComponent>().lock();
-        if (!pSwordSlashComponent)
+        auto pProjectileComponent = pPlayer->GetComponent<ProjectileComponent>().lock();
+        if (!pProjectileComponent)
         {
-            auto pSwordSlashComponent = std::make_shared<SwordSlashComponent>(pPlayer, gameManager, 60.f, 100.f, .1f);
-            pPlayer->AddComponent(pSwordSlashComponent);
+            pProjectileComponent = std::make_shared<ProjectileComponent>(pPlayer, gameManager);
+            pPlayer->AddComponent(pProjectileComponent);
         }
     }
 
@@ -152,7 +165,7 @@ void PlayerManager::InitPlayer()
         auto pLightComponent = pPlayer->GetComponent<LightComponent>().lock();
         if (!pLightComponent)
         {
-            pLightComponent = std::make_shared<LightComponent>(pPlayer, gameManager, 100.f, sf::Color(150, 200, 255, 180));
+            pLightComponent = std::make_shared<LightComponent>(pPlayer, gameManager, 75.f, sf::Color(150, 200, 255, 180));
             pPlayer->AddComponent(pLightComponent);
         }
     }
@@ -162,14 +175,14 @@ void PlayerManager::InitPlayer()
 
     // TESTING STUFF
     {
-        {
-            auto pThowingKnifeComponent = pPlayer->GetComponent<FirePotComponent>().lock();
+        /*{
+            auto pThowingKnifeComponent = pPlayer->GetComponent<PhantomBladeComponent>().lock();
             if (!pThowingKnifeComponent)
             {
-                pThowingKnifeComponent = std::make_shared<FirePotComponent>(pPlayer, gameManager);
+                pThowingKnifeComponent = std::make_shared<PhantomBladeComponent>(pPlayer, gameManager);
                 pPlayer->AddComponent(pThowingKnifeComponent);
             }
-        }
+        }*/
     }
 }
 
@@ -189,6 +202,13 @@ void PlayerManager::Update(float deltaTime)
         for (auto playerHandle : mPlayerHandles)
         {
             GameObject * pPlayer = gameManager.GetGameObject(playerHandle);
+
+            // Set correct room
+            auto pLevelManager = gameManager.GetManager<LevelManager>();
+            if (pLevelManager)
+            {
+                mpCurrentRoom = pLevelManager->GetRoomAtPosition(pPlayer->GetPosition());
+            }
 
             // Destroy the player after the explosion animation finishes
             auto explosionComp = pPlayer->GetComponent<ExplosionComponent>().lock();
@@ -299,6 +319,13 @@ GameObject * PlayerManager::FindClosestEnemy()
         }
     }
     return pEnemy;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+const RoomData * PlayerManager::GetCurrentRoom() const
+{
+    return mpCurrentRoom;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

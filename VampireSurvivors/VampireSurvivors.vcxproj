@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbilitySelectionComponent.cpp" />
     <ClCompile Include="AbilityUIManager.cpp" />
     <ClCompile Include="AIPathComponent.cpp" />
     <ClCompile Include="AISimplePathComponent.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="ControlledMovementComponent.cpp" />
     <ClCompile Include="DamageComponent.cpp" />
     <ClCompile Include="DamageZoneComponent.cpp" />
+    <ClCompile Include="DoorComponent.cpp" />
     <ClCompile Include="DropManager.cpp" />
     <ClCompile Include="DropMovementComponent.cpp" />
     <ClCompile Include="DungeonManager.cpp" />
@@ -173,6 +175,7 @@
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_tables.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
+    <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="LightComponent.cpp" />
     <ClCompile Include="LightManager.cpp" />
@@ -183,6 +186,7 @@
     <ClCompile Include="ProjectileComponent.cpp" />
     <ClCompile Include="RadiusPickupComponent.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="SpawnFromGroundEffectComponent.cpp" />
     <ClCompile Include="SpriteAnimationComponent.cpp" />
     <ClCompile Include="ThrowingKnife.cpp" />
     <ClCompile Include="UIManager.cpp" />
@@ -194,6 +198,7 @@
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbilitySelectionComponent.h" />
     <ClInclude Include="AbilityUIManager.h" />
     <ClInclude Include="AIPathComponent.h" />
     <ClInclude Include="AISimplePathComponent.h" />
@@ -207,6 +212,7 @@
     <ClInclude Include="ControlledMovementComponent.h" />
     <ClInclude Include="DamageComponent.h" />
     <ClInclude Include="DamageZoneComponent.h" />
+    <ClInclude Include="DoorComponent.h" />
     <ClInclude Include="DropManager.h" />
     <ClInclude Include="DropMovementComponent.h" />
     <ClInclude Include="DungeonManager.h" />
@@ -220,6 +226,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="HealthComponent.h" />
+    <ClInclude Include="InputHandler.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="LightComponent.h" />
     <ClInclude Include="LightManager.h" />
@@ -230,6 +237,7 @@
     <ClInclude Include="ProjectileComponent.h" />
     <ClInclude Include="RadiusPickupComponent.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="SpawnFromGroundEffectComponent.h" />
     <ClInclude Include="SpriteAnimationComponent.h" />
     <ClInclude Include="ThrowingKnife.h" />
     <ClInclude Include="UIManager.h" />

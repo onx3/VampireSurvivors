@@ -5,17 +5,20 @@
 class CollisionComponent : public GameComponent
 {
 public:
-    CollisionComponent(GameObject * pOwner, GameManager & gameManager, b2World * pWorld, b2Body * pBody, sf::Vector2f size, bool isDynamic);
+    CollisionComponent(GameObject * pOwner, GameManager & gameManager, b2World * pWorld, b2Body * pBody, sf::Vector2f size, bool isDynamic , bool isActive = true);
     ~CollisionComponent();
 
     virtual void Update(float deltaTime) override;
     virtual void DebugImGuiComponentInfo() override;
     virtual std::string & GetClassName() override;
 
+    void SetActive(bool active);
+
 private:
     b2Body * mpBody;
     b2World * mpWorld;
     sf::Vector2f mSize;
+    bool mIsActive;
     std::string mName;
 };
 

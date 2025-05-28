@@ -267,7 +267,7 @@
 			"__cHei": 1,
 			"identifier": "Torch_Yellow",
 			"uid": 11,
-			"relPath": "../Art/Torch/Torch Yellow.png",
+			"relPath": "../Art/Torch/TorchYellow.png",
 			"embedAtlas": null,
 			"pxWid": 128,
 			"pxHei": 16,

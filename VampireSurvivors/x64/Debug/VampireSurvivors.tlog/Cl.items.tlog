@@ -1,3 +1,4 @@
+D:\VampireSurvivors\VampireSurvivors\AbilitySelectionComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\AbilitySelectionComponent.obj
 D:\VampireSurvivors\VampireSurvivors\AbilityUIManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\AbilityUIManager.obj
 D:\VampireSurvivors\VampireSurvivors\AIPathComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\AIPathComponent.obj
 D:\VampireSurvivors\VampireSurvivors\AISimplePathComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\AISimplePathComponent.obj
@@ -10,6 +11,7 @@ D:\VampireSurvivors\VampireSurvivors\CollisionListener.cpp;D:\VampireSurvivors\V
 D:\VampireSurvivors\VampireSurvivors\ControlledMovementComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ControlledMovementComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DamageComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DamageComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DamageZoneComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DamageZoneComponent.obj
+D:\VampireSurvivors\VampireSurvivors\DoorComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DoorComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DropManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DropManager.obj
 D:\VampireSurvivors\VampireSurvivors\DropMovementComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DropMovementComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DungeonManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DungeonManager.obj
@@ -28,6 +30,7 @@ D:\VampireSurvivors\VampireSurvivors\imgui.cpp;D:\VampireSurvivors\VampireSurviv
 D:\VampireSurvivors\VampireSurvivors\imgui_draw.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\imgui_draw.obj
 D:\VampireSurvivors\VampireSurvivors\imgui_tables.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\imgui_tables.obj
 D:\VampireSurvivors\VampireSurvivors\imgui_widgets.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\imgui_widgets.obj
+D:\VampireSurvivors\VampireSurvivors\InputHandler.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\InputHandler.obj
 D:\VampireSurvivors\VampireSurvivors\LevelManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\LevelManager.obj
 D:\VampireSurvivors\VampireSurvivors\LightComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\LightComponent.obj
 D:\VampireSurvivors\VampireSurvivors\LightManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\LightManager.obj
@@ -38,6 +41,7 @@ D:\VampireSurvivors\VampireSurvivors\PlayerStatsComponent.cpp;D:\VampireSurvivor
 D:\VampireSurvivors\VampireSurvivors\ProjectileComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ProjectileComponent.obj
 D:\VampireSurvivors\VampireSurvivors\RadiusPickupComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\RadiusPickupComponent.obj
 D:\VampireSurvivors\VampireSurvivors\ResourceManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ResourceManager.obj
+D:\VampireSurvivors\VampireSurvivors\SpawnFromGroundEffectComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\SpawnFromGroundEffectComponent.obj
 D:\VampireSurvivors\VampireSurvivors\SpriteAnimationComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\SpriteAnimationComponent.obj
 D:\VampireSurvivors\VampireSurvivors\ThrowingKnife.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ThrowingKnife.obj
 D:\VampireSurvivors\VampireSurvivors\UIManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\UIManager.obj

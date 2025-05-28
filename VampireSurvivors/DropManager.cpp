@@ -59,74 +59,74 @@ void DropManager::CleanUpDrops()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void DropManager::SpawnDrop(EDropType dropType, const sf::Vector2f & position)
-{
-    if (dropType == EDropType::None)
-    {
-        return;
-    }
-
-    auto & gameManager = GetGameManager();
-    BD::Handle dropHandle;
-    if (dropType == EDropType::NukePickup)
-    {
-        dropHandle = gameManager.CreateNewGameObject(ETeam::NukeDrop, gameManager.GetRootGameObjectHandle());
-    }
-    else if (dropType == EDropType::LifePickup)
-    {
-        dropHandle = gameManager.CreateNewGameObject(ETeam::LifeDrop, gameManager.GetRootGameObjectHandle());
-    }
-    mDropHandles.push_back(dropHandle);
-
-    auto * pDrop = gameManager.GetGameObject(dropHandle);
-    auto pSpriteComp = pDrop->GetComponent<SpriteComponent>().lock();
-
-    if (pSpriteComp)
-    {
-        std::shared_ptr<sf::Texture> pSpriteTexture;
-        std::string file;
-        ResourceId resourceId("");
-
-        switch (dropType)
-        {
-            case EDropType::NukePickup:
-                file = "../../VampireSurvivors/Art/Nuke.png";
-                resourceId = ResourceId(file);
-                pSpriteTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
-                if (pSpriteTexture)
-                {
-                    pSpriteComp->SetSprite(pSpriteTexture, sf::Vector2f(1, 1));
-                }
-                break;
-            case EDropType::LifePickup:
-                file = "../../VampireSurvivors/Art/Life.png";
-                resourceId = ResourceId(file);
-                pSpriteTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
-                if (pSpriteTexture)
-                {
-                    pSpriteComp->SetSprite(pSpriteTexture, sf::Vector2f(1, 1));
-                }
-                break;
-            default:
-                return;
-        }
-        sf::Color greenTint(0, 255, 0, 255);
-        pSpriteComp->GetSprite().setColor(greenTint);
-
-        pSpriteComp->SetPosition(position);
-        pDrop->AddComponent(pSpriteComp);
-
-        auto pDropMovementComponent = std::make_shared<DropMovementComponent>(pDrop, gameManager);
-        pDrop->AddComponent(pDropMovementComponent);
-
-        // Add collision or interaction logic for pickup
-        pDrop->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pDrop->GetSize(), true);
-
-        auto pCollisionComp = std::make_shared<CollisionComponent>(
-            pDrop, gameManager, &gameManager.GetPhysicsWorld(), pDrop->GetPhysicsBody(), pDrop->GetSize(), true);
-        pDrop->AddComponent(pCollisionComp);
-    }
-}
+//void DropManager::SpawnDrop(EDropType dropType, const sf::Vector2f & position)
+//{
+//    if (dropType == EDropType::None)
+//    {
+//        return;
+//    }
+//
+//    auto & gameManager = GetGameManager();
+//    BD::Handle dropHandle;
+//    if (dropType == EDropType::NukePickup)
+//    {
+//        dropHandle = gameManager.CreateNewGameObject(ETeam::NukeDrop, gameManager.GetRootGameObjectHandle());
+//    }
+//    else if (dropType == EDropType::LifePickup)
+//    {
+//        dropHandle = gameManager.CreateNewGameObject(ETeam::LifeDrop, gameManager.GetRootGameObjectHandle());
+//    }
+//    mDropHandles.push_back(dropHandle);
+//
+//    auto * pDrop = gameManager.GetGameObject(dropHandle);
+//    auto pSpriteComp = pDrop->GetComponent<SpriteComponent>().lock();
+//
+//    if (pSpriteComp)
+//    {
+//        std::shared_ptr<sf::Texture> pSpriteTexture;
+//        std::string file;
+//        ResourceId resourceId("");
+//
+//        switch (dropType)
+//        {
+//            case EDropType::NukePickup:
+//                file = "../../VampireSurvivors/Art/Nuke.png";
+//                resourceId = ResourceId(file);
+//                pSpriteTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
+//                if (pSpriteTexture)
+//                {
+//                    pSpriteComp->SetSprite(pSpriteTexture, sf::Vector2f(1, 1));
+//                }
+//                break;
+//            case EDropType::LifePickup:
+//                file = "../../VampireSurvivors/Art/Life.png";
+//                resourceId = ResourceId(file);
+//                pSpriteTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
+//                if (pSpriteTexture)
+//                {
+//                    pSpriteComp->SetSprite(pSpriteTexture, sf::Vector2f(1, 1));
+//                }
+//                break;
+//            default:
+//                return;
+//        }
+//        sf::Color greenTint(0, 255, 0, 255);
+//        pSpriteComp->GetSprite().setColor(greenTint);
+//
+//        pSpriteComp->SetPosition(position);
+//        pDrop->AddComponent(pSpriteComp);
+//
+//        auto pDropMovementComponent = std::make_shared<DropMovementComponent>(pDrop, gameManager);
+//        pDrop->AddComponent(pDropMovementComponent);
+//
+//        // Add collision or interaction logic for pickup
+//        pDrop->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pDrop->GetSize(), true);
+//
+//        auto pCollisionComp = std::make_shared<CollisionComponent>(
+//            pDrop, gameManager, &gameManager.GetPhysicsWorld(), pDrop->GetPhysicsBody(), pDrop->GetSize(), true);
+//        pDrop->AddComponent(pCollisionComp);
+//    }
+//}
 
 //------------------------------------------------------------------------------------------------------------------------
 
@@ -176,10 +176,22 @@ void DropManager::DropCoins(const sf::Vector2f & position)
         pAnimComp->PlayAnimation(EAnimationState::Move);
     }
 
-    pCoinDrop->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pCoinDrop->GetSize(), true);
+    pCoinDrop->CreateBoxShapePhysicsBody(
+        &gameManager.GetPhysicsWorld(),
+        pCoinDrop->GetSize(),
+        true,                   // isDynamic
+        true                   // isSensor
+    );
 
     auto pCollisionComp = std::make_shared<CollisionComponent>(
-        pCoinDrop, gameManager, &gameManager.GetPhysicsWorld(), pCoinDrop->GetPhysicsBody(), pCoinDrop->GetSize(), true);
+        pCoinDrop,
+        gameManager,
+        &gameManager.GetPhysicsWorld(),
+        pCoinDrop->GetPhysicsBody(),
+        pCoinDrop->GetSize(),
+        true
+    );
+
     pCoinDrop->AddComponent(pCollisionComp);
 
     auto * pPlayerManager = gameManager.GetManager<PlayerManager>();

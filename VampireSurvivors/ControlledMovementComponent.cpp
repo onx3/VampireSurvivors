@@ -15,7 +15,7 @@ ControlledMovementComponent::ControlledMovementComponent(GameObject * pOwner, Ga
     , mVelocity(3.f, 3.f)
     , mAcceleration(800.f)
     , mDeceleration(1000.f)
-    , mMaxSpeed(150.f)
+    , mMaxSpeed(30.f)
     , mVelocityX(0.f)
     , mVelocityY(0.f)
     , mName("ControlledMovementComponent")
@@ -30,9 +30,9 @@ ControlledMovementComponent::ControlledMovementComponent(GameObject * pOwner, Ga
     , mVelocity(3.f, 3.f)
     , mAcceleration(800.f)
     , mDeceleration(1000.f)
-    , mMaxSpeed(300.f)
+    , mMaxSpeed(30.f)
     , mVelocityX(veloX)
-	  , mVelocityY(veloY)
+    , mVelocityY(veloY)
     , mTilt(ESpriteTilt::Normal)
 {
 }
@@ -53,89 +53,86 @@ void ControlledMovementComponent::Update(float deltaTime)
         return;
     }
 
-    auto pSpriteComponent = GetGameObject().GetComponent<SpriteComponent>().lock();
+    b2Body * pBody = pOwner->GetPhysicsBody();
+    if (!pBody)
+    {
+        return;
+    }
 
+    sf::Vector2f inputDirection = { 0.f, 0.f };
+
+    // Input handling
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) 
+    {
+        inputDirection.y -= 1.f;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) 
+    {
+        inputDirection.y += 1.f;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    {
+        inputDirection.x -= 1.f;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    {
+        inputDirection.x += 1.f;
+    }
+
+    // Normalize to prevent diagonal speed boost
+    if (inputDirection.x != 0.f || inputDirection.y != 0.f)
+    {
+        inputDirection /= std::sqrt(inputDirection.x * inputDirection.x + inputDirection.y * inputDirection.y);
+    }
+
+    // Apply acceleration
+    mVelocity += inputDirection * mAcceleration * deltaTime;
+
+    // Clamp velocity
+    float velocityLength = std::hypot(mVelocity.x, mVelocity.y);
+    if (velocityLength > mMaxSpeed)
+    {
+        mVelocity = (mVelocity / velocityLength) * mMaxSpeed;
+    }
+
+    // Apply deceleration if no input
+    if (inputDirection.x == 0.f)
+    {
+        mVelocity.x -= std::min(std::abs(mVelocity.x), mDeceleration * deltaTime) * (mVelocity.x > 0.f ? 1.f : -1.f);
+    }
+    if (inputDirection.y == 0.f)
+    {
+        mVelocity.y -= std::min(std::abs(mVelocity.y), mDeceleration * deltaTime) * (mVelocity.y > 0.f ? 1.f : -1.f);
+    }
+
+    // Set velocity in physics engine
+    if (mVelocity.x >= 5.f)
+    {
+        int ii = 0;
+        ++ii;
+    }
+    b2Vec2 box2dVelocity(mVelocity.x / pOwner->PIXELS_PER_METER, mVelocity.y / pOwner->PIXELS_PER_METER);
+    pBody->SetLinearVelocity(box2dVelocity);
+
+    // Animation handling
+    auto pAnimComponent = pOwner->GetComponent<SpriteAnimationComponent>().lock();
+    if (pAnimComponent)
+    {
+        if (std::abs(mVelocity.x) > 0.1f || std::abs(mVelocity.y) > 0.1f)
+        {
+            pAnimComponent->PlayAnimation(EAnimationState::Move);
+        }
+        else
+        {
+            pAnimComponent->PlayAnimation(EAnimationState::Idle);
+        }
+    }
+
+    // UV flip
+    auto pSpriteComponent = pOwner->GetComponent<SpriteComponent>().lock();
     if (pSpriteComponent)
     {
-        // Get current position, size, and window bounds
-        auto position = pSpriteComponent->GetPosition();
-        sf::Vector2f size(pSpriteComponent->GetWidth(), pSpriteComponent->GetHeight());
-        sf::Vector2u windowSize = GetGameObject().GetGameManager().GetWindow().getSize();
-
-        sf::Vector2f inputDirection = { 0.f, 0.f };
-
-        // Input handling
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) inputDirection.y -= 1.f;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) inputDirection.y += 1.f;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) inputDirection.x -= 1.f;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) inputDirection.x += 1.f;
-
-        // Normalize input direction to prevent faster diagonal movement
-        if (inputDirection.x != 0.f || inputDirection.y != 0.f)
-        {
-            inputDirection /= std::sqrt(inputDirection.x * inputDirection.x + inputDirection.y * inputDirection.y);
-        }
-
-        // Apply acceleration
-        mVelocity += inputDirection * mAcceleration * deltaTime;
-
-        // Clamp velocity to max speed
-        float velocityLength = std::hypot(mVelocity.x, mVelocity.y);
-        if (velocityLength > mMaxSpeed)
-        {
-            mVelocity = (mVelocity / velocityLength) * mMaxSpeed;
-        }
-
-        // Apply deceleration if no input
-        if (inputDirection.x == 0)
-        {
-            mVelocity.x -= std::min(std::abs(mVelocity.x), mDeceleration * deltaTime) * (mVelocity.x > 0 ? 1 : -1);
-        }
-        if (inputDirection.y == 0)
-        {
-            mVelocity.y -= std::min(std::abs(mVelocity.y), mDeceleration * deltaTime) * (mVelocity.y > 0 ? 1 : -1);
-        }
-
-        // Calculate new position
-        sf::Vector2f newPosition = position + mVelocity * deltaTime;
-
-        // Get grid and tile size
-        auto & gameManager = GetGameObject().GetGameManager();
-        auto pLevelManager = gameManager.GetManager<LevelManager>();
-        float cellSize = BD::gsPixelCountCellSize;
-
-        // Check if the tile is walkable
-        {
-             if (pLevelManager)
-             {
-                 // Determine the tile under the new position
-                 int tileX = static_cast<int>(newPosition.x / cellSize);
-                 int tileY = static_cast<int>(newPosition.y / cellSize);
-
-                 if (pLevelManager->IsTileWalkablePlayer(tileX, tileY))
-                 {
-                     position = newPosition;
-                 }
-             }
-        }
-        pSpriteComponent->SetPosition(position);
-
-        auto pAnimComponent = GetGameObject().GetComponent<SpriteAnimationComponent>().lock();
-        if (pAnimComponent)
-        {
-            if (std::abs(mVelocity.x) > 0.1f || std::abs(mVelocity.y) > 0.1f)
-            {
-                pAnimComponent->PlayAnimation(EAnimationState::Move);
-            }
-            else
-            {
-                pAnimComponent->PlayAnimation(EAnimationState::Idle);
-            }
-        }
-
-        // Handle UV Flip
         auto & sprite = pSpriteComponent->GetSprite();
-
         if (inputDirection.x > 0.f)
         {
             sprite.setScale(std::abs(sprite.getScale().x), sprite.getScale().y);
@@ -166,14 +163,14 @@ std::string & ControlledMovementComponent::GetClassName()
 
 void ControlledMovementComponent::SetVelocityX(float velo)
 {
-	mVelocityX = velo;
+    mVelocityX = velo;
 }
 
 //------------------------------------------------------------------------------------------------------------------------
 
 void ControlledMovementComponent::SetVelocityY(float velo)
 {
-	mVelocityY = velo;
+    mVelocityY = velo;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

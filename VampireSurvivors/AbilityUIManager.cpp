@@ -11,6 +11,7 @@
 #include "PlayerStatsComponent.h"
 #include "BoomerangComponent.h"
 #include "PhantomBladeComponent.h"
+#include "FirePotComponent.h"
 
 namespace
 {
@@ -74,8 +75,9 @@ AbilityUIManager::~AbilityUIManager()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void AbilityUIManager::DrawAbilitySelectionUI(EGameState & gameState)
+void AbilityUIManager::DrawAbilitySelectionUI()
 {
+    GameManager & gameManager = GetGameManager();
     ImGui::Begin("Choose Your Ability");
 
     static std::vector<EAbilityOptions> selectedAbilities;
@@ -106,7 +108,7 @@ void AbilityUIManager::DrawAbilitySelectionUI(EGameState & gameState)
         if (ImGui::Button(label.c_str(), ImVec2(200, 40)))
         {
             ApplySelectedAbility(ability);
-            gameState = EGameState::Running;
+            gameManager.SetGameState(EGameState::Running);
             initialized = false;
         }
 
@@ -286,7 +288,12 @@ void AbilityUIManager::ApplySelectedAbility(EAbilityOptions ability)
             mSelectedAbilityOption = EAbilityOptions::FirePot;
             if (pPlayer)
             {
-
+                auto pFirePot = pPlayer->GetComponent<FirePotComponent>().lock();
+                if (!pFirePot)
+                {
+                    pFirePot = std::make_shared<FirePotComponent>(pPlayer, gameManager);
+                    pPlayer->AddComponent(pFirePot);
+                }
             }
             break;
         }

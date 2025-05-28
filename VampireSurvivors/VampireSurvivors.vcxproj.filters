@@ -163,11 +163,23 @@
     <ClCompile Include="LightComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="FirePotComponent.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="SpawnFromGroundEffectComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="DamageZoneComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DoorComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="FirePotComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="InputHandler.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="AbilitySelectionComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -306,7 +318,23 @@
     <ClInclude Include="LightComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="FirePotComponent.h" />
-    <ClInclude Include="DamageZoneComponent.h" />
+    <ClInclude Include="DamageZoneComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DoorComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="FirePotComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnFromGroundEffectComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InputHandler.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="AbilitySelectionComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

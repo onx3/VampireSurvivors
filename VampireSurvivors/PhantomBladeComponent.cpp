@@ -20,7 +20,7 @@ PhantomBladeComponent::PhantomBladeComponent(GameObject * pOwner, GameManager & 
 	, mCooldown(skPhantomBladeLifeTime * 2) // Keep uptime at 50%
 	, mDamagePerSlash(200.f)
 	, mDamageMult(1.f)
-	, mSpeed(200.f)
+	, mSpeed(25.f)
 	, mName("PhantomBladeComponent")
 {
 
@@ -133,7 +133,12 @@ void PhantomBladeComponent::CastPhantomBlade(GameObject & enemy)
 		auto pShotCollisionComponent = pPhantomeBlade->GetComponent<CollisionComponent>().lock();
 		if (!pShotCollisionComponent)
 		{
-			pPhantomeBlade->CreateBoxShapePhysicsBody(&gameManager.GetPhysicsWorld(), pPhantomeBlade->GetSize(), true);
+            pPhantomeBlade->CreateBoxShapePhysicsBody(
+                &gameManager.GetPhysicsWorld(),
+                pPhantomeBlade->GetSize(),
+                true,                   // isDynamic
+                true                   // isSensor
+            );
 
 			pPhantomeBlade->AddComponent(std::make_shared<CollisionComponent>(
 				pPhantomeBlade,
@@ -168,88 +173,104 @@ void PhantomBladeComponent::CastPhantomBlade(GameObject & enemy)
 
 void PhantomBladeComponent::UpdatePhantomBlades(float deltaTime)
 {
-	auto & gameManager = GetGameManager();
-	auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
-	if (!pPlayerManager)
-	{
-		return;
-	}
+    auto & gameManager = GetGameManager();
+    auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
+    if (!pPlayerManager)
+    {
+        return;
+    }
 
-	for (int i = static_cast<int>(mPhantomBlades.size()) - 1; i >= 0; --i)
-	{
-		auto & blade = mPhantomBlades[i];
-		GameObject * pBlade = gameManager.GetGameObject(blade.phantomHandle);
-		GameObject * pEnemy = gameManager.GetGameObject(blade.enemyHandle);
+    for (int i = static_cast<int>(mPhantomBlades.size()) - 1; i >= 0; --i)
+    {
+        auto & blade = mPhantomBlades[i];
+        GameObject * pBlade = gameManager.GetGameObject(blade.phantomHandle);
+        GameObject * pEnemy = gameManager.GetGameObject(blade.enemyHandle);
 
-		if (!pEnemy)
-		{
-			pEnemy = pPlayerManager->FindClosestEnemy();
-			if (pEnemy)
-			{
-				blade.enemyHandle = pEnemy->GetHandle();
-			}
-		}
-		else
-		{
-			// Remove if any involved object is invalid or destroyed
-			if (!pBlade || pBlade->IsDestroyed())
-			{
-				if (pBlade)
-				{
-					pBlade->Destroy();
-				}
-				mPhantomBlades.erase(mPhantomBlades.begin() + i);
-				continue;
-			}
+        if (!pEnemy)
+        {
+            pEnemy = pPlayerManager->FindClosestEnemy();
+            if (pEnemy)
+            {
+                blade.enemyHandle = pEnemy->GetHandle();
+            }
+        }
 
-			mGhostTrails[blade.phantomHandle].push_back({ pBlade->GetPosition(), skGhostLifeTime });
+        if (!pBlade || pBlade->IsDestroyed())
+        {
+            if (pBlade)
+            {
+                pBlade->Destroy();
+            }
+            mPhantomBlades.erase(mPhantomBlades.begin() + i);
+            continue;
+        }
 
-			auto & ghosts = mGhostTrails[blade.phantomHandle];
-			for (auto & ghost : ghosts)
-				ghost.timeLeft -= deltaTime;
+        // Ghost trail logic
+        mGhostTrails[blade.phantomHandle].push_back({ pBlade->GetPosition(), skGhostLifeTime });
 
-			ghosts.erase(std::remove_if(ghosts.begin(), ghosts.end(),
-				[](const GhostSprite & g) { return g.timeLeft <= 0.f; }), ghosts.end());
+        auto & ghosts = mGhostTrails[blade.phantomHandle];
+        for (auto & ghost : ghosts)
+        {
+            ghost.timeLeft -= deltaTime;
+        }
+        ghosts.erase(std::remove_if(ghosts.begin(), ghosts.end(),
+            [](const GhostSprite & g) { return g.timeLeft <= 0.f; }), ghosts.end());
 
-			// Reduce remaining time
-			blade.timeLeft -= deltaTime;
-			if (blade.timeLeft <= 0.f)
-			{
-				pBlade->Destroy();
-				mPhantomBlades.erase(mPhantomBlades.begin() + i);
-				continue;
-			}
+        // Lifetime
+        blade.timeLeft -= deltaTime;
+        if (blade.timeLeft <= 0.f)
+        {
+            pBlade->Destroy();
+            mPhantomBlades.erase(mPhantomBlades.begin() + i);
+            continue;
+        }
 
-			// Move toward the enemy
-			sf::Vector2f bladePos = pBlade->GetPosition();
-			sf::Vector2f targetPos = pEnemy->GetPosition();
-			sf::Vector2f toTarget = targetPos - bladePos;
-			float dist = std::sqrt(toTarget.x * toTarget.x + toTarget.y * toTarget.y);
+        // Movement toward enemy
+        sf::Vector2f bladePos = pBlade->GetPosition();
+        sf::Vector2f targetPos = pEnemy->GetPosition();
+        sf::Vector2f toTarget = targetPos - bladePos;
+        float dist = std::sqrt(toTarget.x * toTarget.x + toTarget.y * toTarget.y);
 
-			if (dist > 1.0f)
-			{
-				sf::Vector2f dir = toTarget / dist;
-				sf::Vector2f newPos = bladePos + dir * mSpeed * deltaTime;
-				sf::Vector2f playerPos = GetGameObject().GetPosition();
-				sf::Vector2f toPlayer = playerPos - pBlade->GetPosition();
-				float angleRad = std::atan2(toPlayer.y, toPlayer.x);
-				pBlade->SetRotation(angleRad * 180.f / BD::gsPi - 90.f);
-				pBlade->SetPosition(newPos);
-			}
-			else
-			{
-				GameObject * pNextEnemy = pPlayerManager->FindClosestEnemy();
-				if (pNextEnemy)
-				{
-					blade.enemyHandle = pNextEnemy->GetHandle();
-				}
-				else
-				{
-					//Hover
-				}
-			}
-		}
-	}
+        if (dist > 1.0f)
+        {
+            sf::Vector2f dir = toTarget / dist;
+
+            // Blade rotation: always face the player
+            sf::Vector2f playerPos = GetGameObject().GetPosition();
+            sf::Vector2f toPlayer = playerPos - bladePos;
+            float angleRad = std::atan2(toPlayer.y, toPlayer.x);
+            float angleDeg = angleRad * (180.f / BD::gsPi) + 90.f; // +90 to rotate handle forward
+            if (b2Body * pBody = pBlade->GetPhysicsBody())
+            {
+                b2Vec2 position = pBody->GetPosition();
+                float angleRadCorrected = angleRad - (BD::gsPi / 2.f); // Adjust to align handle visually
+                pBody->SetTransform(position, angleRadCorrected);
+            }
+
+            // Physics movement
+            if (b2Body * pBody = pBlade->GetPhysicsBody())
+            {
+                b2Vec2 velocity(
+                    dir.x * mSpeed / pBlade->PIXELS_PER_METER,
+                    dir.y * mSpeed / pBlade->PIXELS_PER_METER
+                );
+                pBody->SetLinearVelocity(velocity);
+            }
+            else
+            {
+                sf::Vector2f newPos = bladePos + dir * mSpeed * deltaTime;
+                pBlade->SetPosition(newPos);
+            }
+        }
+        else
+        {
+            GameObject * pNextEnemy = pPlayerManager->FindClosestEnemy();
+            if (pNextEnemy)
+            {
+                blade.enemyHandle = pNextEnemy->GetHandle();
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

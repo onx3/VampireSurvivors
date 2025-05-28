@@ -57,6 +57,7 @@ public:
 
 	std::vector<sf::Sprite> & GetSpriteLives();
 	int GetScore() const;
+    void RemoveScore(int removeScore);
 
 	const sf::Text & GetRunTimeText();
 	float GetRunTime() const;

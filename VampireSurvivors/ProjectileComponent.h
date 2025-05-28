@@ -8,7 +8,6 @@ struct Projectile
 {
     BD::Handle handle;
     float lifespan;
-    int damage;
     sf::Vector2f direction;
 };
 
@@ -39,6 +38,7 @@ private:
     float mSpeed;
     float mCooldown;
     float mTimeSinceLastShot;
+    float mDamagePerShot;
     EProjectileType mLastUsedProjectile;
     std::string mName;
 };

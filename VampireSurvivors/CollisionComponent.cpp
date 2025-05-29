@@ -43,7 +43,7 @@ void CollisionComponent::Update(float deltaTime)
     float angleDegrees = angleRadians * (180.f / b2_pi);
 
     pOwner->SetPosition(spritePos);
-    pOwner->SetRotation(angleDegrees);
+    //pOwner->SetRotation(angleDegrees); //Dont think I need this but leaving in case
 }
 
 //------------------------------------------------------------------------------------------------------------------------

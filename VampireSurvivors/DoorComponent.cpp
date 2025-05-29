@@ -117,6 +117,8 @@ void DoorComponent::Open()
         if (pTexture)
         {
             pSpriteComp->SetSprite(pTexture);
+            pSpriteComp->GetSprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+            pSpriteComp->GetSprite().setOrigin(16.f, 16.f);
         }
     }
     auto pColisionComp = GetGameObject().GetComponent<CollisionComponent>().lock();
@@ -143,6 +145,8 @@ void DoorComponent::Close()
         if (pTexture)
         {
             pSpriteComp->SetSprite(pTexture);
+            pSpriteComp->GetSprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+            pSpriteComp->GetSprite().setOrigin(16.f, 16.f); // center
         }
     }
     auto pColisionComp = GetGameObject().GetComponent<CollisionComponent>().lock();

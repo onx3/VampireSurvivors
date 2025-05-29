@@ -392,8 +392,8 @@ void LevelManager::ParseTileData(const json & levelData)
                     }
 
                     //Add an AbilitySelectionComponent to track state
-                    auto pDoorComp = std::make_shared<AbilitySelectionComponent>(pObj, gameManager);
-                    pObj->AddComponent(pDoorComp);
+                    auto pAbilitySelectionComp = std::make_shared<AbilitySelectionComponent>(pObj, gameManager);
+                    pObj->AddComponent(pAbilitySelectionComp);
                 }
             }
             else if (entityName == "Door")
@@ -412,10 +412,13 @@ void LevelManager::ParseTileData(const json & levelData)
                         {
                             // Set the sprite to span the full door size
                             pSpriteComponent->SetSprite(pTexture);
-                            pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 32, 48)); // or whatever size
+                            pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+                            pSpriteComponent->GetSprite().setOrigin(16.f, 16.f);
                         }
                     }
+
                     int price = -1;
+                    float rotation = 0.f;
                     if (entity.contains("fieldInstances"))
                     {
                         const auto & fields = entity["fieldInstances"];
@@ -427,11 +430,18 @@ void LevelManager::ParseTileData(const json & levelData)
                                 {
                                     price = field["__value"];
                                 }
-                                break;
+                            }
+                            else if (field.contains("__identifier") && field["__identifier"] == "Rotation")
+                            {
+                                if (field.contains("__value") && field["__value"].is_number_integer())
+                                {
+                                    rotation = field["__value"];
+                                }
                             }
                         }
                     }
 
+                    pObj->SetRotation(rotation);
                     //Add a DoorComponent to track state
                     auto pDoorComp = std::make_shared<DoorComponent>(pObj, gameManager, price);
                     pObj->AddComponent(pDoorComp);

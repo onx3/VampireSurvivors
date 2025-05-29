@@ -84,10 +84,9 @@ void PlayerManager::InitPlayer()
             if (pTexture)
             {
                 pSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.0f, 1.0f));
-                pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 16, 16));
-                pSpriteComponent->GetSprite().setOrigin(8.f, 14.f);
+                pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 6, 6));
+                pSpriteComponent->GetSprite().setOrigin(8.f, 16.f);
                 pSpriteComponent->SetPosition(mSpawnPos);
-                pSpriteComponent->SetSize(sf::Vector2f(16.f, 16.f));
             }
         }
     }

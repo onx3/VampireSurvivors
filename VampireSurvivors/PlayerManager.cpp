@@ -170,7 +170,7 @@ void PlayerManager::InitPlayer()
     }
 
     // Add default sword weapon GameObject to display
-    AddSwordGameObject(*pPlayer);
+    AddWeaponGameObject(*pPlayer);
 
     // TESTING STUFF
     {
@@ -369,18 +369,18 @@ void PlayerManager::CreateAnimationComponent(GameObject & player)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void PlayerManager::AddSwordGameObject(GameObject & player)
+void PlayerManager::AddWeaponGameObject(GameObject & player)
 {
     GameManager & gameManager = GetGameManager();
     BD::Handle playerWeaponHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, player.GetHandle());
     GameObject * pPlayerWeapon = gameManager.GetGameObject(playerWeaponHandle);
 
-    // Sword Sprite Component
+    // Weapon Sprite Component
     {
         auto pWeaponSpriteComponent = pPlayerWeapon->GetComponent<SpriteComponent>().lock();
         if (pWeaponSpriteComponent)
         {
-            std::string file = "../../VampireSurvivors/Art/Weapons/weapon_bow.png";
+            std::string file = "../../VampireSurvivors/Art/Weapons/weapon_bow_2.png";
             ResourceId resourceId(file);
 
             auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
@@ -393,12 +393,12 @@ void PlayerManager::AddSwordGameObject(GameObject & player)
         }
     }
 
-    // Sword Follow Component
+    // Weapon Follow Component
     {
         auto pWeaponFollowComponent = pPlayerWeapon->GetComponent<FollowComponent>().lock();
         if (!pWeaponFollowComponent)
         {
-            auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, player.GetHandle(), sf::Vector2f(8, 0));
+            auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, player.GetHandle(), sf::Vector2f(10, 0));
             pPlayerWeapon->AddComponent(pWeaponFollowComponent);
         }
     }

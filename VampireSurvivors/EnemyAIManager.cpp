@@ -12,7 +12,6 @@
 #include "DropManager.h"
 #include "ResourceManager.h"
 #include "AIPathComponent.h"
-#include "FollowComponent.h"
 #include "TrackingComponent.h"
 #include "PlayerManager.h"
 #include "EnemyBulletComponent.h"

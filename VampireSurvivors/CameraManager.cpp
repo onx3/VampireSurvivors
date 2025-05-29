@@ -9,10 +9,10 @@ CameraManager::CameraManager(GameManager * pGameManager)
 	, mCursorSprite()
 	, mPreviousViewCenter()
 {
-	ResourceId resourceId("../../VampireSurvivors/Art/Crosshair.png");
+	ResourceId resourceId("../../VampireSurvivors/Art/CrosshairWhite.png");
 	auto pTexture = GetGameManager().GetManager<ResourceManager>()->GetTexture(resourceId);
 	mCursorSprite.setTexture(*pTexture);
-	mCursorSprite.setScale(.15f, .15f);
+	mCursorSprite.setScale(2.f, 2.f);
 
 	sf::FloatRect localBounds = mCursorSprite.getLocalBounds();
 	mCursorSprite.setOrigin(
@@ -71,7 +71,7 @@ void CameraManager::Render(sf::RenderWindow & window)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-sf::Vector2f CameraManager::GetCrosshairPosition() const
+const sf::Vector2f & CameraManager::GetCrosshairPosition() const
 {
 	return mCursorSprite.getPosition();
 }

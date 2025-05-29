@@ -11,7 +11,7 @@ public:
 	virtual void OnGameEnd() override;
 
 	sf::View & GetView();
-	sf::Vector2f GetCrosshairPosition() const;
+    const sf::Vector2f & GetCrosshairPosition() const;
 
 	static sf::Vector2f Lerp(sf::Vector2f start, sf::Vector2f end, float t);
 

@@ -306,7 +306,7 @@ void GameManager::RenderGameObjectImGui()
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
     {
-        mShowImGuiWindow = true;
+        mShowImGuiWindow = !mShowImGuiWindow;
     }
 
     if (mShowImGuiWindow && GetGameObject(mRootHandle))

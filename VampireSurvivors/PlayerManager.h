@@ -24,7 +24,7 @@ public:
     const RoomData * GetCurrentRoom() const;
 private:
     void CreateAnimationComponent(GameObject & player);
-    void AddSwordGameObject(GameObject & player);
+    void AddWeaponGameObject(GameObject & player);
 
     std::vector<BD::Handle> mPlayerHandles;
 

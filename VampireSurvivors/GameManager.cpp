@@ -317,6 +317,8 @@ void GameManager::RenderGameObjectImGui()
         float childWidth = ImGui::GetContentRegionAvail().x * 0.5f;
         float childHeight = ImGui::GetContentRegionAvail().y;
 
+        RenderConCommands();
+
         // LEFT: GameObject Tree
         ImGui::BeginChild("GameObjectTree", ImVec2(childWidth, childHeight), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
         {
@@ -328,15 +330,45 @@ void GameManager::RenderGameObjectImGui()
 
             while (!stack.empty())
             {
-                auto [pGameObject, depth] = stack.top();
+                auto & [pGameObject, depth] = stack.top();
                 stack.pop();
 
                 if (!pGameObject || pGameObject->IsDestroyed())
+                {
                     continue;
+                }
 
                 ImGui::Indent(depth * 10.0f);
 
-                std::string label = "GameObject " + std::to_string(reinterpret_cast<std::uintptr_t>(pGameObject));
+                std::string label = "";
+
+                switch (pGameObject->GetTeam())
+                {
+                    case (ETeam::Player):
+                    {
+                        label = "Player " + std::to_string(pGameObject->GetHandle());
+                        break;
+                    }
+                    case (ETeam::Enemy):
+                    {
+                        label = "Enemy " + std::to_string(pGameObject->GetHandle());
+                        break;
+                    }
+                    case (ETeam::CoinDrop):
+                    {
+                        label = "CoinDrop " + std::to_string(pGameObject->GetHandle());
+                        break;
+                    }
+                    case (ETeam::Neutral):
+                    {
+                        label = "Neutral " + std::to_string(pGameObject->GetHandle());
+                        break;
+                    }
+                    default:
+                        label = "GameObject " + std::to_string(pGameObject->GetHandle());
+                        break;
+                }
+
                 if (ImGui::Selectable(label.c_str(), pSelectedGameObject == pGameObject))
                 {
                     pSelectedGameObject = pGameObject;

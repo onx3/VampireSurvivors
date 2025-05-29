@@ -381,13 +381,13 @@ void PlayerManager::AddSwordGameObject(GameObject & player)
         auto pWeaponSpriteComponent = pPlayerWeapon->GetComponent<SpriteComponent>().lock();
         if (pWeaponSpriteComponent)
         {
-            std::string file = "../../VampireSurvivors/Art/Weapons/weapon_anime_sword.png";
+            std::string file = "../../VampireSurvivors/Art/Weapons/weapon_bow.png";
             ResourceId resourceId(file);
 
             auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
             if (pTexture)
             {
-                pWeaponSpriteComponent->SetSprite(pTexture, sf::Vector2f(.8f, .8f));
+                pWeaponSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.0f, 1.0f));
                 pWeaponSpriteComponent->SetPosition(player.GetPosition());
                 pPlayerWeapon->SetRotation(pPlayerWeapon->GetRotationDegrees());
             }
@@ -399,7 +399,7 @@ void PlayerManager::AddSwordGameObject(GameObject & player)
         auto pWeaponFollowComponent = pPlayerWeapon->GetComponent<FollowComponent>().lock();
         if (!pWeaponFollowComponent)
         {
-            auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, player.GetHandle(), sf::Vector2f(10, 0));
+            auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, player.GetHandle(), sf::Vector2f(8, 0));
             pPlayerWeapon->AddComponent(pWeaponFollowComponent);
         }
     }

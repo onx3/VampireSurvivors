@@ -19,6 +19,7 @@ CameraManager::CameraManager(GameManager * pGameManager)
 		localBounds.width / 2.0f,
 		localBounds.height / 2.0f
 	);
+    mView.zoom(.6f);
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -42,8 +43,6 @@ void CameraManager::Update(float deltaTime)
 	sf::Vector2f previousCenter = mView.getCenter();
 	sf::Vector2f targetPos = pPlayer->GetPosition();
 	mView.setCenter(Lerp(mView.getCenter(), targetPos, 0.1f));
-
-	sf::Vector2f cameraDelta = mView.getCenter() - previousCenter;
 
 	gameManager.GetWindow().setView(mView);
 

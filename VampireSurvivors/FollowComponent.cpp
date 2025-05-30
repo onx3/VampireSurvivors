@@ -6,9 +6,10 @@ FollowComponent::FollowComponent(GameObject * pOwner, GameManager & gameManager,
 	: GameComponent(pOwner, gameManager)
 	, mFollowHandle(followHandle)
 	, mOffset(offset)
+    , mOrbitRadius(0.f)
 	, mName("FollowComponent")
 {
-
+    mOrbitRadius = std::sqrt(mOffset.x * mOffset.x + mOffset.y * mOffset.y);
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -38,17 +39,12 @@ void FollowComponent::Update(float deltaTime)
     const sf::Vector2f & playerPos = pFollowObj->GetPosition();
     const sf::Vector2f & crosshairPos = pCameraManager->GetCrosshairPosition();
 
-    // Vector from player to crosshair
     sf::Vector2f toCrosshair = crosshairPos - playerPos;
     float angleRad = std::atan2(toCrosshair.y, toCrosshair.x);
 
-    // Use original offset length as orbit radius
-    float radius = std::sqrt(mOffset.x * mOffset.x + mOffset.y * mOffset.y);
-
-    // Calculate new object position on the circle around the player
     sf::Vector2f orbitPos;
-    orbitPos.x = playerPos.x + std::cos(angleRad) * radius;
-    orbitPos.y = playerPos.y + std::sin(angleRad) * radius;
+    orbitPos.x = playerPos.x + std::cos(angleRad) * mOrbitRadius;
+    orbitPos.y = playerPos.y + std::sin(angleRad) * mOrbitRadius;
     GetGameObject().SetPosition(orbitPos);
 
     // Rotate object to face the crosshair

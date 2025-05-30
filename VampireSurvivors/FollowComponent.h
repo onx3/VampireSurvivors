@@ -12,6 +12,7 @@ public:
 private:
     BD::Handle mFollowHandle;
     sf::Vector2f mOffset;
+    float mOrbitRadius;
     std::string mName;
 };
 

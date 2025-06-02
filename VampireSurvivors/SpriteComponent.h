@@ -11,7 +11,7 @@ public:
 	void SetSprite(std::shared_ptr<sf::Texture> pTexture, const sf::Vector2f & scale = sf::Vector2f(1.f, 1.f));
 	sf::Sprite & GetSprite();
 
-	sf::Vector2f GetPosition() const;
+    const sf::Vector2f & GetPosition() const;
 	void SetPosition(const sf::Vector2f & position);
 
 	float GetWidth() const;

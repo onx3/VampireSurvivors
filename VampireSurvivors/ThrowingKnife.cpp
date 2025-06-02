@@ -99,7 +99,7 @@ void ThrowingKnifeComponent::ThrowKnife()
                 pKnifeSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.f, 1.f));
 
                 auto * pCameraManager = GetGameManager().GetManager<CameraManager>();
-                auto crosshairPosition = pCameraManager->GetCrosshairPosition();
+                auto & crosshairPosition = pCameraManager->GetCrosshairPosition();
                 direction = crosshairPosition - gameObj.GetPosition();
                 float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
                 if (length != 0)
@@ -169,7 +169,7 @@ void ThrowingKnifeComponent::UpdateThrowingKnives(float deltaTime)
         GameObject * pProjectile = gameManager.GetGameObject(projectile.handle);
         if (pProjectile && !pProjectile->IsDestroyed())
         {
-            sf::Vector2f currentPosition = pProjectile->GetPosition();
+            const sf::Vector2f & currentPosition = pProjectile->GetPosition();
             sf::Vector2f newPosition = currentPosition + (projectile.direction * mSpeed * deltaTime);
             pProjectile->SetPosition(newPosition);
 

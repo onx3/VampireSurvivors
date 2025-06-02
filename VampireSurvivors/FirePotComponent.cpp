@@ -108,8 +108,8 @@ void FirePotComponent::CastFirePot(GameObject & enemy)
         }
     }
 
-    sf::Vector2f playerPos = GetGameObject().GetPosition();
-    sf::Vector2f enemyPos = enemy.GetPosition();
+    const sf::Vector2f & playerPos = GetGameObject().GetPosition();
+    const sf::Vector2f & enemyPos = enemy.GetPosition();
     sf::Vector2f midpoint = (playerPos + enemyPos) * 0.5f;
 
     sf::View view = gameManager.GetWindow().getView();
@@ -199,7 +199,7 @@ void FirePotComponent::UpdateFirePots(float deltaTime)
             continue;
         }
 
-        sf::Vector2f currentPos = pPot->GetPosition();
+        const sf::Vector2f & currentPos = pPot->GetPosition();
         sf::Vector2f toTarget = pot.position - currentPos;
         float dist = std::sqrt(toTarget.x * toTarget.x + toTarget.y * toTarget.y);
 

@@ -251,7 +251,7 @@ void EnemyAIManager::OnDeath(GameObject * pEnemy)
 {
     auto & gameManager = GetGameManager();
     auto pDropManager = gameManager.GetManager<DropManager>();
-    sf::Vector2f position = pEnemy->GetPosition();
+    const sf::Vector2f & position = pEnemy->GetPosition();
 
     // Drop Coins
     {

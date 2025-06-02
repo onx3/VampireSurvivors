@@ -226,8 +226,8 @@ void PhantomBladeComponent::UpdatePhantomBlades(float deltaTime)
         }
 
         // Movement toward enemy
-        sf::Vector2f bladePos = pBlade->GetPosition();
-        sf::Vector2f targetPos = pEnemy->GetPosition();
+        const sf::Vector2f & bladePos = pBlade->GetPosition();
+        const sf::Vector2f & targetPos = pEnemy->GetPosition();
         sf::Vector2f toTarget = targetPos - bladePos;
         float dist = std::sqrt(toTarget.x * toTarget.x + toTarget.y * toTarget.y);
 
@@ -236,7 +236,7 @@ void PhantomBladeComponent::UpdatePhantomBlades(float deltaTime)
             sf::Vector2f dir = toTarget / dist;
 
             // Blade rotation: always face the player
-            sf::Vector2f playerPos = GetGameObject().GetPosition();
+            const sf::Vector2f & playerPos = GetGameObject().GetPosition();
             sf::Vector2f toPlayer = playerPos - bladePos;
             float angleRad = std::atan2(toPlayer.y, toPlayer.x);
             float angleDeg = angleRad * (180.f / BD::gsPi) + 90.f; // +90 to rotate handle forward

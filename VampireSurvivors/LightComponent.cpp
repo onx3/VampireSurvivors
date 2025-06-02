@@ -47,7 +47,7 @@ sf::Color LightComponent::GetColor() const
 
 //------------------------------------------------------------------------------------------------------------------------
 
-sf::Vector2f LightComponent::GetPosition() const
+const sf::Vector2f & LightComponent::GetPosition() const
 {
     return GetGameObject().GetPosition();
 }

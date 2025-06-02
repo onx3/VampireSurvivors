@@ -34,7 +34,7 @@ void SpriteComponent::SetSprite(std::shared_ptr<sf::Texture> pTexture, const sf:
 
 //------------------------------------------------------------------------------------------------------------------------
 
-sf::Vector2f SpriteComponent::GetPosition() const
+const sf::Vector2f & SpriteComponent::GetPosition() const
 {
     return mSprite.getPosition();
 }

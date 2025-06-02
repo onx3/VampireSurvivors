@@ -146,8 +146,8 @@ void BoomerangComponent::ThrowBoomerang(GameObject & enemy)
 		pBoomerangObj->AddComponent(pShotDamageComponent);
 	}
 
-	auto enemyPos = enemy.GetPosition();
-	auto myPos = gameObj.GetPosition();
+	auto & enemyPos = enemy.GetPosition();
+	auto & myPos = gameObj.GetPosition();
 	auto directionVec = enemyPos - myPos;
 	float lenSq = BD::GetMagnitudeSquared(directionVec);
 	sf::Vector2f direction = directionVec / std::sqrt(lenSq); // Normalize
@@ -183,7 +183,7 @@ void BoomerangComponent::UpdateBoomerangs(float deltaTime)
 			continue;
 		}
 
-		sf::Vector2f currentPosition = pBoomerang->GetPosition();
+        const sf::Vector2f & currentPosition = pBoomerang->GetPosition();
 		sf::Vector2f movement = boomerang.direction * mSpeed * deltaTime;
 		sf::Vector2f newPosition = currentPosition + movement;
 		pBoomerang->SetPosition(newPosition);

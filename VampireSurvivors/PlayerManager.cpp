@@ -308,7 +308,7 @@ GameObject * PlayerManager::FindClosestEnemy()
             {
                 continue;
             }
-            sf::Vector2f toEnemy = pObj->GetPosition() - myPos;
+            const sf::Vector2f & toEnemy = pObj->GetPosition() - myPos;
             float distSq = BD::Dot(toEnemy, toEnemy); // Gives length squared
             if (distSq < closestDistSq)
             {

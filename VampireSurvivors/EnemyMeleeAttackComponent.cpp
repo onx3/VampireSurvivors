@@ -33,8 +33,8 @@ void EnemyMeleeAttackComponent::Update(float deltaTime)
 		return;
 	}
 
-	sf::Vector2f enemyPos = GetGameObject().GetPosition();
-	sf::Vector2f playerPos = pPlayerObj->GetPosition();
+    const sf::Vector2f & enemyPos = GetGameObject().GetPosition();
+    const sf::Vector2f & playerPos = pPlayerObj->GetPosition();
 	sf::Vector2f direction = enemyPos - playerPos;
 	float distanceSquared = BD::GetMagnitudeSquared(direction);
 

@@ -41,7 +41,7 @@ void CameraManager::Update(float deltaTime)
 	}
 
 	sf::Vector2f previousCenter = mView.getCenter();
-	sf::Vector2f targetPos = pPlayer->GetPosition();
+    const sf::Vector2f & targetPos = pPlayer->GetPosition();
 	mView.setCenter(Lerp(mView.getCenter(), targetPos, 0.1f));
 
 	gameManager.GetWindow().setView(mView);

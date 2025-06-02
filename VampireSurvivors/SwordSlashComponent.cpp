@@ -42,7 +42,7 @@ void SwordSlashComponent::Update(float deltaTime)
         auto pCameraManager = GetGameManager().GetManager<CameraManager>();
         if (pCameraManager)
         {
-            sf::Vector2f playerPos = GetGameObject().GetPosition();
+            const sf::Vector2f & playerPos = GetGameObject().GetPosition();
             sf::Vector2f aimDir = pCameraManager->GetCrosshairPosition() - playerPos;
 
             float len = std::sqrt(aimDir.x * aimDir.x + aimDir.y * aimDir.y);

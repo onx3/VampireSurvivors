@@ -34,8 +34,8 @@ void RadiusPickupComponent::Update(float deltaTime)
         return;
     }
 
-    sf::Vector2f myPos = gameObj.GetPosition();
-    sf::Vector2f followPos = pFollowObj->GetPosition();
+    const sf::Vector2f & myPos = gameObj.GetPosition();
+    const sf::Vector2f & followPos = pFollowObj->GetPosition();
     sf::Vector2f directionVec = followPos - myPos;
 
     float distanceSqr = BD::GetMagnitudeSquared(directionVec);

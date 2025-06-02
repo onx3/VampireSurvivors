@@ -125,7 +125,7 @@ public:
     ETeam GetTeam() const;
     void SetTeam(ETeam team);
 
-    sf::Vector2f GetPosition() const;
+    const sf::Vector2f & GetPosition() const;
     void SetPosition(const sf::Vector2f & position);
 
     float GetRotationDegrees() const;

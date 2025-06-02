@@ -30,8 +30,8 @@ void TrackingComponent::Update(float deltaTime)
         return;
     }
 
-    sf::Vector2f ownerPosition = pGameObject->GetPosition();
-    sf::Vector2f trackedPosition = pTrackedGameObject->GetPosition();
+    const sf::Vector2f & ownerPosition = pGameObject->GetPosition();
+    const sf::Vector2f & trackedPosition = pTrackedGameObject->GetPosition();
 
     sf::Vector2f direction = trackedPosition - ownerPosition;
     float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);

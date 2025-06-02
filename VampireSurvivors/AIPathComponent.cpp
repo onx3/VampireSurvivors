@@ -53,7 +53,7 @@ void AIPathComponent::Update(float deltaTime)
         return;
     }
 
-    auto myPosition = GetGameObject().GetPosition();
+    auto & myPosition = GetGameObject().GetPosition();
 
     mTimeSinceLastPlayerMovement += deltaTime;
     if (mTimeSinceLastPlayerMovement >= skPlayerUpdateInterval)
@@ -118,7 +118,7 @@ void AIPathComponent::Update(float deltaTime)
 
 void AIPathComponent::DebugImGuiComponentInfo()
 {
-	auto gameObjPos = GetGameObject().GetPosition();
+	auto & gameObjPos = GetGameObject().GetPosition();
 	ImGui::Text("Position x,y: %.3f, %.3f", gameObjPos.x, gameObjPos.y);
 }
 

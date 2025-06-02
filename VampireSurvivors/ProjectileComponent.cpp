@@ -76,8 +76,8 @@ void ProjectileComponent::Shoot()
         pProjectileSpriteComponent->SetSprite(pTexture, sf::Vector2f(.85f, .85f));
 
         // Get player position
-        sf::Vector2f playerPosition = pOwnerGameObj->GetPosition();
-        auto crosshairPosition = gameManager.GetManager<CameraManager>()->GetCrosshairPosition();
+        const sf::Vector2f & playerPosition = pOwnerGameObj->GetPosition();
+        auto & crosshairPosition = gameManager.GetManager<CameraManager>()->GetCrosshairPosition();
 
         sf::Vector2f direction = crosshairPosition - playerPosition;
         float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);

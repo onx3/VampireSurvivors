@@ -15,7 +15,7 @@ public:
 
     float GetRadius() const;
     sf::Color GetColor() const;
-    sf::Vector2f GetPosition() const;
+    const sf::Vector2f & GetPosition() const;
 
 private:
     float mRadius;

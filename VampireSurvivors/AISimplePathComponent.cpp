@@ -266,8 +266,8 @@ void AISimplePathComponent::Update(float deltaTime)
         return;
     }
 
-    sf::Vector2f myPos = myGameObj.GetPosition();
-    sf::Vector2f targetPos = pFollowObj->GetPosition();
+    const sf::Vector2f & myPos = myGameObj.GetPosition();
+    const sf::Vector2f & targetPos = pFollowObj->GetPosition();
     sf::Vector2f direction = targetPos - myPos;
 
     float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);

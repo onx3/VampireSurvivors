@@ -148,7 +148,7 @@ void ControlledMovementComponent::Update(float deltaTime)
 
 void ControlledMovementComponent::DebugImGuiComponentInfo()
 {
-    auto gameObjPos = GetGameObject().GetPosition();
+    auto & gameObjPos = GetGameObject().GetPosition();
     ImGui::Text("Position x,y: %.3f, %.3f", gameObjPos.x, gameObjPos.y);
 }
 

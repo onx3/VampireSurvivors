@@ -268,7 +268,7 @@ void GameObject::SetTeam(ETeam team)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-sf::Vector2f GameObject::GetPosition() const
+const sf::Vector2f & GameObject::GetPosition() const
 {
     auto pGameObjectSprite = GetComponent<SpriteComponent>().lock();
     if (pGameObjectSprite)

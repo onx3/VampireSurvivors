@@ -3,32 +3,34 @@
 #include "HealthComponent.h"
 #include <cassert>
 #include "PlayerManager.h"
+#include "RoundManager.h"
 
 UIManager::UIManager(GameManager * pGameManager)
 	: BaseManager(pGameManager)
     , mScore(0)
+    , mHealth(0.f)
     , mRunTime(0.f)
 	, mSpriteLives()
 {
-	if (!mFont.loadFromFile("../../VampireSurvivors/Art/font.ttf")) // Replace with your font path
+	if (!mFont.loadFromFile("../../VampireSurvivors/Art/youmurdererbb_reg.ttf"))
 	{
 		assert(false && "Failed to load font");
 	}
 	mScoreText.setFont(mFont);
-	mScoreText.setCharacterSize(24);
+	mScoreText.setCharacterSize(32);
 	mScoreText.setFillColor(sf::Color::Cyan);
 	mScoreText.setOutlineColor(sf::Color::Black);
 	mScoreText.setPosition(10.f, 10.f); // Top-left corner
 	mScoreText.setString("Score: 0");
 
     mHealthText.setFont(mFont);
-    mHealthText.setCharacterSize(24);
+    mHealthText.setCharacterSize(32);
     mHealthText.setFillColor(sf::Color::Red);
     mHealthText.setOutlineColor(sf::Color::Black);
     mHealthText.setString("Health: ");
 
     mRunTimeText.setFont(mFont);
-    mRunTimeText.setCharacterSize(24);
+    mRunTimeText.setCharacterSize(32);
     mRunTimeText.setFillColor(sf::Color::Cyan);
     mRunTimeText.setOutlineColor(sf::Color::Black);
     mRunTimeText.setString("Time: 0.0s");
@@ -36,6 +38,19 @@ UIManager::UIManager(GameManager * pGameManager)
 	assert(mLifeTexture.loadFromFile("../../VampireSurvivors/Art/UI/ui_heart_full.png"));
 	mLifeSprite.setTexture(mLifeTexture);
     mLifeSprite.setScale(sf::Vector2f(1.2f, 1.2f));
+
+    mRoundText.setFont(mFont);
+    mRoundText.setCharacterSize(32);
+    mRoundText.setFillColor(sf::Color::White);
+    mRoundText.setOutlineColor(sf::Color(128, 0, 0));
+    mRoundText.setOutlineColor(sf::Color::Black);
+    mRoundText.setString("Round: 1");
+
+    mRoundIntroText.setFont(mFont);
+    mRoundIntroText.setCharacterSize(72);
+    mRoundIntroText.setFillColor(sf::Color::White);
+    mRoundIntroText.setOutlineColor(sf::Color::Black);
+    mRoundIntroText.setString("");
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -61,6 +76,42 @@ void UIManager::Update(float deltaTime)
             std::remove_if(mDamageNumbers.begin(), mDamageNumbers.end(),
                 [](const DamageNumber & dn) { return dn.IsExpired(); }),
             mDamageNumbers.end());
+    }
+
+    // Round Text
+    {
+        auto * pRoundManager = GetGameManager().GetManager<RoundManager>();
+        if (pRoundManager)
+        {
+            int round = pRoundManager->GetCurrentRound();
+            mRoundText.setString("Round: " + std::to_string(round));
+        }
+        if (mRoundIntroTimer > 0.f)
+        {
+            mRoundIntroTimer -= deltaTime;
+            float time = 2.0f - mRoundIntroTimer;
+
+            float alpha = 255.f;
+
+            if (time < 0.5f)
+            {
+                // Fade in
+                alpha = 255.f * (time / 0.5f);
+            }
+            else if (time > 1.5f)
+            {
+                // Fade out
+                alpha = 255.f * ((2.0f - time) / 0.5f);
+            }
+
+            sf::Color color = mRoundIntroText.getFillColor();
+            color.a = static_cast<sf::Uint8>(std::clamp(alpha, 0.f, 255.f));
+            mRoundIntroText.setFillColor(color);
+        }
+        else
+        {
+            mRoundIntroText.setString("");
+        }
     }
 }
 
@@ -93,6 +144,20 @@ void UIManager::Render(sf::RenderWindow & window)
         for (const auto & dn : mDamageNumbers)
         {
             window.draw(dn.text);
+        }
+    }
+
+    // Round Text
+    {
+        sf::FloatRect roundBounds = mRoundText.getLocalBounds();
+        mRoundText.setPosition(viewTopLeft.x + (viewSize.x - roundBounds.width) / 2.f, viewTopLeft.y + 40.f);
+        window.draw(mRoundText);
+        if (mRoundIntroTimer > 0.f)
+        {
+            sf::FloatRect bounds = mRoundIntroText.getLocalBounds();
+            mRoundIntroText.setPosition(viewTopLeft.x + (viewSize.x - bounds.width) / 2.f,
+                viewTopLeft.y + viewSize.y / 2.f - bounds.height / 2.f);
+            window.draw(mRoundIntroText);
         }
     }
 }
@@ -230,6 +295,15 @@ void UIManager::AddDamageNumber(const sf::Vector2f & pos, float amount, sf::Colo
     {
         mDamageNumbers.emplace_back(mFont, pos, amount, color);
     }
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void UIManager::ShowRoundIntro(int roundNumber)
+{
+    mRoundIntroText.setString("Round " + std::to_string(roundNumber));
+    mRoundIntroText.setFillColor(sf::Color::White);
+    mRoundIntroTimer = 2.0f;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

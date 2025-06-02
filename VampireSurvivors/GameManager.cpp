@@ -18,6 +18,7 @@
 #include "LevelManager.h"
 #include "AbilityUIManager.h"
 #include "LightManager.h"
+#include "RoundManager.h"
 
 namespace
 {
@@ -53,10 +54,10 @@ GameManager::GameManager(WindowManager & windowManager)
             GetManager<LevelManager>()->LoadLevel("../../VampireSurvivors/Levels/Zombies.ldtk");
         }
         AddManager<PlayerManager>();
-
         
         AddManager<CameraManager>();
         AddManager<EnemyAIManager>();
+        AddManager<RoundManager>();
         AddManager<UIManager>();
         AddManager<DropManager>();
         AddManager<AbilityUIManager>();
@@ -436,18 +437,6 @@ void GameManager::RenderGameWorld()
     if (auto * pLevel = GetManager<LevelManager>())
     {
         pLevel->Render(*mpWindow);
-    }
-    if (auto * pDropManager = GetManager<DropManager>())
-    {
-        pDropManager->Render(*mpWindow);
-    }
-    if (auto * pPlayer = GetManager<PlayerManager>())
-    {
-        pPlayer->Render(*mpWindow);
-    }
-    if (auto * pEnemy = GetManager<EnemyAIManager>())
-    {
-        pEnemy->Render(*mpWindow);
     }
 }
 

@@ -181,6 +181,9 @@
     <ClCompile Include="AbilitySelectionComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="RoundManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -335,6 +338,9 @@
     </ClInclude>
     <ClInclude Include="AbilitySelectionComponent.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="RoundManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

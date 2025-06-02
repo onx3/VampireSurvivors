@@ -20,6 +20,7 @@
 #include "LevelManager.h"
 #include "SpriteAnimationComponent.h"
 #include "SpawnFromGroundEffectComponent.h"
+#include "RoundManager.h"
 
 
 EnemyAIManager::EnemyAIManager(GameManager * pGameManager)
@@ -83,41 +84,6 @@ void EnemyAIManager::Update(float deltaTime)
         }
     }
     CleanUpDeadEnemies();
-
-    auto * pLevelManager = gameManager.GetManager<LevelManager>();
-    if (!pLevelManager)
-    {
-        return;
-    }
-    auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
-    if (!pPlayerManager)
-    {
-        return;
-    }
-
-    const LevelData & levelData = pLevelManager->GetLevelData();
-    const RoomData * pRoomData = pPlayerManager->GetCurrentRoom();
-
-    if (!pRoomData)
-    {
-        return;
-    }
-
-    while (mEnemyHandles.size() < mCurrentMaxEnemies)
-    {
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dist(0, int(pRoomData->enemySpawnPositions.size()) - 1);
-        int randomIndex = dist(gen);
-
-        sf::Vector2f spawnPosition = pRoomData->enemySpawnPositions[randomIndex];
-
-        if (pLevelManager->IsTileWalkableAI(int(spawnPosition.x / BD::gsPixelCountCellSize), int(spawnPosition.y / BD::gsPixelCountCellSize)))
-        {
-            EEnemy EnemyType = GetEnemyType();
-            RespawnEnemy(EnemyType, spawnPosition);
-        }
-    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -136,7 +102,7 @@ void EnemyAIManager::RemoveEnemy(GameObject * pEnemy)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-void EnemyAIManager::RespawnEnemy(EEnemy type, sf::Vector2f pos)
+void EnemyAIManager::RespawnEnemy(EEnemy type, const sf::Vector2f & pos)
 {
     AddEnemies(1, type, pos);
 }
@@ -290,6 +256,14 @@ void EnemyAIManager::OnDeath(GameObject * pEnemy)
     // Drop Coins
     {
         pDropManager->DropCoins(position);
+    }
+    // Notify RoundManager
+    {
+        auto * pRoundManager = gameManager.GetManager<RoundManager>();
+        if (pRoundManager)
+        {
+            pRoundManager->OnEnemyKilled();
+        }
     }
 }
 

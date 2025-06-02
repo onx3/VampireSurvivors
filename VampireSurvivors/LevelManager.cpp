@@ -268,13 +268,19 @@ void LevelManager::ParseTileData(const json & levelData)
     // === FIRST PASS: COLLECT ROOMS ===
     for (const auto & layer : layerInstances)
     {
-        if (!layer.contains("entityInstances")) continue;
+        if (!layer.contains("entityInstances")) 
+        {
+            continue;
+        }
         const auto & entities = layer["entityInstances"];
 
         for (const auto & entity : entities)
         {
             std::string entityName = entity["__identifier"];
-            if (entityName != "Room") continue;
+            if (entityName != "Room")
+            {
+                continue;
+            }
 
             int px = entity["px"][0];
             int py = entity["px"][1];

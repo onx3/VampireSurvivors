@@ -186,6 +186,7 @@
     <ClCompile Include="ProjectileComponent.cpp" />
     <ClCompile Include="RadiusPickupComponent.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="RoundManager.cpp" />
     <ClCompile Include="SpawnFromGroundEffectComponent.cpp" />
     <ClCompile Include="SpriteAnimationComponent.cpp" />
     <ClCompile Include="ThrowingKnife.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="ProjectileComponent.h" />
     <ClInclude Include="RadiusPickupComponent.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="RoundManager.h" />
     <ClInclude Include="SpawnFromGroundEffectComponent.h" />
     <ClInclude Include="SpriteAnimationComponent.h" />
     <ClInclude Include="ThrowingKnife.h" />

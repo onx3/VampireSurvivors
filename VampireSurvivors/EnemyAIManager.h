@@ -23,7 +23,7 @@ public:
 	virtual void OnGameEnd() override;
 
 	void RemoveEnemy(GameObject * pEnemy);
-	void RespawnEnemy(EEnemy type, sf::Vector2f pos);
+	void RespawnEnemy(EEnemy type, const sf::Vector2f & pos);
 
 	void AddEnemies(int count, EEnemy type, sf::Vector2f pos);
 	void DestroyAllEnemies();
@@ -32,6 +32,8 @@ public:
 
 	void OnDeath(GameObject * pEnemy);
 
+    EEnemy GetEnemyType();
+
 private:
 	std::string GetEnemyFile(EEnemy type);
 	void CleanUpDeadEnemies();
@@ -39,8 +41,6 @@ private:
 	EDropType DetermineDropType() const;
 
 	void SetUpSprite(GameObject & gameObj, SpriteComponent & spriteComp, EEnemy type);
-
-	EEnemy GetEnemyType();
 
 	int mBaseEnemyCount;
 	int mCurrentMaxEnemies;

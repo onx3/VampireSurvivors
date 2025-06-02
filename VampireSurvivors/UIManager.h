@@ -64,6 +64,8 @@ public:
 
 	void AddDamageNumber(const sf::Vector2f & pos, float amount, sf::Color & color);
 
+    void ShowRoundIntro(int roundNumber);
+
 private:
 	int mScore;
 	sf::Font mFont;
@@ -78,6 +80,10 @@ private:
 	sf::Texture mLifeTexture;
 	sf::Sprite mLifeSprite;
 	std::vector<sf::Sprite> mSpriteLives;
+
+    sf::Text mRoundText;
+    sf::Text mRoundIntroText;
+    float mRoundIntroTimer = 0.f;
 
 	std::vector<DamageNumber> mDamageNumbers;
 };

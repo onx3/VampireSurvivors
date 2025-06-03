@@ -14,6 +14,9 @@ public:
 
     void SetActive(bool active);
 
+    bool IntersectsLine(const sf::Vector2f & a, const sf::Vector2f & b) const;
+    sf::FloatRect GetWorldAABB() const;
+
 private:
     b2Body * mpBody;
     b2World * mpWorld;

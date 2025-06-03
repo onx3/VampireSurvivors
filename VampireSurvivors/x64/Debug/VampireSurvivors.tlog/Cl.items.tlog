@@ -3,6 +3,7 @@ D:\VampireSurvivors\VampireSurvivors\AbilityUIManager.cpp;D:\VampireSurvivors\Va
 D:\VampireSurvivors\VampireSurvivors\AIPathComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\AIPathComponent.obj
 D:\VampireSurvivors\VampireSurvivors\AISimplePathComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\AISimplePathComponent.obj
 D:\VampireSurvivors\VampireSurvivors\AstroidsPrivate.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\AstroidsPrivate.obj
+D:\VampireSurvivors\VampireSurvivors\AudioManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\AudioManager.obj
 D:\VampireSurvivors\VampireSurvivors\BaseManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\BaseManager.obj
 D:\VampireSurvivors\VampireSurvivors\BoomerangComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\BoomerangComponent.obj
 D:\VampireSurvivors\VampireSurvivors\CameraManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\CameraManager.obj
@@ -37,9 +38,11 @@ D:\VampireSurvivors\VampireSurvivors\LightManager.cpp;D:\VampireSurvivors\Vampir
 D:\VampireSurvivors\VampireSurvivors\Main.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\Main.obj
 D:\VampireSurvivors\VampireSurvivors\PhantomBladeComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\PhantomBladeComponent.obj
 D:\VampireSurvivors\VampireSurvivors\PlayerManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\PlayerManager.obj
+D:\VampireSurvivors\VampireSurvivors\PlayerShootingComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\PlayerShootingComponent.obj
 D:\VampireSurvivors\VampireSurvivors\PlayerStatsComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\PlayerStatsComponent.obj
 D:\VampireSurvivors\VampireSurvivors\ProjectileComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ProjectileComponent.obj
 D:\VampireSurvivors\VampireSurvivors\RadiusPickupComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\RadiusPickupComponent.obj
+D:\VampireSurvivors\VampireSurvivors\ReloadComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ReloadComponent.obj
 D:\VampireSurvivors\VampireSurvivors\ResourceManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ResourceManager.obj
 D:\VampireSurvivors\VampireSurvivors\RoundManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\RoundManager.obj
 D:\VampireSurvivors\VampireSurvivors\SpawnFromGroundEffectComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\SpawnFromGroundEffectComponent.obj

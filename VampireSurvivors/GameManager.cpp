@@ -19,6 +19,7 @@
 #include "AbilityUIManager.h"
 #include "LightManager.h"
 #include "RoundManager.h"
+#include "AudioManager.h"
 
 namespace
 {
@@ -62,6 +63,7 @@ GameManager::GameManager(WindowManager & windowManager)
         AddManager<DropManager>();
         AddManager<AbilityUIManager>();
         AddManager<LightManager>();
+        AddManager<AudioManager>();
     }
     
 

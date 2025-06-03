@@ -5,6 +5,8 @@
 #include "PlayerManager.h"
 #include "InputHandler.h"
 #include <imgui.h>
+#include <random>
+#include "AudioManager.h"
 
 DoorComponent::DoorComponent(GameObject * pOwner, GameManager & gameManager, int doorCost)
     : GameComponent(pOwner, gameManager)
@@ -104,6 +106,7 @@ std::string & DoorComponent::GetClassName()
 
 void DoorComponent::Open()
 {
+    GameManager & gameManager = GetGameManager();
     if (mIsOpen)
     {
         return;
@@ -113,7 +116,7 @@ void DoorComponent::Open()
     if (pSpriteComp)
     {
         ResourceId resId = ResourceId("../../VampireSurvivors/Art/Door/DoorOpen.png");
-        auto pTexture = GetGameManager().GetManager<ResourceManager>()->GetTexture(resId);
+        auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resId);
         if (pTexture)
         {
             pSpriteComp->SetSprite(pTexture);
@@ -125,6 +128,19 @@ void DoorComponent::Open()
     if (pColisionComp)
     {
         pColisionComp->SetActive(false);
+    }
+
+    // Play Sound
+    auto * pResourceManager = gameManager.GetManager<ResourceManager>();
+    if (!pResourceManager)
+    {
+        return;
+    }
+    ResourceId soundId("../../VampireSurvivors/Audio/DoorOpen.mp3");
+    auto pBuffer = pResourceManager->GetSoundBuffer(soundId);
+    if (pBuffer)
+    {
+        gameManager.GetManager<AudioManager>()->PlayPooledSound(pBuffer, 20.f, 1.f);
     }
 }
 

@@ -4,6 +4,7 @@
 #include <cassert>
 #include "PlayerManager.h"
 #include "RoundManager.h"
+#include "ReloadComponent.h"
 
 UIManager::UIManager(GameManager * pGameManager)
 	: BaseManager(pGameManager)
@@ -11,11 +12,15 @@ UIManager::UIManager(GameManager * pGameManager)
     , mHealth(0.f)
     , mRunTime(0.f)
 	, mSpriteLives()
+    , mReloadFlashTimer(0.f)
+    , mReloadFlashSpeed(8.f)
 {
 	if (!mFont.loadFromFile("../../VampireSurvivors/Art/youmurdererbb_reg.ttf"))
 	{
 		assert(false && "Failed to load font");
 	}
+
+    // Score Info
 	mScoreText.setFont(mFont);
 	mScoreText.setCharacterSize(32);
 	mScoreText.setFillColor(sf::Color::Cyan);
@@ -23,22 +28,23 @@ UIManager::UIManager(GameManager * pGameManager)
 	mScoreText.setPosition(10.f, 10.f); // Top-left corner
 	mScoreText.setString("Score: 0");
 
-    mHealthText.setFont(mFont);
-    mHealthText.setCharacterSize(32);
-    mHealthText.setFillColor(sf::Color::Red);
-    mHealthText.setOutlineColor(sf::Color::Black);
-    mHealthText.setString("Health: ");
-
     mRunTimeText.setFont(mFont);
     mRunTimeText.setCharacterSize(32);
     mRunTimeText.setFillColor(sf::Color::Cyan);
     mRunTimeText.setOutlineColor(sf::Color::Black);
     mRunTimeText.setString("Time: 0.0s");
 
+    // Health Info
+    mHealthText.setFont(mFont);
+    mHealthText.setCharacterSize(32);
+    mHealthText.setFillColor(sf::Color::Red);
+    mHealthText.setOutlineColor(sf::Color::Black);
+    mHealthText.setString("Health: ");
 	assert(mLifeTexture.loadFromFile("../../VampireSurvivors/Art/UI/ui_heart_full.png"));
 	mLifeSprite.setTexture(mLifeTexture);
     mLifeSprite.setScale(sf::Vector2f(1.2f, 1.2f));
 
+    // Round Info
     mRoundText.setFont(mFont);
     mRoundText.setCharacterSize(32);
     mRoundText.setFillColor(sf::Color::White);
@@ -51,6 +57,13 @@ UIManager::UIManager(GameManager * pGameManager)
     mRoundIntroText.setFillColor(sf::Color::White);
     mRoundIntroText.setOutlineColor(sf::Color::Black);
     mRoundIntroText.setString("");
+
+    // Ammo Info
+    mAmmoText.setFont(mFont);
+    mAmmoText.setCharacterSize(32);
+    mAmmoText.setFillColor(sf::Color::White);
+    mAmmoText.setOutlineColor(sf::Color::Black);
+    mAmmoText.setString("Ammo: --/--");
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -113,6 +126,47 @@ void UIManager::Update(float deltaTime)
             mRoundIntroText.setString("");
         }
     }
+
+    // Ammo Text
+    {
+        auto * pPlayerManager = GetGameManager().GetManager<PlayerManager>();
+        if (pPlayerManager && !pPlayerManager->GetPlayers().empty())
+        {
+            GameObject * pPlayer = GetGameManager().GetGameObject(pPlayerManager->GetPlayers()[0]);
+            if (pPlayer)
+            {
+                auto pReload = pPlayer->GetComponent<ReloadComponent>().lock();
+                if (pReload)
+                {
+                    std::string ammoStr;
+                    if (pReload->GetReserveAmmo() == -1)
+                    {
+                        ammoStr = "Ammo: " + std::to_string(pReload->GetClipAmmo()) + "/INF";
+                    }
+                    else
+                    {
+                        ammoStr = "Ammo: " + std::to_string(pReload->GetClipAmmo()) + "/" + std::to_string(pReload->GetReserveAmmo());
+                    }
+                    mAmmoText.setString(ammoStr);
+
+                    if (pReload->IsReloading())
+                    {
+                        mReloadFlashTimer += deltaTime;
+                        float alpha = 128.f + 127.f * std::sin(mReloadFlashTimer * mReloadFlashSpeed);
+
+                        sf::Color flashColor = sf::Color::Red;
+                        flashColor.a = static_cast<sf::Uint8>(std::clamp(alpha, 0.f, 255.f));
+                        mAmmoText.setFillColor(flashColor);
+                    }
+                    else
+                    {
+                        mReloadFlashTimer = 0.f;
+                        mAmmoText.setFillColor(sf::Color::White);
+                    }
+                }
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -147,7 +201,7 @@ void UIManager::Render(sf::RenderWindow & window)
         }
     }
 
-    // Round Text
+    // Round Info
     {
         sf::FloatRect roundBounds = mRoundText.getLocalBounds();
         mRoundText.setPosition(viewTopLeft.x + (viewSize.x - roundBounds.width) / 2.f, viewTopLeft.y + 40.f);
@@ -159,6 +213,16 @@ void UIManager::Render(sf::RenderWindow & window)
                 viewTopLeft.y + viewSize.y / 2.f - bounds.height / 2.f);
             window.draw(mRoundIntroText);
         }
+    }
+
+    // Ammo Info
+    {
+        sf::FloatRect ammoBounds = mAmmoText.getLocalBounds();
+        mAmmoText.setPosition(
+            viewTopLeft.x + viewSize.x - ammoBounds.width - 20.f,
+            viewTopLeft.y + viewSize.y - ammoBounds.height - 20.f
+        );
+        window.draw(mAmmoText);
     }
 }
 

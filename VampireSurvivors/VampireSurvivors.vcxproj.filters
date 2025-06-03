@@ -184,6 +184,15 @@
     <ClCompile Include="RoundManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ReloadComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerShootingComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -342,5 +351,12 @@
     <ClInclude Include="RoundManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ReloadComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerShootingComponent.h" />
   </ItemGroup>
 </Project>

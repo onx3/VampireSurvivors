@@ -56,6 +56,7 @@ public:
 	ResourceManager(GameManager * pGameManager);
 	
     std::shared_ptr<sf::Texture> GetTexture(ResourceId & resourceId);
+    std::shared_ptr<sf::SoundBuffer> GetSoundBuffer(ResourceId & resourceId);
 
     void PreloadResources(std::vector<std::string> const & resourcePaths);
 
@@ -63,4 +64,5 @@ public:
     
 private:
     std::unordered_map<ResourceId, std::shared_ptr<sf::Texture>> mTextureResources;
+    std::unordered_map<ResourceId, std::shared_ptr<sf::SoundBuffer>> mSoundResources;
 };

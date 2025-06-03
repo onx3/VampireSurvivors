@@ -1,0 +1,147 @@
+#include "AstroidsPrivate.h"
+#include "PlayerShootingComponent.h"
+#include "ReloadComponent.h"
+#include "CameraManager.h"
+#include "CollisionComponent.h"
+#include "HealthComponent.h"
+#include "AudioManager.h"
+
+PlayerShootingComponent::PlayerShootingComponent(GameObject * pOwner, GameManager & gameManager)
+    : GameComponent(pOwner, gameManager)
+    , mShootCooldown(.2f)
+    , mTimeSinceLastShot(0.f)
+    , mEmptyGunSoundCoolDown(.5f)
+    , mEmptyGunSoundTimer(0.f)
+    , mLastTracerStart()
+    , mLastTracerEnd()
+    , mTracerTimer()
+    , mTracerLifespan()
+    , mName("PlayerShootingComponent")
+{
+
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void PlayerShootingComponent::Update(float deltaTime)
+{
+    GameManager & gameManager = GetGameManager();
+    mTimeSinceLastShot += deltaTime;
+    mEmptyGunSoundTimer -= deltaTime;
+
+    auto pReloadComp = GetGameObject().GetComponent<ReloadComponent>().lock();
+    if (pReloadComp)
+    {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+        {
+            pReloadComp->StartReload();
+        }
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && mTimeSinceLastShot >= mShootCooldown)
+        {
+            if (pReloadComp->CanShoot())
+            {
+                Shoot();
+                pReloadComp->ConsumeAmmo();
+                mTimeSinceLastShot = 0.f;
+            }
+            else if (!pReloadComp->IsReloading() && mEmptyGunSoundTimer <= 0.f)
+            {
+                // Empty Gun sound
+                mEmptyGunSoundTimer = mEmptyGunSoundCoolDown;
+                ResourceId resId = ResourceId("../../VampireSurvivors/Audio/EmptyGun.mp3");
+                auto pBuffer = gameManager.GetManager<ResourceManager>()->GetSoundBuffer(resId);
+                if (pBuffer)
+                {
+                    gameManager.GetManager<AudioManager>()->PlayPooledSound(pBuffer, 20.f, 1.f);
+                }
+            }
+        }
+    }   
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void PlayerShootingComponent::draw(sf::RenderTarget & target, sf::RenderStates states)
+{
+    if (mTracerTimer <= 0.f)
+    {
+        return;
+    }
+
+    float alpha = (mTracerTimer / mTracerLifespan) * 255.f;
+
+    sf::VertexArray line(sf::Lines, 2);
+    line[0].position = mLastTracerStart;
+    line[1].position = mLastTracerEnd;
+
+    sf::Color tracerColor = sf::Color::White;
+    tracerColor.a = static_cast<sf::Uint8>(alpha);
+    line[0].color = line[1].color = tracerColor;
+
+    target.draw(line);
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void PlayerShootingComponent::DebugImGuiComponentInfo()
+{
+
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+std::string & PlayerShootingComponent::GetClassName()
+{
+    return mName;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void PlayerShootingComponent::Shoot()
+{
+    GameManager & gameManager = GetGameManager();
+    const sf::Vector2f & startPos = GetGameObject().GetPosition();
+    const sf::Vector2f & endPos = gameManager.GetManager<CameraManager>()->GetCrosshairPosition();
+
+    GameObject * hitEnemy = nullptr;
+    std::vector<GameObject *> objects;
+    gameManager.GetAllGameObjects(objects);
+    for (GameObject * pObj : objects)
+    {
+        if (pObj->GetTeam() == ETeam::Enemy && !pObj->IsDestroyed())
+        {
+            auto pCollision = pObj->GetComponent<CollisionComponent>().lock();
+            if (pCollision && pCollision->IntersectsLine(startPos, endPos)) // You'll need to implement this
+            {
+                hitEnemy = pObj;
+                break;
+            }
+        }
+    }
+
+    if (hitEnemy)
+    {
+        auto pHealth = hitEnemy->GetComponent<HealthComponent>().lock();
+        if (pHealth)
+        {
+            pHealth->LoseHealth(25.f);
+        }
+    }
+
+    // Fire sound
+    ResourceId resId = ResourceId("../../VampireSurvivors/Audio/9mm.mp3");
+    auto pBuffer = gameManager.GetManager<ResourceManager>()->GetSoundBuffer(resId);
+    if (pBuffer)
+    {
+        gameManager.GetManager<AudioManager>()->PlayPooledSound(pBuffer, 20.f, 1.f);
+    }
+
+    mLastTracerStart = startPos;
+    mLastTracerEnd = endPos;
+    mTracerTimer = mTracerLifespan;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+// EOF
+//------------------------------------------------------------------------------------------------------------------------\

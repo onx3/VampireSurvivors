@@ -40,5 +40,13 @@ private:
     float mTimeSinceLastShot;
     float mDamagePerShot;
     EProjectileType mLastUsedProjectile;
+    
+    //Sound
+    sf::Sound mContinuousFireSound;
+    bool mIsFiringSoundPlaying;
+    bool mIsFadingOut;
+    const float mStartVolume;
+    const float mFadeRate;
+
     std::string mName;
 };

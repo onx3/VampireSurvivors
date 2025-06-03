@@ -30,6 +30,7 @@ std::string & ResourceId::GetName()
 ResourceManager::ResourceManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
     , mTextureResources()
+    , mSoundResources()
 {
 }
 
@@ -50,6 +51,26 @@ std::shared_ptr<sf::Texture> ResourceManager::GetTexture(ResourceId & resourceId
     {
         mTextureResources[resourceId] = texture;
         return texture;
+    }
+
+    return nullptr;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+std::shared_ptr<sf::SoundBuffer> ResourceManager::GetSoundBuffer(ResourceId & resourceId)
+{
+    auto it = mSoundResources.find(resourceId);
+    if (it != mSoundResources.end())
+    {
+        return it->second;
+    }
+
+    auto pBuffer = std::make_shared<sf::SoundBuffer>();
+    if (pBuffer->loadFromFile(resourceId.GetName()))
+    {
+        mSoundResources[resourceId] = pBuffer;
+        return pBuffer;
     }
 
     return nullptr;

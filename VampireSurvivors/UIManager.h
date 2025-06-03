@@ -67,24 +67,30 @@ public:
     void ShowRoundIntro(int roundNumber);
 
 private:
+    // Score Info
 	int mScore;
 	sf::Font mFont;
 	sf::Text mScoreText;
 
-	float mHealth;
-	sf::Text mHealthText;
-
 	float mRunTime;
 	sf::Text mRunTimeText;
 
+    // Health Info
+    float mHealth;
+    sf::Text mHealthText;
 	sf::Texture mLifeTexture;
 	sf::Sprite mLifeSprite;
 	std::vector<sf::Sprite> mSpriteLives;
 
+    // Round Info
     sf::Text mRoundText;
     sf::Text mRoundIntroText;
     float mRoundIntroTimer = 0.f;
 
+    // Ammo Info
+    sf::Text mAmmoText;
+    float mReloadFlashTimer;
+    const float mReloadFlashSpeed;
 	std::vector<DamageNumber> mDamageNumbers;
 };
 

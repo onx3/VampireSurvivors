@@ -13,6 +13,7 @@
 #include "CameraManager.h"
 #include "imgui.h"
 #include "DamageComponent.h"
+#include "AudioManager.h"
 
 ProjectileComponent::ProjectileComponent(GameObject * pOwner, GameManager & gameManager)
     : GameComponent(pOwner, gameManager)
@@ -22,6 +23,11 @@ ProjectileComponent::ProjectileComponent(GameObject * pOwner, GameManager & game
     , mTimeSinceLastShot(1.f)
     , mLastUsedProjectile(EProjectileType::GreenLaser)
     , mDamagePerShot(25.f)
+    , mContinuousFireSound()
+    , mIsFiringSoundPlaying(false)
+    , mIsFadingOut(false)
+    , mStartVolume(40.f)
+    , mFadeRate(80.f)
     , mName("ProjectileComponent")
 {
 
@@ -128,6 +134,18 @@ void ProjectileComponent::Shoot()
 
         // Track projectile
         mProjectiles.push_back({ projectileHandle, 5.f, direction });
+
+        auto * pResourceManager = gameManager.GetManager<ResourceManager>();
+        if (!pResourceManager)
+        {
+            return;
+        }
+        ResourceId soundId("../../VampireSurvivors/Audio/9mm.mp3");
+        auto pBuffer = pResourceManager->GetSoundBuffer(soundId);
+        if (pBuffer)
+        {
+            gameManager.GetManager<AudioManager>()->PlayPooledSound(pBuffer, 20.f, 1.f);
+        }
     }
 }
 
@@ -143,7 +161,9 @@ void ProjectileComponent::Update(float deltaTime)
 
     mTimeSinceLastShot += deltaTime;
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && mTimeSinceLastShot >= mCooldown)
+    bool isMouseDown = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+
+    if (isMouseDown && mTimeSinceLastShot >= mCooldown)
     {
         Shoot();
         mTimeSinceLastShot = 0.0f;

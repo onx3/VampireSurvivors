@@ -19,6 +19,8 @@
 #include "SpriteAnimationComponent.h"
 #include "LightComponent.h"
 #include "FirePotComponent.h"
+#include "ReloadComponent.h"
+#include "PlayerShootingComponent.h"
 
 namespace
 {
@@ -139,13 +141,23 @@ void PlayerManager::InitPlayer()
         }
     }
 
-    // Projectile Component
+    // Reload Component
     {
-        auto pProjectileComponent = pPlayer->GetComponent<ProjectileComponent>().lock();
-        if (!pProjectileComponent)
+        auto pReloadComponent = pPlayer->GetComponent<ReloadComponent>().lock();
+        if (!pReloadComponent)
         {
-            pProjectileComponent = std::make_shared<ProjectileComponent>(pPlayer, gameManager);
-            pPlayer->AddComponent(pProjectileComponent);
+            pReloadComponent = std::make_shared<ReloadComponent>(pPlayer, gameManager, 10, -1 /*infinite*/, 2.0f); // clipSize, reserveAmmo, reloadTime
+            pPlayer->AddComponent(pReloadComponent);
+        }
+    }
+
+    // Player Shooting Component
+    {
+        auto pShootingComponent = pPlayer->GetComponent<PlayerShootingComponent>().lock();
+        if (!pShootingComponent)
+        {
+            pShootingComponent = std::make_shared<PlayerShootingComponent>(pPlayer, gameManager);
+            pPlayer->AddComponent(pShootingComponent);
         }
     }
 
@@ -380,13 +392,14 @@ void PlayerManager::AddWeaponGameObject(GameObject & player)
         auto pWeaponSpriteComponent = pPlayerWeapon->GetComponent<SpriteComponent>().lock();
         if (pWeaponSpriteComponent)
         {
-            std::string file = "../../VampireSurvivors/Art/Weapons/weapon_bow_2.png";
+            std::string file = "../../VampireSurvivors/Art/Weapons/Guns/Glock - P80 [64x48].png";
             ResourceId resourceId(file);
 
             auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
             if (pTexture)
             {
-                pWeaponSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.0f, 1.0f));
+                pWeaponSpriteComponent->SetSprite(pTexture, sf::Vector2f(.5f, .5f));
+                pWeaponSpriteComponent->SetOriginToCenter();
                 pWeaponSpriteComponent->SetPosition(player.GetPosition());
                 pPlayerWeapon->SetRotation(pPlayerWeapon->GetRotationDegrees());
             }
@@ -398,7 +411,7 @@ void PlayerManager::AddWeaponGameObject(GameObject & player)
         auto pWeaponFollowComponent = pPlayerWeapon->GetComponent<FollowComponent>().lock();
         if (!pWeaponFollowComponent)
         {
-            auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, player.GetHandle(), sf::Vector2f(10, 0));
+            auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, player.GetHandle(), sf::Vector2f(12, 10));
             pPlayerWeapon->AddComponent(pWeaponFollowComponent);
         }
     }

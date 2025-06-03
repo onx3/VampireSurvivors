@@ -4,6 +4,7 @@
 #include <random>
 #include "GameObject.h"
 #include "SpriteComponent.h"
+#include "AudioManager.h"
 
 ExplosionComponent::ExplosionComponent(GameObject * pOwner, GameManager & gameManager, const std::string & spriteSheetPath, int frameWidth, int frameHeight, int numFrames, float frameTime, sf::Vector2f scale, sf::Vector2f pos)
     : GameComponent(pOwner, gameManager)
@@ -16,7 +17,6 @@ ExplosionComponent::ExplosionComponent(GameObject * pOwner, GameManager & gameMa
     , mAnimationFinished(false)
     , mScale(scale)
     , mPosition(pos)
-    , mSoundPlayed(false)
 {
     std::string file = spriteSheetPath;
     ResourceId resourceId(file);
@@ -38,18 +38,24 @@ ExplosionComponent::ExplosionComponent(GameObject * pOwner, GameManager & gameMa
         }
     }
 
-    // Sound
+    auto * pResourceManager = gameManager.GetManager<ResourceManager>();
+    ResourceId explosionSoundId("../../VampireSurvivors/Audio/explosion.wav");
+    auto pBuffer = pResourceManager->GetSoundBuffer(explosionSoundId);
+
+    if (pBuffer)
     {
-        assert(mSoundBuffer.loadFromFile("../../VampireSurvivors/Audio/explosion.wav"));
-        mSound.setBuffer(mSoundBuffer);
-        mSound.setVolume(20.f);
+        sf::Sound sound;
+        sound.setBuffer(*pBuffer);
+        sound.setVolume(20.f);
 
         // Randomize pitch between 0.95 and 1.05
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_real_distribution<float> pitchDist(0.95f, 1.05f);
-        float randomPitch = pitchDist(gen);
-        mSound.setPitch(randomPitch);
+        sound.setPitch(pitchDist(gen));
+
+        sound.play();
+        gameManager.GetManager<AudioManager>()->TrackAndPlaySound(std::move(sound));
     }
 }
 
@@ -64,12 +70,6 @@ ExplosionComponent::~ExplosionComponent()
 void ExplosionComponent::Update(float deltaTime)
 {
     mElapsedTime += deltaTime;
-
-    if (!mSoundPlayed && mCurrentFrame == 0)
-    {
-        mSound.play();
-        mSoundPlayed = true;
-    }
 
     if (mElapsedTime >= mFrameTime && mCurrentFrame < mNumFrames - 1)
     {

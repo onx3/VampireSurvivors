@@ -28,10 +28,5 @@ private:
 	bool mAnimationFinished;
 	sf::Vector2f mScale;
 	sf::Vector2f mPosition;
-
-	// Audio
-	sf::SoundBuffer mSoundBuffer;
-	sf::Sound mSound;
-	bool mSoundPlayed;
 };
 

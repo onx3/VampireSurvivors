@@ -1,10 +1,10 @@
 #include "AstroidsPrivate.h"
 #include "PlayerShootingComponent.h"
-#include "ReloadComponent.h"
 #include "CameraManager.h"
 #include "CollisionComponent.h"
 #include "HealthComponent.h"
 #include "AudioManager.h"
+#include "WeaponComponent.h"
 
 PlayerShootingComponent::PlayerShootingComponent(GameObject * pOwner, GameManager & gameManager)
     : GameComponent(pOwner, gameManager)
@@ -15,7 +15,7 @@ PlayerShootingComponent::PlayerShootingComponent(GameObject * pOwner, GameManage
     , mLastTracerStart()
     , mLastTracerEnd()
     , mTracerTimer()
-    , mTracerLifespan()
+    , mTracerLifespan(.0f)
     , mName("PlayerShootingComponent")
 {
 
@@ -29,23 +29,22 @@ void PlayerShootingComponent::Update(float deltaTime)
     mTimeSinceLastShot += deltaTime;
     mEmptyGunSoundTimer -= deltaTime;
 
-    auto pReloadComp = GetGameObject().GetComponent<ReloadComponent>().lock();
-    if (pReloadComp)
+    auto pWeaponComp = GetGameObject().GetComponent<WeaponComponent>().lock();
+    if (pWeaponComp)
     {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
         {
-            pReloadComp->StartReload();
+            pWeaponComp->StartReload();
         }
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && mTimeSinceLastShot >= mShootCooldown)
         {
-            if (pReloadComp->CanShoot())
+            if (pWeaponComp->CanShoot())
             {
-                Shoot();
-                pReloadComp->ConsumeAmmo();
+                pWeaponComp->Shoot();
                 mTimeSinceLastShot = 0.f;
             }
-            else if (!pReloadComp->IsReloading() && mEmptyGunSoundTimer <= 0.f)
+            else if (!pWeaponComp->IsReloading() && mEmptyGunSoundTimer <= 0.f && pWeaponComp->GetAmmoInClip() <= 0)
             {
                 // Empty Gun sound
                 mEmptyGunSoundTimer = mEmptyGunSoundCoolDown;
@@ -54,6 +53,7 @@ void PlayerShootingComponent::Update(float deltaTime)
                 if (pBuffer)
                 {
                     gameManager.GetManager<AudioManager>()->PlayPooledSound(pBuffer, 20.f, 1.f);
+                    pWeaponComp->StartReload();
                 }
             }
         }

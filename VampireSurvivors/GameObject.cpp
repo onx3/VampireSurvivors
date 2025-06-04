@@ -271,11 +271,8 @@ void GameObject::SetTeam(ETeam team)
 const sf::Vector2f & GameObject::GetPosition() const
 {
     auto pGameObjectSprite = GetComponent<SpriteComponent>().lock();
-    if (pGameObjectSprite)
-    {
-        return pGameObjectSprite->GetPosition();
-    }
-    return sf::Vector2f();
+    assert(pGameObjectSprite && "Why does this gameObject not have a sprite component?");
+    return pGameObjectSprite->GetPosition();
 }
 
 //------------------------------------------------------------------------------------------------------------------------

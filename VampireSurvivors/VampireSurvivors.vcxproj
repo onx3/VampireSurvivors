@@ -187,7 +187,6 @@
     <ClCompile Include="PlayerStatsComponent.cpp" />
     <ClCompile Include="ProjectileComponent.cpp" />
     <ClCompile Include="RadiusPickupComponent.cpp" />
-    <ClCompile Include="ReloadComponent.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RoundManager.cpp" />
     <ClCompile Include="SpawnFromGroundEffectComponent.cpp" />
@@ -199,6 +198,7 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TrackingComponent.cpp" />
     <ClCompile Include="WandComponent.cpp" />
+    <ClCompile Include="WeaponComponent.cpp" />
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -242,7 +242,6 @@
     <ClInclude Include="PlayerStatsComponent.h" />
     <ClInclude Include="ProjectileComponent.h" />
     <ClInclude Include="RadiusPickupComponent.h" />
-    <ClInclude Include="ReloadComponent.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RoundManager.h" />
     <ClInclude Include="SpawnFromGroundEffectComponent.h" />
@@ -256,6 +255,7 @@
     <ClInclude Include="TrackingComponent.h" />
     <ClInclude Include="TReusePool.h" />
     <ClInclude Include="WandComponent.h" />
+    <ClInclude Include="WeaponComponent.h" />
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -42,7 +42,6 @@ D:\VampireSurvivors\VampireSurvivors\PlayerShootingComponent.cpp;D:\VampireSurvi
 D:\VampireSurvivors\VampireSurvivors\PlayerStatsComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\PlayerStatsComponent.obj
 D:\VampireSurvivors\VampireSurvivors\ProjectileComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ProjectileComponent.obj
 D:\VampireSurvivors\VampireSurvivors\RadiusPickupComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\RadiusPickupComponent.obj
-D:\VampireSurvivors\VampireSurvivors\ReloadComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ReloadComponent.obj
 D:\VampireSurvivors\VampireSurvivors\ResourceManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\ResourceManager.obj
 D:\VampireSurvivors\VampireSurvivors\RoundManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\RoundManager.obj
 D:\VampireSurvivors\VampireSurvivors\SpawnFromGroundEffectComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\SpawnFromGroundEffectComponent.obj
@@ -54,4 +53,5 @@ D:\VampireSurvivors\VampireSurvivors\SwordSlashComponent.cpp;D:\VampireSurvivors
 D:\VampireSurvivors\VampireSurvivors\Timer.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\Timer.obj
 D:\VampireSurvivors\VampireSurvivors\TrackingComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\TrackingComponent.obj
 D:\VampireSurvivors\VampireSurvivors\WandComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\WandComponent.obj
+D:\VampireSurvivors\VampireSurvivors\WeaponComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\WeaponComponent.obj
 D:\VampireSurvivors\VampireSurvivors\WindowManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\WindowManager.obj

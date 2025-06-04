@@ -187,10 +187,10 @@
     <ClCompile Include="AudioManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="ReloadComponent.cpp">
+    <ClCompile Include="PlayerShootingComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerShootingComponent.cpp">
+    <ClCompile Include="WeaponComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
@@ -354,10 +354,10 @@
     <ClInclude Include="AudioManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
-    <ClInclude Include="ReloadComponent.h">
+    <ClInclude Include="PlayerShootingComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerShootingComponent.h">
+    <ClInclude Include="WeaponComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

@@ -19,8 +19,8 @@
 #include "SpriteAnimationComponent.h"
 #include "LightComponent.h"
 #include "FirePotComponent.h"
-#include "ReloadComponent.h"
 #include "PlayerShootingComponent.h"
+#include "WeaponComponent.h"
 
 namespace
 {
@@ -141,16 +141,6 @@ void PlayerManager::InitPlayer()
         }
     }
 
-    // Reload Component
-    {
-        auto pReloadComponent = pPlayer->GetComponent<ReloadComponent>().lock();
-        if (!pReloadComponent)
-        {
-            pReloadComponent = std::make_shared<ReloadComponent>(pPlayer, gameManager, 10, -1 /*infinite*/, 2.0f); // clipSize, reserveAmmo, reloadTime
-            pPlayer->AddComponent(pReloadComponent);
-        }
-    }
-
     // Player Shooting Component
     {
         auto pShootingComponent = pPlayer->GetComponent<PlayerShootingComponent>().lock();
@@ -158,6 +148,16 @@ void PlayerManager::InitPlayer()
         {
             pShootingComponent = std::make_shared<PlayerShootingComponent>(pPlayer, gameManager);
             pPlayer->AddComponent(pShootingComponent);
+        }
+    }
+
+    // Pistol Weapon
+    {
+        auto pWeaponComponent = pPlayer->GetComponent<WeaponComponent>().lock();
+        if (!pWeaponComponent)
+        {
+            pWeaponComponent = std::make_shared<WeaponComponent>(pPlayer, gameManager, EWeaponType::Pistol);
+            pPlayer->AddComponent(pWeaponComponent);
         }
     }
 

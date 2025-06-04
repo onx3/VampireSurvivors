@@ -122,6 +122,8 @@ private:
 	
 	void GameOverScreen();
 
+    void PreloadAssets();
+
 	bool mShowImGuiWindow;
 	std::vector<std::pair<std::type_index, BaseManager *>> mManagers;
 	BD::Handle mRootHandle;

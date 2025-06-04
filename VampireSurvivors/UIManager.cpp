@@ -4,7 +4,7 @@
 #include <cassert>
 #include "PlayerManager.h"
 #include "RoundManager.h"
-#include "ReloadComponent.h"
+#include "WeaponComponent.h"
 
 UIManager::UIManager(GameManager * pGameManager)
 	: BaseManager(pGameManager)
@@ -135,21 +135,21 @@ void UIManager::Update(float deltaTime)
             GameObject * pPlayer = GetGameManager().GetGameObject(pPlayerManager->GetPlayers()[0]);
             if (pPlayer)
             {
-                auto pReload = pPlayer->GetComponent<ReloadComponent>().lock();
-                if (pReload)
+                auto pWeaponComp = pPlayer->GetComponent<WeaponComponent>().lock();
+                if (pWeaponComp)
                 {
                     std::string ammoStr;
-                    if (pReload->GetReserveAmmo() == -1)
+                    if (pWeaponComp->GetReserveAmmo() == -1)
                     {
-                        ammoStr = "Ammo: " + std::to_string(pReload->GetClipAmmo()) + "/INF";
+                        ammoStr = "Ammo: " + std::to_string(pWeaponComp->GetAmmoInClip()) + "/INF";
                     }
                     else
                     {
-                        ammoStr = "Ammo: " + std::to_string(pReload->GetClipAmmo()) + "/" + std::to_string(pReload->GetReserveAmmo());
+                        ammoStr = "Ammo: " + std::to_string(pWeaponComp->GetAmmoInClip()) + "/" + std::to_string(pWeaponComp->GetReserveAmmo());
                     }
                     mAmmoText.setString(ammoStr);
 
-                    if (pReload->IsReloading())
+                    if (pWeaponComp->IsReloading())
                     {
                         mReloadFlashTimer += deltaTime;
                         float alpha = 128.f + 127.f * std::sin(mReloadFlashTimer * mReloadFlashSpeed);

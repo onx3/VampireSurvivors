@@ -98,7 +98,7 @@ GameManager::GameManager(WindowManager & windowManager)
 
     // ResourceManager
     {
-        auto * pResourceManager = GetManager<ResourceManager>();
+        PreloadAssets();
     }
 }
 
@@ -773,6 +773,16 @@ void GameManager::GameOverScreen()
         mRunTimeText.setString(buffer);
         mScoreText.setString("Score: " + std::to_string(pUIManager->GetScore()) + "\n" + "Press ENTER to Play Again!");
     }
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void GameManager::PreloadAssets()
+{
+    /*auto * pResourceManager = GetManager<ResourceManager>();
+    std::vector<std::string> resIds;
+    resIds.push_back("../../VampireSurvivors/Audio/9mm.mp3");
+    pResourceManager->PreloadResources(resIds);*/
 }
 
 //------------------------------------------------------------------------------------------------------------------------

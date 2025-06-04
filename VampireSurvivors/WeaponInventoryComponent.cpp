@@ -114,6 +114,7 @@ bool WeaponInventoryComponent::IsReloading() const
     {
         return pWeapon->IsReloading();
     }
+    return false;
 }
 
 //------------------------------------------------------------------------------------------------------------------------

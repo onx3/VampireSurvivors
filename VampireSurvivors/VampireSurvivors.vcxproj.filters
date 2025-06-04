@@ -191,7 +191,7 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="PlayerShootingComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -357,6 +357,8 @@
     <ClInclude Include="ReloadComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerShootingComponent.h" />
+    <ClInclude Include="PlayerShootingComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

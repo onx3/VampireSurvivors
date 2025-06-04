@@ -112,7 +112,7 @@ void PlayerShootingComponent::Shoot()
         if (pObj->GetTeam() == ETeam::Enemy && !pObj->IsDestroyed())
         {
             auto pCollision = pObj->GetComponent<CollisionComponent>().lock();
-            if (pCollision && pCollision->IntersectsLine(startPos, endPos)) // You'll need to implement this
+            if (pCollision && pCollision->IntersectsLine(startPos, endPos))
             {
                 hitEnemy = pObj;
                 break;

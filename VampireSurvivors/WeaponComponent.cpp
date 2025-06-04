@@ -51,7 +51,6 @@ WeaponComponent::WeaponComponent(GameObject * pOwner, GameManager & gameManager,
             break;
         }
     }
-
     mClipAmmo = mClipSize;
 }
 

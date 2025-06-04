@@ -199,6 +199,7 @@
     <ClCompile Include="TrackingComponent.cpp" />
     <ClCompile Include="WandComponent.cpp" />
     <ClCompile Include="WeaponComponent.cpp" />
+    <ClCompile Include="WeaponInventoryComponent.cpp" />
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -256,6 +257,7 @@
     <ClInclude Include="TReusePool.h" />
     <ClInclude Include="WandComponent.h" />
     <ClInclude Include="WeaponComponent.h" />
+    <ClInclude Include="WeaponInventoryComponent.h" />
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

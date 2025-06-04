@@ -12,9 +12,6 @@ public:
 
 private:
     void Shoot();
-
-    float mShootCooldown;
-    float mTimeSinceLastShot;
     float mEmptyGunSoundCoolDown;
     float mEmptyGunSoundTimer;
 

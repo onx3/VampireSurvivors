@@ -150,6 +150,7 @@ public:
 
     void Activate();
     void Deactivate();
+    void SetIsActive(bool active);
     bool IsActive();
 
     void DebugImGuiInfo();

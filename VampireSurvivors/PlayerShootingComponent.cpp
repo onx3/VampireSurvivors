@@ -5,11 +5,10 @@
 #include "HealthComponent.h"
 #include "AudioManager.h"
 #include "WeaponComponent.h"
+#include "WeaponInventoryComponent.h"
 
 PlayerShootingComponent::PlayerShootingComponent(GameObject * pOwner, GameManager & gameManager)
     : GameComponent(pOwner, gameManager)
-    , mShootCooldown(.2f)
-    , mTimeSinceLastShot(0.f)
     , mEmptyGunSoundCoolDown(.5f)
     , mEmptyGunSoundTimer(0.f)
     , mLastTracerStart()
@@ -26,25 +25,26 @@ PlayerShootingComponent::PlayerShootingComponent(GameObject * pOwner, GameManage
 void PlayerShootingComponent::Update(float deltaTime)
 {
     GameManager & gameManager = GetGameManager();
-    mTimeSinceLastShot += deltaTime;
     mEmptyGunSoundTimer -= deltaTime;
 
-    auto pWeaponComp = GetGameObject().GetComponent<WeaponComponent>().lock();
-    if (pWeaponComp)
+    auto pInventory = GetGameObject().GetComponent<WeaponInventoryComponent>().lock();
+
+    if (pInventory)
     {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
         {
-            pWeaponComp->StartReload();
+            pInventory->Reload();
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+        {
+            pInventory->SwitchToNextSlot();
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && mTimeSinceLastShot >= mShootCooldown)
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-            if (pWeaponComp->CanShoot())
-            {
-                pWeaponComp->Shoot();
-                mTimeSinceLastShot = 0.f;
-            }
-            else if (!pWeaponComp->IsReloading() && mEmptyGunSoundTimer <= 0.f && pWeaponComp->GetAmmoInClip() <= 0)
+            pInventory->Shoot();
+
+            if (!pInventory->IsReloading() && mEmptyGunSoundTimer <= 0.f && pInventory->GetAmmoInCurrentClip() <= 0)
             {
                 // Empty Gun sound
                 mEmptyGunSoundTimer = mEmptyGunSoundCoolDown;
@@ -53,11 +53,11 @@ void PlayerShootingComponent::Update(float deltaTime)
                 if (pBuffer)
                 {
                     gameManager.GetManager<AudioManager>()->PlayPooledSound(pBuffer, 20.f, 1.f);
-                    pWeaponComp->StartReload();
+                    pInventory->Reload();
                 }
             }
         }
-    }   
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

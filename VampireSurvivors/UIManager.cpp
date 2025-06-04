@@ -5,6 +5,7 @@
 #include "PlayerManager.h"
 #include "RoundManager.h"
 #include "WeaponComponent.h"
+#include "WeaponInventoryComponent.h"
 
 UIManager::UIManager(GameManager * pGameManager)
 	: BaseManager(pGameManager)
@@ -135,21 +136,21 @@ void UIManager::Update(float deltaTime)
             GameObject * pPlayer = GetGameManager().GetGameObject(pPlayerManager->GetPlayers()[0]);
             if (pPlayer)
             {
-                auto pWeaponComp = pPlayer->GetComponent<WeaponComponent>().lock();
-                if (pWeaponComp)
+                auto pInventory = pPlayer->GetComponent<WeaponInventoryComponent>().lock();
+                if (pInventory)
                 {
                     std::string ammoStr;
-                    if (pWeaponComp->GetReserveAmmo() == -1)
+                    if (pInventory->GetActiveReserveAmmo() == -1)
                     {
-                        ammoStr = "Ammo: " + std::to_string(pWeaponComp->GetAmmoInClip()) + "/INF";
+                        ammoStr = "Ammo: " + std::to_string(pInventory->GetAmmoInCurrentClip()) + "/INF";
                     }
                     else
                     {
-                        ammoStr = "Ammo: " + std::to_string(pWeaponComp->GetAmmoInClip()) + "/" + std::to_string(pWeaponComp->GetReserveAmmo());
+                        ammoStr = "Ammo: " + std::to_string(pInventory->GetAmmoInCurrentClip()) + "/" + std::to_string(pInventory->GetActiveReserveAmmo());
                     }
                     mAmmoText.setString(ammoStr);
 
-                    if (pWeaponComp->IsReloading())
+                    if (pInventory->IsReloading())
                     {
                         mReloadFlashTimer += deltaTime;
                         float alpha = 128.f + 127.f * std::sin(mReloadFlashTimer * mReloadFlashSpeed);

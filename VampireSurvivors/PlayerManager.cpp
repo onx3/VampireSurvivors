@@ -21,6 +21,7 @@
 #include "FirePotComponent.h"
 #include "PlayerShootingComponent.h"
 #include "WeaponComponent.h"
+#include "WeaponInventoryComponent.h"
 
 namespace
 {
@@ -151,13 +152,13 @@ void PlayerManager::InitPlayer()
         }
     }
 
-    // Pistol Weapon
+    // Player Inventory
     {
-        auto pWeaponComponent = pPlayer->GetComponent<WeaponComponent>().lock();
-        if (!pWeaponComponent)
+        auto pInventory = pPlayer->GetComponent<WeaponInventoryComponent>().lock();
+        if (!pInventory)
         {
-            pWeaponComponent = std::make_shared<WeaponComponent>(pPlayer, gameManager, EWeaponType::Pistol);
-            pPlayer->AddComponent(pWeaponComponent);
+            pInventory = std::make_shared<WeaponInventoryComponent>(pPlayer, gameManager);
+            pPlayer->AddComponent(pInventory);
         }
     }
 
@@ -181,20 +182,8 @@ void PlayerManager::InitPlayer()
         }
     }
 
-    // Add default sword weapon GameObject to display
+    // Add weapon GameObject
     AddWeaponGameObject(*pPlayer);
-
-    // TESTING STUFF
-    {
-        /*{
-            auto pThowingKnifeComponent = pPlayer->GetComponent<PhantomBladeComponent>().lock();
-            if (!pThowingKnifeComponent)
-            {
-                pThowingKnifeComponent = std::make_shared<PhantomBladeComponent>(pPlayer, gameManager);
-                pPlayer->AddComponent(pThowingKnifeComponent);
-            }
-        }*/
-    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -383,36 +372,98 @@ void PlayerManager::CreateAnimationComponent(GameObject & player)
 
 void PlayerManager::AddWeaponGameObject(GameObject & player)
 {
-    GameManager & gameManager = GetGameManager();
-    BD::Handle playerWeaponHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, player.GetHandle());
-    GameObject * pPlayerWeapon = gameManager.GetGameObject(playerWeaponHandle);
-
-    // Weapon Sprite Component
     {
-        auto pWeaponSpriteComponent = pPlayerWeapon->GetComponent<SpriteComponent>().lock();
-        if (pWeaponSpriteComponent)
-        {
-            std::string file = "../../VampireSurvivors/Art/Weapons/Guns/Glock - P80 [64x48].png";
-            ResourceId resourceId(file);
 
-            auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
-            if (pTexture)
+        GameManager & gameManager = GetGameManager();
+        BD::Handle playerWeaponHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, player.GetHandle());
+        GameObject * pPlayerWeapon = gameManager.GetGameObject(playerWeaponHandle);
+
+        // Weapon Sprite Component
+        {
+            auto pWeaponSpriteComponent = pPlayerWeapon->GetComponent<SpriteComponent>().lock();
+            if (pWeaponSpriteComponent)
             {
-                pWeaponSpriteComponent->SetSprite(pTexture, sf::Vector2f(.5f, .5f));
-                pWeaponSpriteComponent->SetOriginToCenter();
-                pWeaponSpriteComponent->SetPosition(player.GetPosition());
-                pPlayerWeapon->SetRotation(pPlayerWeapon->GetRotationDegrees());
+                std::string file = "../../VampireSurvivors/Art/Weapons/Guns/Glock - P80 [64x48].png";
+                ResourceId resourceId(file);
+
+                auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
+                if (pTexture)
+                {
+                    pWeaponSpriteComponent->SetSprite(pTexture, sf::Vector2f(.4f, .4f));
+                    pWeaponSpriteComponent->SetOriginToCenter();
+                    pWeaponSpriteComponent->SetPosition(player.GetPosition());
+                    pPlayerWeapon->SetRotation(pPlayerWeapon->GetRotationDegrees());
+                }
+            }
+        }
+
+        // Weapon Follow Component
+        {
+            auto pWeaponFollowComponent = pPlayerWeapon->GetComponent<FollowComponent>().lock();
+            if (!pWeaponFollowComponent)
+            {
+                auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, player.GetHandle(), sf::Vector2f(12, 10));
+                pPlayerWeapon->AddComponent(pWeaponFollowComponent);
+            }
+        }
+
+        auto pPlayerInventory = player.GetComponent<WeaponInventoryComponent>().lock();
+        if (pPlayerInventory)
+        {
+            auto pWeaponComponent = pPlayerWeapon->GetComponent<WeaponComponent>().lock();
+            if (!pWeaponComponent)
+            {
+                pWeaponComponent = std::make_shared<WeaponComponent>(pPlayerWeapon, gameManager, EWeaponType::Pistol);
+                pPlayerWeapon->AddComponent(pWeaponComponent);
+                pPlayerInventory->AddWeapon(pWeaponComponent);
             }
         }
     }
-
-    // Weapon Follow Component
     {
-        auto pWeaponFollowComponent = pPlayerWeapon->GetComponent<FollowComponent>().lock();
-        if (!pWeaponFollowComponent)
+
+        GameManager & gameManager = GetGameManager();
+        BD::Handle playerWeaponHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, player.GetHandle());
+        GameObject * pPlayerWeapon = gameManager.GetGameObject(playerWeaponHandle);
+
+        // Weapon Sprite Component
         {
-            auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, player.GetHandle(), sf::Vector2f(12, 10));
-            pPlayerWeapon->AddComponent(pWeaponFollowComponent);
+            auto pWeaponSpriteComponent = pPlayerWeapon->GetComponent<SpriteComponent>().lock();
+            if (pWeaponSpriteComponent)
+            {
+                std::string file = "../../VampireSurvivors/Art/Weapons/Guns/Submachine - MP5A3 [80x48].png";
+                ResourceId resourceId(file);
+
+                auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
+                if (pTexture)
+                {
+                    pWeaponSpriteComponent->SetSprite(pTexture, sf::Vector2f(.4f, .4f));
+                    pWeaponSpriteComponent->SetOriginToCenter();
+                    pWeaponSpriteComponent->SetPosition(player.GetPosition());
+                    pPlayerWeapon->SetRotation(pPlayerWeapon->GetRotationDegrees());
+                }
+            }
+        }
+
+        // Weapon Follow Component
+        {
+            auto pWeaponFollowComponent = pPlayerWeapon->GetComponent<FollowComponent>().lock();
+            if (!pWeaponFollowComponent)
+            {
+                auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, player.GetHandle(), sf::Vector2f(12, 10));
+                pPlayerWeapon->AddComponent(pWeaponFollowComponent);
+            }
+        }
+
+        auto pPlayerInventory = player.GetComponent<WeaponInventoryComponent>().lock();
+        if (pPlayerInventory)
+        {
+            auto pWeaponComponent = pPlayerWeapon->GetComponent<WeaponComponent>().lock();
+            if (!pWeaponComponent)
+            {
+                pWeaponComponent = std::make_shared<WeaponComponent>(pPlayerWeapon, gameManager, EWeaponType::SMG);
+                pPlayerWeapon->AddComponent(pWeaponComponent);
+                pPlayerInventory->AddWeapon(pWeaponComponent);
+            }
         }
     }
 }

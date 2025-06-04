@@ -462,6 +462,13 @@ void GameObject::Deactivate()
 
 //------------------------------------------------------------------------------------------------------------------------
 
+void GameObject::SetIsActive(bool active)
+{
+    mActive = active;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
 void GameObject::NotifyChildrenToDeactivate()
 {
     for (auto childHandle : mChildHandles)

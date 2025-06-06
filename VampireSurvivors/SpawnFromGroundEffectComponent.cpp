@@ -33,7 +33,8 @@ void SpawnFromGroundEffectComponent::Update(float deltaTime)
     GameObject & gameObj = GetGameObject();
     mElapsed += deltaTime;
     float t = std::min(mElapsed / mDuration, 1.f);
-    float scale = t * t * (3 - 2 * t);
+    float endScale = .9f;
+    float scale = endScale * (t * t * (3 - 2 * t));
     
     auto pSpriteComponent = gameObj.GetComponent<SpriteComponent>().lock();
     if (pSpriteComponent)

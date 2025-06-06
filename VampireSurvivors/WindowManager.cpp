@@ -7,7 +7,8 @@
 WindowManager::WindowManager()
 	: mEvent()
 {
-    mpWindow = new sf::RenderWindow(sf::VideoMode(1920, 1088), "Astroids", sf::Style::Default);
+    mpWindow = new sf::RenderWindow(sf::VideoMode(1920, 1088), "Zombies", sf::Style::Default);
+    //mpWindow = new sf::RenderWindow(sf::VideoMode(2560, 1440), "Zombies", sf::Style::fullscreen);
     mpWindow->setFramerateLimit(300);
 
     mpWindow->setMouseCursorVisible(false);

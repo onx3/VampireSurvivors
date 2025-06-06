@@ -143,9 +143,10 @@ void EnemyAIManager::AddEnemies(int count, EEnemy type, sf::Vector2f pos)
         // Sprite Comp
         SetUpSprite(*pEnemy, *pSpriteComp, type);
         pSpriteComp->SetPosition(pos);
+        sf::Vector2f spriteScale = pSpriteComp->GetSprite().getScale();
         sf::Vector2f fullSize = sf::Vector2f(
-            float(pSpriteComp->GetSprite().getTextureRect().width),
-            float(pSpriteComp->GetSprite().getTextureRect().height)
+            float(pSpriteComp->GetSprite().getTextureRect().width) * spriteScale.x,
+            float(pSpriteComp->GetSprite().getTextureRect().height) * spriteScale.y
         );
 
         // Health
@@ -298,14 +299,14 @@ void EnemyAIManager::SetUpSprite(GameObject & gameObj, SpriteComponent & spriteC
     {
         case (EEnemy::LizardF):
         {
-            scale = sf::Vector2f(1.2f, 1.2f);
+            scale = sf::Vector2f(.9f, .9f);
             frameWidth = 16;
             frameHeight = 28;
             break;
         }
         case (EEnemy::Ogre):
         {
-            scale = sf::Vector2f(1.2f, 1.2f);
+            scale = sf::Vector2f(.9f, .9f);
             frameWidth = 32;
             frameHeight = 35;
             break;
@@ -313,7 +314,7 @@ void EnemyAIManager::SetUpSprite(GameObject & gameObj, SpriteComponent & spriteC
         case (EEnemy::Chort):
         default:
         {
-            scale = sf::Vector2f(1.2f, 1.2f);
+            scale = sf::Vector2f(.9f, .9f);
             frameWidth = 16;
             frameHeight = 22;
             break;

@@ -86,7 +86,7 @@ void PlayerManager::InitPlayer()
             auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
             if (pTexture)
             {
-                pSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.0f, 1.0f));
+                pSpriteComponent->SetSprite(pTexture, sf::Vector2f(.9f, .9f));
                 pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 6, 6));
                 pSpriteComponent->GetSprite().setOrigin(8.f, 16.f);
                 pSpriteComponent->SetPosition(mSpawnPos);

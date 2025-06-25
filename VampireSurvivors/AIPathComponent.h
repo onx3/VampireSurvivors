@@ -29,7 +29,7 @@ public:
 
 	virtual void Update(float deltaTime) override;
 	virtual void DebugImGuiComponentInfo() override;
-	virtual std::string & GetClassName() override;
+	virtual const std::string & GetClassName() override;
 
 private:
 	std::vector<sf::Vector2i> FindPath(sf::Vector2i start, sf::Vector2i goal);

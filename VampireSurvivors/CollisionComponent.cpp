@@ -55,7 +55,7 @@ void CollisionComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & CollisionComponent::GetClassName()
+const std::string & CollisionComponent::GetClassName()
 {
     return mName;
 }

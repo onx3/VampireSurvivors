@@ -1,9 +1,9 @@
 #include "AstroidsPrivate.h"
+#include "BDConfig.h"
 #include "ControlledMovementComponent.h"
 #include <cassert>
 #include "GameObject.h"
 #include "SpriteComponent.h"
-#include "BDConfig.h"
 #include "ResourceManager.h"
 #include "CameraManager.h"
 #include "LevelManager.h"
@@ -106,11 +106,6 @@ void ControlledMovementComponent::Update(float deltaTime)
     }
 
     // Set velocity in physics engine
-    if (mVelocity.x >= 5.f)
-    {
-        int ii = 0;
-        ++ii;
-    }
     b2Vec2 box2dVelocity(mVelocity.x / pOwner->PIXELS_PER_METER, mVelocity.y / pOwner->PIXELS_PER_METER);
     pBody->SetLinearVelocity(box2dVelocity);
 
@@ -154,7 +149,7 @@ void ControlledMovementComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & ControlledMovementComponent::GetClassName()
+const std::string & ControlledMovementComponent::GetClassName()
 {
     return mName;
 }

@@ -106,15 +106,15 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\ExtLibs\SFML\include;$(SolutionDir)\ExtLibs\ImGui\;$(SolutionDir)\ExtLibs\ImGui-sfml\;$(SolutionDir)\ExtLibs\Box2d\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\ExtLibs\SFML\include;$(SolutionDir)\ExtLibs\ImGui\;$(SolutionDir)\ExtLibs\ImGui-sfml\;$(SolutionDir)\ExtLibs\Box2d\include;$(SolutionDir)\ExtLibs\Curl\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>AstroidsPrivate.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\ExtLibs\SFML\lib;$(SolutionDir)\ExtLibs\Box2d\lib\DebugVersion;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-audio-d.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;box2d.lib;%(AdditionalDependencies);opengl32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\ExtLibs\SFML\lib;$(SolutionDir)\ExtLibs\Box2d\lib\DebugVersion;$(SolutionDir)\ExtLibs\Curl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-audio-d.lib;sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;box2d.lib;%(AdditionalDependencies);opengl32.lib;libcurl-d.lib;zlibd.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -125,7 +125,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\ExtLibs\SFML\include;$(SolutionDir)\ExtLibs\ImGui\;$(SolutionDir)\ExtLibs\ImGui-sfml\;$(SolutionDir)\ExtLibs\Box2d\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\ExtLibs\SFML\include;$(SolutionDir)\ExtLibs\ImGui\;$(SolutionDir)\ExtLibs\ImGui-sfml\;$(SolutionDir)\ExtLibs\Box2d\include;$(SolutionDir)\ExtLibs\Curl\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>AstroidsPrivate.h</PrecompiledHeaderFile>
@@ -135,8 +135,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\ExtLibs\SFML\lib;$(SolutionDir)\ExtLibs\Box2d\lib\ReleaseVersion;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-audio.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;box2d.lib;%(AdditionalDependencies);opengl32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\ExtLibs\SFML\lib;$(SolutionDir)\ExtLibs\Box2d\lib\ReleaseVersion;$(SolutionDir)\ExtLibs\Curl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-audio.lib;sfml-system.lib;sfml-window.lib;sfml-graphics.lib;box2d.lib;%(AdditionalDependencies);opengl32.lib;libcurl.lib;zlib.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -197,6 +197,7 @@
     <ClCompile Include="SwordSlashComponent.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TrackingComponent.cpp" />
+    <ClCompile Include="WallBuyWeaponComponent.cpp" />
     <ClCompile Include="WandComponent.cpp" />
     <ClCompile Include="WeaponComponent.cpp" />
     <ClCompile Include="WeaponInventoryComponent.cpp" />
@@ -255,6 +256,7 @@
     <ClInclude Include="TPool.h" />
     <ClInclude Include="TrackingComponent.h" />
     <ClInclude Include="TReusePool.h" />
+    <ClInclude Include="WallBuyWeaponComponent.h" />
     <ClInclude Include="WandComponent.h" />
     <ClInclude Include="WeaponComponent.h" />
     <ClInclude Include="WeaponInventoryComponent.h" />

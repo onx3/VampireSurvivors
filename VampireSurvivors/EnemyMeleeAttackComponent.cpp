@@ -99,7 +99,7 @@ void EnemyMeleeAttackComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & EnemyMeleeAttackComponent::GetClassName()
+const std::string & EnemyMeleeAttackComponent::GetClassName()
 {
 	return mName;
 }

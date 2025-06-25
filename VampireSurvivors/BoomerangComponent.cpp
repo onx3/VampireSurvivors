@@ -65,7 +65,7 @@ void BoomerangComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & BoomerangComponent::GetClassName()
+const std::string & BoomerangComponent::GetClassName()
 {
 	return mName;
 }

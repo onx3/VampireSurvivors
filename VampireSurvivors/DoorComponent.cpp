@@ -97,7 +97,7 @@ void DoorComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & DoorComponent::GetClassName()
+const std::string & DoorComponent::GetClassName()
 {
     return mName;
 }

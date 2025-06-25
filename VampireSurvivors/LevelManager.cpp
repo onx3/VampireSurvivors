@@ -8,6 +8,7 @@
 #include "DoorComponent.h"
 #include "CollisionComponent.h"
 #include "AbilitySelectionComponent.h"
+#include "WallBuyWeaponComponent.h"
 
 LevelManager::LevelManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
@@ -517,6 +518,43 @@ void LevelManager::ParseTileData(const json & levelData)
                         std::cerr << "Warning: RoomConnection failed. Could not find one or both rooms: "
                             << roomA << " or " << roomB << std::endl;
                     }
+                }
+            }
+            else if (entityName == "WallBuy")
+            {
+                BD::Handle objHandle = gameManager.CreateNewGameObject(ETeam::Neutral, gameManager.GetRootGameObjectHandle());
+                GameObject * pObj = gameManager.GetGameObject(objHandle);
+                if (pObj)
+                {
+                    pObj->SetPosition(sf::Vector2f(float(px), float(py)));
+                    std::string name;
+                    int price = -1;
+                    if (entity.contains("fieldInstances"))
+                    {
+                        const auto & fields = entity["fieldInstances"];
+                        for (const auto & field : fields)
+                        {
+                            if (field.contains("__identifier") && field["__identifier"] == "Name")
+                            {
+                                if (field.contains("__value") && field["__value"].is_string())
+                                {
+                                    name = field["__value"];
+                                }
+                                break;
+                            }
+                            if (field.contains("__identifier") && field["__identifier"] == "Price")
+                            {
+                                if (field.contains("__value") && field["__value"].is_number_integer())
+                                {
+                                    price = field["__value"];
+                                }
+                                break;
+                            }
+                        }
+                    }
+
+                    auto pWallBuyWeaponComponent = std::make_shared<WallBuyWeaponComponent>(pObj, gameManager, name, price);
+                    pObj->AddComponent(pWallBuyWeaponComponent);
                 }
             }
         }

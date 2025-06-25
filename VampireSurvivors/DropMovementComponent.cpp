@@ -70,7 +70,7 @@ void DropMovementComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & DropMovementComponent::GetClassName()
+const std::string & DropMovementComponent::GetClassName()
 {
 	return mName;
 }

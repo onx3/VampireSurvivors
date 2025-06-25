@@ -18,6 +18,7 @@ public:
     void OnPlayerDeath(GameObject * pPlayer);
 
     const std::vector<BD::Handle> & GetPlayers() const;
+    BD::Handle GetActivePlayerHandle() const;
 
     GameObject * FindClosestEnemy();
 

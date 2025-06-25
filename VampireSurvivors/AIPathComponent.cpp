@@ -124,7 +124,7 @@ void AIPathComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & AIPathComponent::GetClassName()
+const std::string & AIPathComponent::GetClassName()
 {
 	return mName;
 }

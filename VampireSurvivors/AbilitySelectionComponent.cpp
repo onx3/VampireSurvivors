@@ -33,7 +33,7 @@ AbilitySelectionComponent::~AbilitySelectionComponent()
 void AbilitySelectionComponent::Update(float deltaTime)
 {
     GameManager & gameManager = GetGameManager();
-    GameObject & doorObj = GetGameObject();
+    GameObject & gameObj = GetGameObject();
 
     auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
     if (!pPlayerManager)
@@ -54,12 +54,12 @@ void AbilitySelectionComponent::Update(float deltaTime)
         return;
     }
 
-    float distanceSqr = BD::GetMagnitudeSquared(doorObj.GetPosition(), pPlayer->GetPosition());
+    float distanceSqr = BD::GetMagnitudeSquared(gameObj.GetPosition(), pPlayer->GetPosition());
     mIsPlayerInRange = (distanceSqr <= mInteractionRange * mInteractionRange);
 
     if (mIsPlayerInRange)
     {
-        mInteractionText.setPosition(doorObj.GetPosition().x, doorObj.GetPosition().y - 40.f);
+        mInteractionText.setPosition(gameObj.GetPosition().x, gameObj.GetPosition().y - 40.f);
 
         if (BD::IsKeyJustPressed(sf::Keyboard::F))
         {
@@ -86,7 +86,7 @@ void AbilitySelectionComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & AbilitySelectionComponent::GetClassName()
+const std::string & AbilitySelectionComponent::GetClassName()
 {
     return mName;
 }

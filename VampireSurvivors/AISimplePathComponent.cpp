@@ -310,7 +310,7 @@ void AISimplePathComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & AISimplePathComponent::GetClassName()
+const std::string & AISimplePathComponent::GetClassName()
 {
     return mName;
 }

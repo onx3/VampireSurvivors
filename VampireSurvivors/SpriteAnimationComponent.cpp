@@ -49,7 +49,7 @@ void SpriteAnimationComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & SpriteAnimationComponent::GetClassName()
+const std::string & SpriteAnimationComponent::GetClassName()
 {
     return mName;
 }

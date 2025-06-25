@@ -186,7 +186,7 @@ void ProjectileComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & ProjectileComponent::GetClassName()
+const std::string & ProjectileComponent::GetClassName()
 {
     return mName;
 }

@@ -84,7 +84,7 @@ void PhantomBladeComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & PhantomBladeComponent::GetClassName()
+const std::string & PhantomBladeComponent::GetClassName()
 {
 	return mName;
 }

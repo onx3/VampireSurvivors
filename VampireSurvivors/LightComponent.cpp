@@ -68,7 +68,7 @@ void LightComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & LightComponent::GetClassName()
+const std::string & LightComponent::GetClassName()
 {
     return mName;
 }

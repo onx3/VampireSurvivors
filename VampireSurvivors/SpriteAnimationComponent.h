@@ -31,7 +31,7 @@ public:
 
     virtual void Update(float deltaTime) override;
     virtual void DebugImGuiComponentInfo() override;
-    virtual std::string & GetClassName() override;
+    virtual const std::string & GetClassName() override;
 
     void AddAnimation(EAnimationState state, const Animation & animation);
     void PlayAnimation(EAnimationState state);

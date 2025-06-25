@@ -56,7 +56,7 @@ void ThrowingKnifeComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & ThrowingKnifeComponent::GetClassName()
+const std::string & ThrowingKnifeComponent::GetClassName()
 {
     return mName;
 }

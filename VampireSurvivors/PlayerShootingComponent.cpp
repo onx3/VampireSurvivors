@@ -52,7 +52,7 @@ void PlayerShootingComponent::Update(float deltaTime)
                 auto pBuffer = gameManager.GetManager<ResourceManager>()->GetSoundBuffer(resId);
                 if (pBuffer)
                 {
-                    gameManager.GetManager<AudioManager>()->PlayPooledSound(pBuffer, 20.f, 1.f);
+                    gameManager.GetManager<AudioManager>()->PlayPooledSound(pBuffer, 10.f, 1.f);
                     pInventory->Reload();
                 }
             }
@@ -91,7 +91,7 @@ void PlayerShootingComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & PlayerShootingComponent::GetClassName()
+const std::string & PlayerShootingComponent::GetClassName()
 {
     return mName;
 }

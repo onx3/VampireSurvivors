@@ -19,7 +19,7 @@ public:
     virtual void Update(float deltaTime) override;
     virtual void draw(sf::RenderTarget & target, sf::RenderStates states) override;
     virtual void DebugImGuiComponentInfo() override;
-    virtual std::string & GetClassName() override;
+    virtual const std::string & GetClassName() override;
 
     void Shoot();
     void StartReload();
@@ -31,8 +31,13 @@ public:
     bool IsReloading() const;
     bool CanShoot() const;
     
+    static EWeaponType ConvertStringToWeaponType(const std::string & string);
+
+    void SetWeaponType(EWeaponType newType);
 
 private:
+    void SetUpSprite();
+    void SetUpWeapon();
     void ConsumeAmmo();
 
     EWeaponType mWeaponType;

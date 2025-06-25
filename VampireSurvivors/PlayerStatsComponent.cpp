@@ -33,7 +33,7 @@ void PlayerStatsComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & PlayerStatsComponent::GetClassName()
+const std::string & PlayerStatsComponent::GetClassName()
 {
 	return mName;
 }

@@ -77,7 +77,7 @@ void RadiusPickupComponent::Update(float deltaTime)
 
     //------------------------------------------------------------------------------------------------------------------------
 
-    std::string & RadiusPickupComponent::GetClassName()
+    const std::string & RadiusPickupComponent::GetClassName()
     {
         return mName;
     }

@@ -50,7 +50,7 @@ void GameComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & GameComponent::GetClassName()
+const std::string & GameComponent::GetClassName()
 {
     return mName;
 }

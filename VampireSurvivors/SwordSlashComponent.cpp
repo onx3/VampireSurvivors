@@ -140,7 +140,7 @@ void SwordSlashComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & SwordSlashComponent::GetClassName()
+const std::string & SwordSlashComponent::GetClassName()
 {
 	return mName;
 }

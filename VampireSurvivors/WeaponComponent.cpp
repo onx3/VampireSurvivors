@@ -4,6 +4,7 @@
 #include "CameraManager.h"
 #include "CollisionComponent.h"
 #include "HealthComponent.h"
+#include "PlayerManager.h"
 
 WeaponComponent::WeaponComponent(GameObject * pOwner, GameManager & gameManager, EWeaponType weaponType)
     : GameComponent(pOwner, gameManager)
@@ -13,45 +14,7 @@ WeaponComponent::WeaponComponent(GameObject * pOwner, GameManager & gameManager,
     , mFireCooldown(0.f)
     , mName("WeaponComponent")
 {
-    switch (mWeaponType)
-    {
-        case (EWeaponType::Pistol):
-        {
-            mClipSize = 10;
-            mReserveAmmo = -1; // infinite
-            mReloadTime = 1.5f;
-            mTimeBetweenShots = 0.3f;
-            break;
-        }
-
-        case (EWeaponType::SMG):
-        {
-            mClipSize = 25;
-            mReserveAmmo = 150;
-            mReloadTime = 1.7f;
-            mTimeBetweenShots = .1f;
-            break;
-        }
-
-        case (EWeaponType::Shotgun):
-        {
-            mClipSize = 5;
-            mReserveAmmo = 25;
-            mReloadTime = 2.5f;
-            mTimeBetweenShots = 1.0f;
-            break;
-        }
-
-        case (EWeaponType::Rifle):
-        {
-            mClipSize = 30;
-            mReserveAmmo = 90;
-            mReloadTime = 2.0f;
-            mTimeBetweenShots = 0.2f;
-            break;
-        }
-    }
-    mClipAmmo = mClipSize;
+    SetUpWeapon();
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -99,7 +62,7 @@ void WeaponComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & WeaponComponent::GetClassName()
+const std::string & WeaponComponent::GetClassName()
 {
     return mName;
 }
@@ -218,6 +181,117 @@ bool WeaponComponent::IsReloading() const
 
 //------------------------------------------------------------------------------------------------------------------------
 
+void WeaponComponent::SetUpSprite()
+{
+    GameObject & gameObj = GetGameObject();
+    GameManager & gameManager = GetGameManager();
+
+    auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
+    if (!pPlayerManager)
+    {
+        return;
+    }
+
+    BD::Handle playerHandle = pPlayerManager->GetActivePlayerHandle();
+    auto * pPlayer = gameManager.GetGameObject(playerHandle);
+    if (!pPlayer)
+    {
+        return;
+    }
+
+    auto pWeaponSpriteComponent = gameObj.GetComponent<SpriteComponent>().lock();
+    if (pWeaponSpriteComponent)
+    {
+        std::string file;
+        switch (mWeaponType)
+        {
+            case (EWeaponType::Pistol):
+            {
+                file = "../../VampireSurvivors/Art/Weapons/Guns/Glock - P80 [64x48].png";
+                break;
+            }
+            case (EWeaponType::Shotgun):
+            {
+                file = "../../VampireSurvivors/Art/Weapons/Guns/[32x96]Shotgun_V1.01.png";
+                break;
+            }
+            case (EWeaponType::SMG):
+            {
+                file = "../../VampireSurvivors/Art/Weapons/Guns/Glock - P80 [64x48].png";
+                break;
+            }
+            case (EWeaponType::Rifle):
+            {
+                file = "../../VampireSurvivors/Art/Weapons/Guns/AK 47 [96x48].png";
+                break;
+            }
+            case (EWeaponType::RPG):
+            {
+                file = "../../VampireSurvivors/Art/Weapons/Guns/Thick Bazooka - M20 [192x32].png";
+                break;
+            }
+        }
+        ResourceId resourceId(file);
+
+        auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
+        if (pTexture)
+        {
+            pWeaponSpriteComponent->SetSprite(pTexture, sf::Vector2f(.4f, .4f));
+            pWeaponSpriteComponent->SetOriginToCenter();
+            pWeaponSpriteComponent->SetPosition(pPlayer->GetPosition());
+            gameObj.SetRotation(gameObj.GetRotationDegrees());
+        }
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void WeaponComponent::SetUpWeapon()
+{
+    switch (mWeaponType)
+    {
+        case (EWeaponType::Pistol):
+        {
+            mClipSize = 10;
+            mReserveAmmo = -1; // infinite
+            mReloadTime = 1.5f;
+            mTimeBetweenShots = 0.3f;
+            break;
+        }
+
+        case (EWeaponType::SMG):
+        {
+            mClipSize = 25;
+            mReserveAmmo = 150;
+            mReloadTime = 1.7f;
+            mTimeBetweenShots = .1f;
+            break;
+        }
+
+        case (EWeaponType::Shotgun):
+        {
+            mClipSize = 5;
+            mReserveAmmo = 25;
+            mReloadTime = 2.5f;
+            mTimeBetweenShots = 1.0f;
+            break;
+        }
+
+        case (EWeaponType::Rifle):
+        {
+            mClipSize = 30;
+            mReserveAmmo = 90;
+            mReloadTime = 2.0f;
+            mTimeBetweenShots = 0.2f;
+            break;
+        }
+    }
+    mClipAmmo = mClipSize;
+    SetUpSprite();
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
 void WeaponComponent::ConsumeAmmo()
 {
     if (mClipAmmo > 0)
@@ -231,6 +305,35 @@ void WeaponComponent::ConsumeAmmo()
 bool WeaponComponent::CanShoot() const
 {
     return !mIsReloading && mClipAmmo > 0 && mFireCooldown <= 0.f;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+EWeaponType WeaponComponent::ConvertStringToWeaponType(const std::string & string)
+{
+    static const std::unordered_map<std::string, EWeaponType> stringToWeaponType = {
+        {"Pistol", EWeaponType::Pistol},
+        {"Shotgun", EWeaponType::Shotgun},
+        {"SMG", EWeaponType::SMG},
+        {"Rifle", EWeaponType::Rifle},
+        {"RPG", EWeaponType::RPG}
+    };
+
+    auto it = stringToWeaponType.find(string);
+    if (it != stringToWeaponType.end())
+    {
+        return it->second;
+    }
+
+    return EWeaponType::Pistol; // Default
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void WeaponComponent::SetWeaponType(EWeaponType newType)
+{
+    mWeaponType = newType;
+    SetUpWeapon();
 }
 
 //------------------------------------------------------------------------------------------------------------------------

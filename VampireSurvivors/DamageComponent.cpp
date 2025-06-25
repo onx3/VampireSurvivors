@@ -28,7 +28,7 @@ void DamageComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & DamageComponent::GetClassName()
+const std::string & DamageComponent::GetClassName()
 {
 	return mName;
 }

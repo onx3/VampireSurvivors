@@ -59,7 +59,7 @@ void WandComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & WandComponent::GetClassName()
+const std::string & WandComponent::GetClassName()
 {
     return mName;
 }

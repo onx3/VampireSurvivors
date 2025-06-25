@@ -8,7 +8,7 @@ public:
 
     virtual void Update(float deltaTime) override;
     virtual void DebugImGuiComponentInfo() override;
-    virtual std::string & GetClassName() override;
+    virtual const std::string & GetClassName() override;
 
     void SetRadius(float radius);
     void SetColor(const sf::Color & color);

@@ -47,7 +47,7 @@ void TrackingComponent::Update(float deltaTime)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & TrackingComponent::GetClassName()
+const std::string & TrackingComponent::GetClassName()
 {
     return mName;
 }

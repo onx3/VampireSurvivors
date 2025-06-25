@@ -58,7 +58,7 @@ void SpawnFromGroundEffectComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & SpawnFromGroundEffectComponent::GetClassName()
+const std::string & SpawnFromGroundEffectComponent::GetClassName()
 {
     return mName;
 }

@@ -23,7 +23,7 @@ public:
 	virtual void Update(float deltaTime) override;
 	virtual void draw(sf::RenderTarget & target, sf::RenderStates states);
 	virtual void DebugImGuiComponentInfo() override;
-	virtual std::string & GetClassName() override;
+	virtual const std::string & GetClassName() override;
 
 	void AddDamage(float damage);
 

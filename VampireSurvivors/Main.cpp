@@ -1,6 +1,7 @@
 #include "AstroidsPrivate.h"
 #include <iostream>
 #include <cstdlib>
+#include <curl/curl.h>
 
 int main()
 {

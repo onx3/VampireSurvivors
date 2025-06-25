@@ -191,7 +191,7 @@ void SpriteComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & SpriteComponent::GetClassName()
+const std::string & SpriteComponent::GetClassName()
 {
     return mName;
 }

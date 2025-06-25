@@ -204,7 +204,7 @@ void HealthComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & HealthComponent::GetClassName()
+const std::string & HealthComponent::GetClassName()
 {
     return mName;
 }

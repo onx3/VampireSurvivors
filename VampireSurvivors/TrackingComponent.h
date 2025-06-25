@@ -7,7 +7,7 @@ public:
 	~TrackingComponent();
 
 	virtual void Update(float deltaTime) override;
-	virtual std::string & GetClassName() override;
+	virtual const std::string & GetClassName() override;
 
 private:
 	BD::Handle mTracker;

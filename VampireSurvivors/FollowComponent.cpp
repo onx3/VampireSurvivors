@@ -77,7 +77,7 @@ void FollowComponent::Update(float deltaTime)
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & FollowComponent::GetClassName()
+const std::string & FollowComponent::GetClassName()
 {
 	return mName;
 }

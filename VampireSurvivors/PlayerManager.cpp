@@ -284,6 +284,20 @@ const std::vector<BD::Handle> & PlayerManager::GetPlayers() const
 
 //------------------------------------------------------------------------------------------------------------------------
 
+BD::Handle PlayerManager::GetActivePlayerHandle() const
+{
+    if (mPlayerHandles.empty())
+    {
+        return 0;
+    }
+    else
+    {
+        return mPlayerHandles[0];
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
 GameObject * PlayerManager::FindClosestEnemy()
 {
     if (mPlayerHandles.empty())
@@ -419,6 +433,7 @@ void PlayerManager::AddWeaponGameObject(GameObject & player)
             }
         }
     }
+#if 0
     {
 
         GameManager & gameManager = GetGameManager();
@@ -466,6 +481,7 @@ void PlayerManager::AddWeaponGameObject(GameObject & player)
             }
         }
     }
+#endif
 }
 
 //------------------------------------------------------------------------------------------------------------------------

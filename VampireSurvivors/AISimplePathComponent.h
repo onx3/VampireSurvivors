@@ -8,7 +8,7 @@ public:
 
 	virtual void Update(float deltaTime) override;
 	virtual void DebugImGuiComponentInfo() override;
-	virtual std::string & GetClassName() override;
+	virtual const std::string & GetClassName() override;
 
 private:
 	bool HasLineOfSight(const sf::Vector2f & from, const sf::Vector2f & to);

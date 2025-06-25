@@ -1,5 +1,6 @@
 #include "AstroidsPrivate.h"
 #include "WeaponInventoryComponent.h"
+#include "FollowComponent.h"
 
 WeaponInventoryComponent::WeaponInventoryComponent(GameObject * pOwner, GameManager & gameManager)
     : GameComponent(pOwner, gameManager)
@@ -43,7 +44,7 @@ void WeaponInventoryComponent::DebugImGuiComponentInfo()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-std::string & WeaponInventoryComponent::GetClassName()
+const std::string & WeaponInventoryComponent::GetClassName()
 {
     return mName;
 }
@@ -144,6 +145,64 @@ int WeaponInventoryComponent::GetActiveReserveAmmo() const
 std::weak_ptr<WeaponComponent> WeaponInventoryComponent::GetActiveWeapon() const
 {
     return mWeapons[mCurrentIndex];
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void WeaponInventoryComponent::AddOrReplaceWeapon(EWeaponType weaponType)
+{
+    if (!TryAddWeapon(weaponType))
+    {
+        ReplaceCurrentWeapon(weaponType);
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+bool WeaponInventoryComponent::TryAddWeapon(EWeaponType weaponType)
+{
+    for (int i = 0; i < kMaxWeapons; ++i)
+    {
+        if (mWeapons[i].expired())
+        {
+            GameObject & gameObj = GetGameObject();
+            GameManager & gameManager = GetGameManager();
+
+            BD::Handle weaponHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, gameObj.GetHandle());
+            GameObject * pWeaponObj = gameManager.GetGameObject(weaponHandle);
+
+            auto pNewWeapon = std::make_shared<WeaponComponent>(pWeaponObj, gameManager, weaponType);
+            pWeaponObj->AddComponent(pNewWeapon);
+
+            mWeapons[i] = pNewWeapon;
+            SetWeaponActiveState(i, true);
+
+            // Weapon Follow Component
+            {
+                auto pWeaponFollowComponent = pWeaponObj->GetComponent<FollowComponent>().lock();
+                if (!pWeaponFollowComponent)
+                {
+                    auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pWeaponObj, gameManager, gameObj.GetHandle(), sf::Vector2f(12, 10));
+                    pWeaponObj->AddComponent(pWeaponFollowComponent);
+                }
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
+
+void WeaponInventoryComponent::ReplaceCurrentWeapon(EWeaponType weaponType)
+{
+    auto pOldWeapon = mWeapons[mCurrentIndex].lock();
+    if (pOldWeapon)
+    {
+        pOldWeapon->SetWeaponType(weaponType);
+        SetWeaponActiveState(mCurrentIndex, true);
+        return;
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

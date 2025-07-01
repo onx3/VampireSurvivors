@@ -13,7 +13,7 @@ WandComponent::WandComponent(GameObject * pOwner, GameManager & gameManager)
     , mCooldown(1.5f)
     , mDamagePerShot(100.f)
     , mDamageMult(1.f)
-    , mSpeed(150.f)
+    , mSpeed(15.f)
     , mName("WandComponent")
 {
 
@@ -112,8 +112,12 @@ void WandComponent::UpdateHomingShots(float deltaTime)
         if (length > 0.f)
             dir /= length;
 
-        sf::Vector2f newPosition = pHomingShot->GetPosition() + dir * projectile.speed * deltaTime;
-        pHomingShot->SetPosition(newPosition);
+        b2Body * pBody = pHomingShot->GetPhysicsBody();
+        if (pBody)
+        {
+            b2Vec2 velocity(dir.x * projectile.speed / BD::gsPixelsPerMeter, dir.y * projectile.speed / BD::gsPixelsPerMeter);
+            pBody->SetLinearVelocity(velocity);
+        }
     }
 
     // Clean up

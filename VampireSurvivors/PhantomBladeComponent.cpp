@@ -251,8 +251,8 @@ void PhantomBladeComponent::UpdatePhantomBlades(float deltaTime)
             if (b2Body * pBody = pBlade->GetPhysicsBody())
             {
                 b2Vec2 velocity(
-                    dir.x * mSpeed / pBlade->PIXELS_PER_METER,
-                    dir.y * mSpeed / pBlade->PIXELS_PER_METER
+                    dir.x * mSpeed / BD::gsPixelsPerMeter,
+                    dir.y * mSpeed / BD::gsPixelsPerMeter
                 );
                 pBody->SetLinearVelocity(velocity);
             }

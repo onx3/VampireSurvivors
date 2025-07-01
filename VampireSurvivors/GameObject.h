@@ -155,8 +155,6 @@ public:
 
     void DebugImGuiInfo();
 
-    const float PIXELS_PER_METER = 100.f;
-
 protected:
     GameObject(GameManager * pGameManager, ETeam team, BD::Handle handle, BD::Handle parentHandle = BD::Handle(0));
 

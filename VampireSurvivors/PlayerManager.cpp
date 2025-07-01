@@ -433,55 +433,6 @@ void PlayerManager::AddWeaponGameObject(GameObject & player)
             }
         }
     }
-#if 0
-    {
-
-        GameManager & gameManager = GetGameManager();
-        BD::Handle playerWeaponHandle = gameManager.CreateNewGameObject(ETeam::FriendlyPersistant, player.GetHandle());
-        GameObject * pPlayerWeapon = gameManager.GetGameObject(playerWeaponHandle);
-
-        // Weapon Sprite Component
-        {
-            auto pWeaponSpriteComponent = pPlayerWeapon->GetComponent<SpriteComponent>().lock();
-            if (pWeaponSpriteComponent)
-            {
-                std::string file = "../../VampireSurvivors/Art/Weapons/Guns/Submachine - MP5A3 [80x48].png";
-                ResourceId resourceId(file);
-
-                auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
-                if (pTexture)
-                {
-                    pWeaponSpriteComponent->SetSprite(pTexture, sf::Vector2f(.4f, .4f));
-                    pWeaponSpriteComponent->SetOriginToCenter();
-                    pWeaponSpriteComponent->SetPosition(player.GetPosition());
-                    pPlayerWeapon->SetRotation(pPlayerWeapon->GetRotationDegrees());
-                }
-            }
-        }
-
-        // Weapon Follow Component
-        {
-            auto pWeaponFollowComponent = pPlayerWeapon->GetComponent<FollowComponent>().lock();
-            if (!pWeaponFollowComponent)
-            {
-                auto pWeaponFollowComponent = std::make_shared<FollowComponent>(pPlayerWeapon, gameManager, player.GetHandle(), sf::Vector2f(12, 10));
-                pPlayerWeapon->AddComponent(pWeaponFollowComponent);
-            }
-        }
-
-        auto pPlayerInventory = player.GetComponent<WeaponInventoryComponent>().lock();
-        if (pPlayerInventory)
-        {
-            auto pWeaponComponent = pPlayerWeapon->GetComponent<WeaponComponent>().lock();
-            if (!pWeaponComponent)
-            {
-                pWeaponComponent = std::make_shared<WeaponComponent>(pPlayerWeapon, gameManager, EWeaponType::SMG);
-                pPlayerWeapon->AddComponent(pWeaponComponent);
-                pPlayerInventory->AddWeapon(pWeaponComponent);
-            }
-        }
-    }
-#endif
 }
 
 //------------------------------------------------------------------------------------------------------------------------

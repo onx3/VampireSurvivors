@@ -8,7 +8,7 @@
 
 namespace
 {
-	static const float skBoomerangTravelDistance = 15.f;
+	static const float skBoomerangTravelDistance = 8.f;
 }
 
 BoomerangComponent::BoomerangComponent(GameObject * pOwner, GameManager & gameManager)
@@ -18,7 +18,7 @@ BoomerangComponent::BoomerangComponent(GameObject * pOwner, GameManager & gameMa
 	, mCooldown(1.5f)
 	, mBoomerangDamagePerThrow(50.f)
 	, mBoomerangDamageMult(1.f)
-	, mSpeed(150.f)
+	, mSpeed(20.f)
 	, mName("BoomerangComponent")
 {
 
@@ -154,7 +154,12 @@ void BoomerangComponent::ThrowBoomerang(GameObject & enemy)
 
 	float overalRangeMult = pPlayerStatsComp->GetRangeMult();
 	float distanceSqr = (skBoomerangTravelDistance * overalRangeMult) * (skBoomerangTravelDistance * overalRangeMult);
-	Boomerang boomerang = { boomerangHandle, distanceSqr, distanceSqr, direction};
+    Boomerang boomerang = {};
+    boomerang.handle = boomerangHandle;
+    boomerang.distanceSqr = distanceSqr;
+    boomerang.isReturning = false;
+    boomerang.direction = direction;
+    boomerang.lastPosition = gameObj.GetPosition();
 	mBoomerangs.push_back(boomerang);
 }
 
@@ -162,67 +167,78 @@ void BoomerangComponent::ThrowBoomerang(GameObject & enemy)
 
 void BoomerangComponent::UpdateBoomerangs(float deltaTime)
 {
-	auto & gameManager = GetGameManager();
-	auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
-	if (!pPlayerManager || pPlayerManager->GetPlayers().empty())
-	{
-		return;
-	}
+    auto & gameManager = GetGameManager();
+    auto * pPlayerManager = gameManager.GetManager<PlayerManager>();
+    if (!pPlayerManager || pPlayerManager->GetPlayers().empty())
+    {
+        return;
+    }
 
-	GameObject * pPlayer = gameManager.GetGameObject(pPlayerManager->GetPlayers()[0]);
-	if (!pPlayer)
-	{
-		return;
-	}
+    GameObject * pPlayer = gameManager.GetGameObject(pPlayerManager->GetPlayers()[0]);
+    if (!pPlayer)
+    {
+        return;
+    }
 
-	for (auto & boomerang : mBoomerangs)
-	{
-		GameObject * pBoomerang = gameManager.GetGameObject(boomerang.handle);
-		if (!pBoomerang || pBoomerang->IsDestroyed())
-		{
-			continue;
-		}
+    for (auto & boomerang : mBoomerangs)
+    {
+        GameObject * pBoomerang = gameManager.GetGameObject(boomerang.handle);
+        if (!pBoomerang || pBoomerang->IsDestroyed())
+        {
+            continue;
+        }
 
-        const sf::Vector2f & currentPosition = pBoomerang->GetPosition();
-		sf::Vector2f movement = boomerang.direction * mSpeed * deltaTime;
-		sf::Vector2f newPosition = currentPosition + movement;
-		pBoomerang->SetPosition(newPosition);
+        // Movement
+        if (b2Body * pBody = pBoomerang->GetPhysicsBody())
+        {
+            b2Vec2 velocity(
+                boomerang.direction.x * mSpeed / BD::gsPixelsPerMeter,
+                boomerang.direction.y * mSpeed / BD::gsPixelsPerMeter
+            );
+            pBody->SetLinearVelocity(velocity);
+        }
 
-		// Rotation
-		{
-			auto pSpriteComponent = pBoomerang->GetComponent<SpriteComponent>().lock();
-			if (pSpriteComponent)
-			{
-				float currentRotation = pSpriteComponent->GetRotation();
-				currentRotation += 360.f * deltaTime;
-				if (currentRotation > 360.f) currentRotation -= 360.f;
-				pSpriteComponent->SetRotation(currentRotation);
-			}
-		}
+        // Rotation
+        {
+            auto pSpriteComponent = pBoomerang->GetComponent<SpriteComponent>().lock();
+            if (pSpriteComponent)
+            {
+                float currentRotation = pSpriteComponent->GetRotation();
+                currentRotation += 360.f * deltaTime;
+                if (currentRotation > 360.f) currentRotation -= 360.f;
+                pSpriteComponent->SetRotation(currentRotation);
+            }
+        }
 
-		float movementSqr = BD::GetMagnitudeSquared(movement);
-		boomerang.distanceSqr -= movementSqr;
+        // Track distance
+        const sf::Vector2f currentPosition = pBoomerang->GetPosition();
+        sf::Vector2f movement = currentPosition - boomerang.lastPosition;
+        float movementSqr = BD::GetMagnitudeSquared(movement);
+        boomerang.distanceSqr -= movementSqr;
 
-		if (!boomerang.isReturning && boomerang.distanceSqr <= 0.0f)
-		{
-			// Begin return trip using same distance
-			boomerang.direction = -boomerang.direction;
-			boomerang.isReturning = true;
-			boomerang.distanceSqr = skBoomerangTravelDistance * skBoomerangTravelDistance;
-		}
-		else if (boomerang.isReturning && boomerang.distanceSqr <= 0.0f)
-		{
-			pBoomerang->Destroy();
-		}
-	}
-	
-	mBoomerangs.erase(
-		std::remove_if(mBoomerangs.begin(), mBoomerangs.end(),
-			[&gameManager](Boomerang & boomerang) {
-				GameObject * pBoomerang = gameManager.GetGameObject(boomerang.handle);
-				return !pBoomerang || pBoomerang->IsDestroyed();
-			}),
-		mBoomerangs.end());
+        boomerang.lastPosition = currentPosition;
+
+        if (!boomerang.isReturning && boomerang.distanceSqr <= 0.0f)
+        {
+            // Begin return trip using same distance
+            boomerang.direction = -boomerang.direction;
+            boomerang.isReturning = true;
+            boomerang.distanceSqr = skBoomerangTravelDistance * skBoomerangTravelDistance;
+        }
+        else if (boomerang.isReturning && boomerang.distanceSqr <= 0.0f)
+        {
+            pBoomerang->Destroy();
+        }
+    }
+
+    // Clean up destroyed boomerangs
+    mBoomerangs.erase(
+        std::remove_if(mBoomerangs.begin(), mBoomerangs.end(),
+            [&gameManager](Boomerang & boomerang) {
+                GameObject * pBoomerang = gameManager.GetGameObject(boomerang.handle);
+                return !pBoomerang || pBoomerang->IsDestroyed();
+            }),
+        mBoomerangs.end());
 }
 
 //------------------------------------------------------------------------------------------------------------------------

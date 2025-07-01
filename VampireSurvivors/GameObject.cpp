@@ -72,7 +72,7 @@ void GameObject::CreateBoxShapePhysicsBody(b2World * world, const sf::Vector2f &
     // Define the body
     b2BodyDef bodyDef;
     bodyDef.type = isDynamic ? b2_dynamicBody : b2_staticBody;
-    bodyDef.position.Set(GetPosition().x / PIXELS_PER_METER, GetPosition().y / PIXELS_PER_METER);
+    bodyDef.position.Set(GetPosition().x / BD::gsPixelsPerMeter, GetPosition().y / BD::gsPixelsPerMeter);
     bodyDef.bullet = true; // More acurate collision checks
     bodyDef.awake = true;
 
@@ -81,7 +81,7 @@ void GameObject::CreateBoxShapePhysicsBody(b2World * world, const sf::Vector2f &
 
     // Define the shape
     b2PolygonShape boxShape;
-    boxShape.SetAsBox((size.x / 2.0f) / PIXELS_PER_METER, (size.y / 2.0f) / PIXELS_PER_METER);
+    boxShape.SetAsBox((size.x / 2.0f) / BD::gsPixelsPerMeter, (size.y / 2.0f) / BD::gsPixelsPerMeter);
 
     // Define the fixture
     b2FixtureDef fixtureDef;
@@ -114,7 +114,7 @@ bool GameObject::CreateWedgeShapePhysicsBody(b2World * world, float arcAngleRad,
     // Define the body
     b2BodyDef bodyDef;
     bodyDef.type = isDynamic ? b2_dynamicBody : b2_staticBody;
-    bodyDef.position.Set(GetPosition().x / PIXELS_PER_METER, GetPosition().y / PIXELS_PER_METER);
+    bodyDef.position.Set(GetPosition().x / BD::gsPixelsPerMeter, GetPosition().y / BD::gsPixelsPerMeter);
     bodyDef.bullet = true;
     bodyDef.awake = true;
 
@@ -160,7 +160,7 @@ void GameObject::CreateCircleShapePhysicsBody(b2World * world, float radiusPixel
     // Define the body
     b2BodyDef bodyDef;
     bodyDef.type = isDynamic ? b2_dynamicBody : b2_staticBody;
-    bodyDef.position.Set(GetPosition().x / PIXELS_PER_METER, GetPosition().y / PIXELS_PER_METER);
+    bodyDef.position.Set(GetPosition().x / BD::gsPixelsPerMeter, GetPosition().y / BD::gsPixelsPerMeter);
     bodyDef.bullet = true; // Accurate collision detection
     bodyDef.awake = true;
 
@@ -169,7 +169,7 @@ void GameObject::CreateCircleShapePhysicsBody(b2World * world, float radiusPixel
 
     // Define the shape
     b2CircleShape circleShape;
-    circleShape.m_radius = radiusPixels / PIXELS_PER_METER;
+    circleShape.m_radius = radiusPixels / BD::gsPixelsPerMeter;
 
     // Define the fixture
     b2FixtureDef fixtureDef;

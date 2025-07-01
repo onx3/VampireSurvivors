@@ -297,7 +297,7 @@ void AISimplePathComponent::Update(float deltaTime)
         }
     }
 
-    b2Vec2 velocity(direction.x * mMoveSpeed / myGameObj.PIXELS_PER_METER, direction.y * mMoveSpeed / myGameObj.PIXELS_PER_METER);
+    b2Vec2 velocity(direction.x * mMoveSpeed / BD::gsPixelsPerMeter, direction.y * mMoveSpeed / BD::gsPixelsPerMeter);
     pBody->SetLinearVelocity(velocity);
 }
 

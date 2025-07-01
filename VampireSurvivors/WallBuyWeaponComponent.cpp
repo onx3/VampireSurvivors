@@ -87,7 +87,7 @@ void WallBuyWeaponComponent::Update(float deltaTime)
     {
         mInteractionText.setPosition(gameObj.GetPosition().x, gameObj.GetPosition().y - 40.f);
 
-        if (BD::IsKeyJustPressed(sf::Keyboard::F))
+        if (gameManager.mInputHandler.IsKeyJustPressed(sf::Keyboard::F))
         {
             BuyWeapon(*pPlayer);
         }

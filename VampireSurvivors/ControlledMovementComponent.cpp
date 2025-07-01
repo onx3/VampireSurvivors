@@ -107,7 +107,7 @@ void ControlledMovementComponent::Update(float deltaTime)
     }
 
     // Set velocity in physics engine
-    b2Vec2 box2dVelocity(mVelocity.x / pOwner->PIXELS_PER_METER, mVelocity.y / pOwner->PIXELS_PER_METER);
+    b2Vec2 box2dVelocity(mVelocity.x / BD::gsPixelsPerMeter, mVelocity.y / BD::gsPixelsPerMeter);
     pBody->SetLinearVelocity(box2dVelocity);
 
     // Animation handling

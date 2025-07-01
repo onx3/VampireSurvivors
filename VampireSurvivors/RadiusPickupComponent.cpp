@@ -53,8 +53,8 @@ void RadiusPickupComponent::Update(float deltaTime)
             if (b2Body * pBody = gameObj.GetPhysicsBody())
             {
                 b2Vec2 velocity(
-                    direction.x * mMoveSpeed / gameObj.PIXELS_PER_METER,
-                    direction.y * mMoveSpeed / gameObj.PIXELS_PER_METER
+                    direction.x * mMoveSpeed / BD::gsPixelsPerMeter,
+                    direction.y * mMoveSpeed / BD::gsPixelsPerMeter
                 );
                 pBody->SetLinearVelocity(velocity);
             }

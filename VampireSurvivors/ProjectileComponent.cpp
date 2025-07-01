@@ -112,7 +112,7 @@ void ProjectileComponent::Shoot()
         b2Body * pBody = pProjectile->GetPhysicsBody();
         if (pBody)
         {
-            b2Vec2 startPos(playerPosition.x / pProjectile->PIXELS_PER_METER, playerPosition.y / pProjectile->PIXELS_PER_METER);
+            b2Vec2 startPos(playerPosition.x / BD::gsPixelsPerMeter, playerPosition.y / BD::gsPixelsPerMeter);
             float correctedAngle = angleRadians + (BD::gsPi / 2.f);
             pBody->SetTransform(startPos, correctedAngle); // Apply rotation to physics body
         }
@@ -207,8 +207,8 @@ void ProjectileComponent::UpdateProjectiles(float deltaTime)
             {
                 // Use physics velocity
                 b2Vec2 velocity(
-                    projectile.direction.x * mSpeed / pProjectile->PIXELS_PER_METER,
-                    projectile.direction.y * mSpeed / pProjectile->PIXELS_PER_METER
+                    projectile.direction.x * mSpeed / BD::gsPixelsPerMeter,
+                    projectile.direction.y * mSpeed / BD::gsPixelsPerMeter
                 );
                 pBody->SetLinearVelocity(velocity);
             }

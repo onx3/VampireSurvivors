@@ -62,7 +62,7 @@ void DoorComponent::Update(float deltaTime)
     {
         mInteractionText.setPosition(doorObj.GetPosition().x, doorObj.GetPosition().y - 40.f);
 
-        if (BD::IsKeyJustPressed(sf::Keyboard::F))
+        if (gameManager.mInputHandler.IsKeyJustPressed(sf::Keyboard::F))
         {
             int score = 0;
             auto * pUIManager = gameManager.GetManager<UIManager>();

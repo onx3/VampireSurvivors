@@ -35,7 +35,7 @@ void CollisionComponent::Update(float deltaTime)
         return;
     }
 
-    float scale = pOwner->PIXELS_PER_METER;
+    float scale = BD::gsPixelsPerMeter;
     b2Vec2 bodyPos = mpBody->GetPosition();
     float angleRadians = mpBody->GetAngle();
 
@@ -91,7 +91,7 @@ sf::FloatRect CollisionComponent::GetWorldAABB() const
         return sf::FloatRect();
     }
 
-    float pixelsPerMeter = GetGameObject().PIXELS_PER_METER;
+    float pixelsPerMeter = BD::gsPixelsPerMeter;
 
     sf::FloatRect aabb;
     aabb.left = FLT_MAX;

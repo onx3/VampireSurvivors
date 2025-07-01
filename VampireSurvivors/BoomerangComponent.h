@@ -7,6 +7,7 @@ struct Boomerang
 	float distanceSqr;
 	float totalDistanceSqr;
 	sf::Vector2f direction;
+    sf::Vector2f lastPosition;
 	bool isReturning = false;
 };
 

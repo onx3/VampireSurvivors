@@ -197,7 +197,7 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="WallBuyWeaponComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -366,7 +366,11 @@
     <ClInclude Include="WeaponComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="WeaponInventoryComponent.h" />
-    <ClInclude Include="WallBuyWeaponComponent.h" />
+    <ClInclude Include="WallBuyWeaponComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponInventoryComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

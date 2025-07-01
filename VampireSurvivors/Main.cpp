@@ -6,6 +6,7 @@
 int main()
 {
     WindowManager windowManager;
+    InputHandler inputHandler;
     bool paused = false;
     sf::Clock clock;
     float fpsTimer = 0.f;
@@ -13,13 +14,14 @@ int main()
 
     while (windowManager.GetWindow()->isOpen())
     {
-        GameManager * pGameManager = new GameManager(windowManager);
+        GameManager * pGameManager = new GameManager(windowManager, inputHandler);
 
         while (windowManager.GetWindow()->isOpen() && !pGameManager->IsGameOver())
         {
             windowManager.PollEvents();
+            inputHandler.Update();
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+            if (inputHandler.IsKeyJustPressed(sf::Keyboard::Escape))
             {
                 paused = !paused;
                 pGameManager->SetPausedState(paused);

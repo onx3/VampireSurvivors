@@ -31,11 +31,11 @@ void PlayerShootingComponent::Update(float deltaTime)
 
     if (pInventory)
     {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+        if (gameManager.mInputHandler.IsKeyJustPressed(sf::Keyboard::R))
         {
             pInventory->Reload();
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+        if (gameManager.mInputHandler.IsKeyJustPressed(sf::Keyboard::E))
         {
             pInventory->SwitchToNextSlot();
         }

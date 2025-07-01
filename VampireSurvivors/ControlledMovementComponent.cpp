@@ -48,6 +48,7 @@ ControlledMovementComponent::~ControlledMovementComponent()
 void ControlledMovementComponent::Update(float deltaTime)
 {
     GameObject * pOwner = GetGameManager().GetGameObject(mOwnerHandle);
+    GameManager & gameManager = GetGameManager();
     if (!pOwner || !pOwner->IsActive())
     {
         return;
@@ -62,19 +63,19 @@ void ControlledMovementComponent::Update(float deltaTime)
     sf::Vector2f inputDirection = { 0.f, 0.f };
 
     // Input handling
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) 
+    if (gameManager.mInputHandler.IsKeyHeld(sf::Keyboard::W))
     {
         inputDirection.y -= 1.f;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) 
+    if (gameManager.mInputHandler.IsKeyHeld(sf::Keyboard::S))
     {
         inputDirection.y += 1.f;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+    if (gameManager.mInputHandler.IsKeyHeld(sf::Keyboard::A))
     {
         inputDirection.x -= 1.f;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    if (gameManager.mInputHandler.IsKeyHeld(sf::Keyboard::D))
     {
         inputDirection.x += 1.f;
     }

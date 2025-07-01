@@ -7,6 +7,7 @@
 #include "UIManager.h"
 #include "BaseManager.h"
 #include "WindowManager.h"
+#include "InputHandler.h"
 #include "CollisionListener.h"
 #include "TPool.h"
 
@@ -25,7 +26,7 @@ class BaseManager;
 class GameManager
 {
 public:
-	GameManager(WindowManager & windowManager);
+	GameManager(WindowManager & windowManager, InputHandler & inputHandler);
 	~GameManager();
 
 	void EndGame();
@@ -102,6 +103,7 @@ public:
 
 	// Window
 	WindowManager & mWindowManager;
+    InputHandler & mInputHandler;
 	sf::Event mEvent;
 
 private:

@@ -27,8 +27,9 @@ namespace
     static int gsAbilityThreshold = 10000;
 }
 
-GameManager::GameManager(WindowManager & windowManager)
+GameManager::GameManager(WindowManager & windowManager, InputHandler & inputHandler)
     : mWindowManager(windowManager)
+    , mInputHandler(inputHandler)
     , mpWindow(windowManager.GetWindow())
     , mEvent(windowManager.GetEvent())
     , mShowImGuiWindow(false)
@@ -307,7 +308,7 @@ void GameManager::RenderGameObjectImGui()
 #if IMGUI_ENABLED()
     static GameObject * pSelectedGameObject = nullptr;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
+    if (mInputHandler.IsKeyJustPressed(sf::Keyboard::G))
     {
         mShowImGuiWindow = !mShowImGuiWindow;
     }

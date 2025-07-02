@@ -55,6 +55,7 @@ GameManager::GameManager(WindowManager & windowManager, InputHandler & inputHand
             AddManager<LevelManager>();
             GetManager<LevelManager>()->LoadLevel("../../VampireSurvivors/Levels/Zombies.ldtk");
         }
+        AddManager<AudioManager>();
         AddManager<PlayerManager>();
         
         AddManager<CameraManager>();
@@ -64,7 +65,6 @@ GameManager::GameManager(WindowManager & windowManager, InputHandler & inputHand
         AddManager<DropManager>();
         AddManager<AbilityUIManager>();
         AddManager<LightManager>();
-        AddManager<AudioManager>();
     }
     
 

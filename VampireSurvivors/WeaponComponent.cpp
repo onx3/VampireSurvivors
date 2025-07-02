@@ -36,8 +36,9 @@ void WeaponComponent::Update(float deltaTime)
             int toReload = (mReserveAmmo == -1) ? ammoNeeded : std::min(ammoNeeded, mReserveAmmo);
             mClipAmmo += toReload;
             if (mReserveAmmo != -1)
+            {
                 mReserveAmmo -= toReload;
-
+            }
             mIsReloading = false;
         }
     }

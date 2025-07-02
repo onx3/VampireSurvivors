@@ -72,7 +72,6 @@ std::shared_ptr<sf::SoundBuffer> ResourceManager::GetSoundBuffer(ResourceId & re
         mSoundResources[resourceId] = pBuffer;
         return pBuffer;
     }
-
     return nullptr;
 }
 

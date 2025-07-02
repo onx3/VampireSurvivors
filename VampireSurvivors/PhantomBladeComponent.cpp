@@ -180,11 +180,21 @@ void PhantomBladeComponent::UpdatePhantomBlades(float deltaTime)
         return;
     }
 
-    for (int i = static_cast<int>(mPhantomBlades.size()) - 1; i >= 0; --i)
+    for (int ii = int(mPhantomBlades.size()) - 1; ii >= 0; --ii)
     {
-        auto & blade = mPhantomBlades[i];
+        auto & blade = mPhantomBlades[ii];
         GameObject * pBlade = gameManager.GetGameObject(blade.phantomHandle);
         GameObject * pEnemy = gameManager.GetGameObject(blade.enemyHandle);
+
+        if (!pBlade || pBlade->IsDestroyed())
+        {
+            if (pBlade)
+            {
+                pBlade->Destroy();
+            }
+            mPhantomBlades.erase(mPhantomBlades.begin() + ii);
+            continue;
+        }
 
         if (!pEnemy)
         {
@@ -193,17 +203,13 @@ void PhantomBladeComponent::UpdatePhantomBlades(float deltaTime)
             {
                 blade.enemyHandle = pEnemy->GetHandle();
             }
-        }
-
-        if (!pBlade || pBlade->IsDestroyed())
-        {
-            if (pBlade)
+            else // No Enemy Object
             {
                 pBlade->Destroy();
+                mPhantomBlades.erase(mPhantomBlades.begin() + ii);
+                continue;
             }
-            mPhantomBlades.erase(mPhantomBlades.begin() + i);
-            continue;
-        }
+        }        
 
         // Ghost trail logic
         mGhostTrails[blade.phantomHandle].push_back({ pBlade->GetPosition(), skGhostLifeTime });
@@ -221,7 +227,7 @@ void PhantomBladeComponent::UpdatePhantomBlades(float deltaTime)
         if (blade.timeLeft <= 0.f)
         {
             pBlade->Destroy();
-            mPhantomBlades.erase(mPhantomBlades.begin() + i);
+            mPhantomBlades.erase(mPhantomBlades.begin() + ii);
             continue;
         }
 

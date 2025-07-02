@@ -45,6 +45,12 @@ GameManager::GameManager(WindowManager & windowManager, InputHandler & inputHand
     // Order Matters
     {
         AddManager<ResourceManager>();
+        
+        // Audio Manager
+        {
+            AddManager<AudioManager>();
+            GetManager<AudioManager>()->PlayBackgroundMusic("../../VampireSurvivors/Audio/OneManSymphony.ogg", 4.5f, true);
+        }
 
         InitWindow();
         InitImGui();
@@ -55,7 +61,6 @@ GameManager::GameManager(WindowManager & windowManager, InputHandler & inputHand
             AddManager<LevelManager>();
             GetManager<LevelManager>()->LoadLevel("../../VampireSurvivors/Levels/Zombies.ldtk");
         }
-        AddManager<AudioManager>();
         AddManager<PlayerManager>();
         
         AddManager<CameraManager>();

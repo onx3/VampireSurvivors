@@ -73,5 +73,21 @@ void AudioManager::TrackAndPlaySound(sf::Sound && sound)
 }
 
 //------------------------------------------------------------------------------------------------------------------------
+
+bool AudioManager::PlayBackgroundMusic(const std::string & filePath, float volume, bool loop)
+{
+    if (!mBackgroundMusic.openFromFile(filePath))
+    {
+        std::cerr << "Failed to load background music: " << filePath << "\n";
+        return false;
+    }
+
+    mBackgroundMusic.setVolume(volume);
+    mBackgroundMusic.setLoop(loop);
+    mBackgroundMusic.play();
+    return true;
+}
+
+//------------------------------------------------------------------------------------------------------------------------
 // EOF
 //------------------------------------------------------------------------------------------------------------------------

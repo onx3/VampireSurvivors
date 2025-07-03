@@ -211,8 +211,15 @@ void WeaponInventoryComponent::SetWeaponActiveState(int index, bool isActive)
 {
     if (auto pWeapon = mWeapons[index].lock())
     {
-        auto * pWeaponObj = &pWeapon->GetGameObject();
-        pWeaponObj->SetIsActive(isActive);
+        auto pWeaponObj = pWeapon->GetGameObject();
+        pWeaponObj.SetIsActive(isActive);
+        int otherWeaponIndex = index == 0 ? 1 : 0;
+        if (auto currentWeapon = mWeapons[otherWeaponIndex].lock())
+        {
+            currentWeapon->GetGameObject().SetIsActive(false);
+        }
+        
+        mCurrentIndex = index;
     }
 }
 

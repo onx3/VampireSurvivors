@@ -199,6 +199,12 @@
     <ClCompile Include="WallBuyWeaponComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="MysteryBoxComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -372,5 +378,7 @@
     <ClInclude Include="WeaponInventoryComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="MysteryBoxComponent.h" />
+    <ClInclude Include="WeaponManager.h" />
   </ItemGroup>
 </Project>

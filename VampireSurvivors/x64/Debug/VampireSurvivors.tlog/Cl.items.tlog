@@ -36,6 +36,7 @@ D:\VampireSurvivors\VampireSurvivors\LevelManager.cpp;D:\VampireSurvivors\Vampir
 D:\VampireSurvivors\VampireSurvivors\LightComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\LightComponent.obj
 D:\VampireSurvivors\VampireSurvivors\LightManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\LightManager.obj
 D:\VampireSurvivors\VampireSurvivors\Main.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\Main.obj
+D:\VampireSurvivors\VampireSurvivors\MysteryBoxComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\MysteryBoxComponent.obj
 D:\VampireSurvivors\VampireSurvivors\PhantomBladeComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\PhantomBladeComponent.obj
 D:\VampireSurvivors\VampireSurvivors\PlayerManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\PlayerManager.obj
 D:\VampireSurvivors\VampireSurvivors\PlayerShootingComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\PlayerShootingComponent.obj
@@ -56,4 +57,5 @@ D:\VampireSurvivors\VampireSurvivors\WallBuyWeaponComponent.cpp;D:\VampireSurviv
 D:\VampireSurvivors\VampireSurvivors\WandComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\WandComponent.obj
 D:\VampireSurvivors\VampireSurvivors\WeaponComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\WeaponComponent.obj
 D:\VampireSurvivors\VampireSurvivors\WeaponInventoryComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\WeaponInventoryComponent.obj
+D:\VampireSurvivors\VampireSurvivors\WeaponManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\WeaponManager.obj
 D:\VampireSurvivors\VampireSurvivors\WindowManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\WindowManager.obj

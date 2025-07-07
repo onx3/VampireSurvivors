@@ -1,14 +1,6 @@
 #pragma once
 #include "GameComponent.h"
-
-enum class EWeaponType
-{
-    Pistol,
-    Shotgun,
-    SMG,
-    Rifle,
-    RPG
-};
+#include "WeaponManager.h"
 
 class WeaponComponent : public GameComponent
 {

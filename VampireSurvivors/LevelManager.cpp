@@ -9,6 +9,7 @@
 #include "CollisionComponent.h"
 #include "AbilitySelectionComponent.h"
 #include "WallBuyWeaponComponent.h"
+#include "MysteryBoxComponent.h"
 
 LevelManager::LevelManager(GameManager * pGameManager)
     : BaseManager(pGameManager)
@@ -554,6 +555,38 @@ void LevelManager::ParseTileData(const json & levelData)
                     }
 
                     auto pWallBuyWeaponComponent = std::make_shared<WallBuyWeaponComponent>(pObj, gameManager, name, price);
+                    pObj->AddComponent(pWallBuyWeaponComponent);
+                }
+            }
+            else if (entityName == "MysteryBox")
+            {
+                BD::Handle objHandle = gameManager.CreateNewGameObject(ETeam::Neutral, gameManager.GetRootGameObjectHandle());
+                GameObject * pObj = gameManager.GetGameObject(objHandle);
+                if (pObj)
+                {
+                    auto pSpriteComponent = pObj->GetComponent<SpriteComponent>().lock();
+                    if (pSpriteComponent)
+                    {
+                        ResourceId resId = ResourceId("../../VampireSurvivors/Art/Frames/chest_empty_open_anim_f0.png");
+                        auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resId);
+                        if (pTexture)
+                        {
+                            pSpriteComponent->SetSprite(pTexture, sf::Vector2f(1.f, 1.f));
+                            //pSpriteComponent->GetSprite().setTextureRect(sf::IntRect(0, 0, 16, 28));
+                            //pSpriteComponent->GetSprite().setOrigin(8.f, 14.f);
+                            pSpriteComponent->SetOriginToCenter();
+                        }
+                    }
+                    auto pLightComponent = pObj->GetComponent<LightComponent>().lock();
+                    if (!pLightComponent)
+                    {
+                        pLightComponent = std::make_shared<LightComponent>(pObj, gameManager, 200.f, sf::Color(255, 215, 0, 180));
+                        pObj->AddComponent(pLightComponent);
+                    }
+
+                    pObj->SetPosition(sf::Vector2f(float(px), float(py)));
+
+                    auto pWallBuyWeaponComponent = std::make_shared<MysteryBoxComponent>(pObj, gameManager);
                     pObj->AddComponent(pWallBuyWeaponComponent);
                 }
             }

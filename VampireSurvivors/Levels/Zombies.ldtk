@@ -11,7 +11,7 @@
 	"iid": "a9c99620-1030-11f0-932b-d51fb7995097",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 37,
+	"nextUid": 38,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "Free",
@@ -832,6 +832,41 @@
 					"tilesetUid": null
 				}
 			]
+		},
+		{
+			"identifier": "MysteryBox",
+			"uid": 37,
+			"tags": [],
+			"exportToToc": false,
+			"allowOutOfBounds": false,
+			"doc": null,
+			"width": 16,
+			"height": 16,
+			"resizableX": false,
+			"resizableY": false,
+			"minWidth": null,
+			"maxWidth": null,
+			"minHeight": null,
+			"maxHeight": null,
+			"keepAspectRatio": false,
+			"tileOpacity": 1,
+			"fillOpacity": 1,
+			"lineOpacity": 1,
+			"hollow": false,
+			"color": "#63C74D",
+			"renderMode": "Rectangle",
+			"showName": true,
+			"tilesetId": null,
+			"tileRenderMode": "FitInside",
+			"tileRect": null,
+			"uiTileRect": null,
+			"nineSliceBorders": [],
+			"maxCount": 0,
+			"limitScope": "PerLevel",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0,
+			"pivotY": 0,
+			"fieldDefs": []
 		}
 	], "tilesets": [
 		{
@@ -1682,6 +1717,22 @@
 							],
 							"__worldX": 1360,
 							"__worldY": 1264
+						},
+						{
+							"__identifier": "MysteryBox",
+							"__grid": [84,86],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#63C74D",
+							"iid": "174b3710-3740-11f0-854a-1b98ba005541",
+							"width": 16,
+							"height": 16,
+							"defUid": 37,
+							"px": [1344,1376],
+							"fieldInstances": [],
+							"__worldX": 1344,
+							"__worldY": 1376
 						}
 					]
 				},

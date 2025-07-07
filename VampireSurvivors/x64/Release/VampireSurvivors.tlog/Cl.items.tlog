@@ -1,7 +1,9 @@
+D:\VampireSurvivors\VampireSurvivors\AbilitySelectionComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\AbilitySelectionComponent.obj
 D:\VampireSurvivors\VampireSurvivors\AbilityUIManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\AbilityUIManager.obj
 D:\VampireSurvivors\VampireSurvivors\AIPathComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\AIPathComponent.obj
 D:\VampireSurvivors\VampireSurvivors\AISimplePathComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\AISimplePathComponent.obj
 D:\VampireSurvivors\VampireSurvivors\AstroidsPrivate.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\AstroidsPrivate.obj
+D:\VampireSurvivors\VampireSurvivors\AudioManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\AudioManager.obj
 D:\VampireSurvivors\VampireSurvivors\BaseManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\BaseManager.obj
 D:\VampireSurvivors\VampireSurvivors\BoomerangComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\BoomerangComponent.obj
 D:\VampireSurvivors\VampireSurvivors\CameraManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\CameraManager.obj
@@ -9,6 +11,8 @@ D:\VampireSurvivors\VampireSurvivors\CollisionComponent.cpp;D:\VampireSurvivors\
 D:\VampireSurvivors\VampireSurvivors\CollisionListener.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\CollisionListener.obj
 D:\VampireSurvivors\VampireSurvivors\ControlledMovementComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\ControlledMovementComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DamageComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\DamageComponent.obj
+D:\VampireSurvivors\VampireSurvivors\DamageZoneComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\DamageZoneComponent.obj
+D:\VampireSurvivors\VampireSurvivors\DoorComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\DoorComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DropManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\DropManager.obj
 D:\VampireSurvivors\VampireSurvivors\DropMovementComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\DropMovementComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DungeonManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\DungeonManager.obj
@@ -16,6 +20,7 @@ D:\VampireSurvivors\VampireSurvivors\EnemyAIManager.cpp;D:\VampireSurvivors\Vamp
 D:\VampireSurvivors\VampireSurvivors\EnemyBulletComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\EnemyBulletComponent.obj
 D:\VampireSurvivors\VampireSurvivors\EnemyMeleeAttackComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\EnemyMeleeAttackComponent.obj
 D:\VampireSurvivors\VampireSurvivors\ExplosionComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\ExplosionComponent.obj
+D:\VampireSurvivors\VampireSurvivors\FirePotComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\FirePotComponent.obj
 D:\VampireSurvivors\VampireSurvivors\FollowComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\FollowComponent.obj
 D:\VampireSurvivors\VampireSurvivors\GameComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\GameComponent.obj
 D:\VampireSurvivors\VampireSurvivors\GameManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\GameManager.obj
@@ -26,14 +31,20 @@ D:\VampireSurvivors\VampireSurvivors\imgui.cpp;D:\VampireSurvivors\VampireSurviv
 D:\VampireSurvivors\VampireSurvivors\imgui_draw.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\imgui_draw.obj
 D:\VampireSurvivors\VampireSurvivors\imgui_tables.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\imgui_tables.obj
 D:\VampireSurvivors\VampireSurvivors\imgui_widgets.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\imgui_widgets.obj
+D:\VampireSurvivors\VampireSurvivors\InputHandler.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\InputHandler.obj
 D:\VampireSurvivors\VampireSurvivors\LevelManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\LevelManager.obj
+D:\VampireSurvivors\VampireSurvivors\LightComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\LightComponent.obj
+D:\VampireSurvivors\VampireSurvivors\LightManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\LightManager.obj
 D:\VampireSurvivors\VampireSurvivors\Main.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\Main.obj
 D:\VampireSurvivors\VampireSurvivors\PhantomBladeComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\PhantomBladeComponent.obj
 D:\VampireSurvivors\VampireSurvivors\PlayerManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\PlayerManager.obj
+D:\VampireSurvivors\VampireSurvivors\PlayerShootingComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\PlayerShootingComponent.obj
 D:\VampireSurvivors\VampireSurvivors\PlayerStatsComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\PlayerStatsComponent.obj
 D:\VampireSurvivors\VampireSurvivors\ProjectileComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\ProjectileComponent.obj
 D:\VampireSurvivors\VampireSurvivors\RadiusPickupComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\RadiusPickupComponent.obj
 D:\VampireSurvivors\VampireSurvivors\ResourceManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\ResourceManager.obj
+D:\VampireSurvivors\VampireSurvivors\RoundManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\RoundManager.obj
+D:\VampireSurvivors\VampireSurvivors\SpawnFromGroundEffectComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\SpawnFromGroundEffectComponent.obj
 D:\VampireSurvivors\VampireSurvivors\SpriteAnimationComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\SpriteAnimationComponent.obj
 D:\VampireSurvivors\VampireSurvivors\ThrowingKnife.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\ThrowingKnife.obj
 D:\VampireSurvivors\VampireSurvivors\UIManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\UIManager.obj
@@ -41,5 +52,8 @@ D:\VampireSurvivors\VampireSurvivors\SpriteComponent.cpp;D:\VampireSurvivors\Vam
 D:\VampireSurvivors\VampireSurvivors\SwordSlashComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\SwordSlashComponent.obj
 D:\VampireSurvivors\VampireSurvivors\Timer.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\Timer.obj
 D:\VampireSurvivors\VampireSurvivors\TrackingComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\TrackingComponent.obj
+D:\VampireSurvivors\VampireSurvivors\WallBuyWeaponComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\WallBuyWeaponComponent.obj
 D:\VampireSurvivors\VampireSurvivors\WandComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\WandComponent.obj
+D:\VampireSurvivors\VampireSurvivors\WeaponComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\WeaponComponent.obj
+D:\VampireSurvivors\VampireSurvivors\WeaponInventoryComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\WeaponInventoryComponent.obj
 D:\VampireSurvivors\VampireSurvivors\WindowManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Release\WindowManager.obj

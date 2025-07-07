@@ -20,6 +20,7 @@
 #include "LightManager.h"
 #include "RoundManager.h"
 #include "AudioManager.h"
+#include "WeaponManager.h"
 
 namespace
 {
@@ -55,6 +56,7 @@ GameManager::GameManager(WindowManager & windowManager, InputHandler & inputHand
         InitWindow();
         InitImGui();
         mRootHandle = CreateNewGameObject(ETeam::Neutral, BD::Handle(0));
+        AddManager<WeaponManager>();
 
         //Level Manager
         {

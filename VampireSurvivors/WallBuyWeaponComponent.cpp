@@ -20,29 +20,32 @@ WallBuyWeaponComponent::WallBuyWeaponComponent(GameObject * pOwner, GameManager 
     mInteractionText.setFont(mFont);
     mInteractionText.setCharacterSize(15);
     mInteractionText.setFillColor(sf::Color::White);
-    char buffer[64];
-    std::snprintf(buffer, sizeof(buffer), "Press F to open ability selector");
-    mInteractionText.setString(buffer);
 
     auto pSpriteComp = GetGameObject().GetComponent<SpriteComponent>().lock();
     if (pSpriteComp)
     {
-        switch (mWeaponType)
+        auto * pWeaponManager = gameManager.GetManager<WeaponManager>();
+        if (pWeaponManager)
         {
-            case (EWeaponType::Rifle):
+            const WeaponInfo * pInfo = pWeaponManager->GetWeaponInfo(mWeaponType);
+            if (pInfo)
             {
-                std::string file = "../../VampireSurvivors/Art/Weapons/Guns/AK 47 [96x48].png";
-                ResourceId resourceId(file);
-
+                ResourceId resourceId(pInfo->spritePath);
                 auto pTexture = gameManager.GetManager<ResourceManager>()->GetTexture(resourceId);
                 if (pTexture)
                 {
-                    pSpriteComp->SetSprite(pTexture, sf::Vector2f(.5f, .5f));
-                    pSpriteComp->GetSprite().setTextureRect(sf::IntRect(0, 0, 96, 48));
-                    pSpriteComp->SetPosition(GetGameObject().GetPosition());
-                    sf::Sprite & sprite = pSpriteComp->GetSprite();
-                    sprite.setColor(sf::Color(0, 255, 0, 255));
+                    auto pSpriteComp = GetGameObject().GetComponent<SpriteComponent>().lock();
+                    if (pSpriteComp)
+                    {
+                        pSpriteComp->SetSprite(pTexture, sf::Vector2f(.5f, .5f));
+                        pSpriteComp->GetSprite().setTextureRect(sf::IntRect(0, 0, 96, 48));
+                        pSpriteComp->SetPosition(GetGameObject().GetPosition());
+                        pSpriteComp->GetSprite().setColor(sf::Color(0, 255, 0, 255));
+                    }
                 }
+                char buffer[64];
+                std::snprintf(buffer, sizeof(buffer), "Press F to buy %s ($%d)", pInfo->name.c_str(), pInfo->price);
+                mInteractionText.setString(buffer);
             }
         }
     }
@@ -124,13 +127,11 @@ void WallBuyWeaponComponent::BuyWeapon(GameObject & playerObj)
 {
     GameManager & gameManager = GetGameManager();
 
-    auto pWeaponInventoryComp = playerObj.GetComponent<WeaponInventoryComponent>().lock();
-    if (!pWeaponInventoryComp)
+    auto * pWeaponManager = gameManager.GetManager<WeaponManager>();
+    if (pWeaponManager)
     {
-        return;
+        pWeaponManager->GiveWeaponToPlayer(playerObj, mWeaponType);
     }
-
-    pWeaponInventoryComp->AddOrReplaceWeapon(mWeaponType);
 }
 
 //------------------------------------------------------------------------------------------------------------------------

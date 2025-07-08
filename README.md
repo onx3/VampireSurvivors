@@ -9,8 +9,10 @@ This project represents an ongoing effort to sharpen my skills in gameplay syste
 ---
 
 ## Screenshots
-![Gameplay Screenshot](VampireSurvivors/Art/Screenshots/Gameplay1.png)
-![Gameplay Screenshot](VampireSurvivors/Art/Screenshots/Gameplay2.png)
+![Gameplay Screenshot](VampireSurvivors/Art/Screenshots/Zombies1.png)
+![Gameplay Screenshot](VampireSurvivors/Art/Screenshots/Zombies2.png)
+![Gameplay Screenshot](VampireSurvivors/Art/Screenshots/Zombies3.png)
+![Gameplay Screenshot](VampireSurvivors/Art/Screenshots/Zombies4.png)
 
 ---
 

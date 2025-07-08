@@ -6,6 +6,7 @@
 int main()
 {
     WindowManager windowManager;
+    gInputHandler.reset(new InputHandler);
     InputHandler inputHandler;
     bool paused = false;
     sf::Clock clock;

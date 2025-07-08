@@ -22,3 +22,5 @@ private:
     std::array<bool, sf::Keyboard::KeyCount> mPreviousState{};
     std::array<bool, sf::Keyboard::KeyCount> mCurrentState{};
 };
+
+extern std::unique_ptr<InputHandler> gInputHandler;

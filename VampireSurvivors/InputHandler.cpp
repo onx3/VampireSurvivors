@@ -1,6 +1,8 @@
 #include "AstroidsPrivate.h"
 #include "InputHandler.h"
 
+std::unique_ptr<InputHandler> gInputHandler;
+
 InputHandler::InputHandler()
 {
     mPreviousState.fill(false);

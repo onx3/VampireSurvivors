@@ -68,13 +68,14 @@ public:
 	template <typename T>
 	T * GetManager()
 	{
+        T * pManager = nullptr;
 		auto it = std::find_if(mManagers.begin(), mManagers.end(),
 			[](const auto & pair) { return pair.first == std::type_index(typeid(T)); });
 		if (it != mManagers.end())
 		{
-			return dynamic_cast<T *>(it->second);
+            pManager = dynamic_cast<T *>(it->second);
 		}
-		return nullptr;
+		return pManager;
 	}
 
 	BD::Handle CreateNewGameObject(ETeam team, BD::Handle parentHandle);

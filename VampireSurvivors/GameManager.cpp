@@ -166,6 +166,17 @@ void GameManager::EndGame()
 
 void GameManager::Update(float deltaTime)
 {
+    // Pause Game
+    if (mInputHandler.IsKeyJustPressed(sf::Keyboard::Escape))
+    {
+        SetPausedState(!mPaused);
+    }
+
+    if (mPaused)
+    {
+        return;
+    }
+
     // Game Audio
     if (!mSoundPlayed)
     {

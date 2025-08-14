@@ -151,6 +151,7 @@
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="BaseManager.cpp" />
     <ClCompile Include="BoomerangComponent.cpp" />
+    <ClCompile Include="Camera2D.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionListener.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="DropManager.cpp" />
     <ClCompile Include="DropMovementComponent.cpp" />
     <ClCompile Include="DungeonManager.cpp" />
+    <ClCompile Include="EditorManager.cpp" />
     <ClCompile Include="EnemyAIManager.cpp" />
     <ClCompile Include="EnemyBulletComponent.cpp" />
     <ClCompile Include="EnemyMeleeAttackComponent.cpp" />
@@ -215,6 +217,7 @@
     <ClInclude Include="BaseManager.h" />
     <ClInclude Include="BDConfig.h" />
     <ClInclude Include="BoomerangComponent.h" />
+    <ClInclude Include="Camera2D.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionListener.h" />
@@ -225,6 +228,7 @@
     <ClInclude Include="DropManager.h" />
     <ClInclude Include="DropMovementComponent.h" />
     <ClInclude Include="DungeonManager.h" />
+    <ClInclude Include="EditorManager.h" />
     <ClInclude Include="EnemyAIManager.h" />
     <ClInclude Include="EnemyBulletComponent.h" />
     <ClInclude Include="EnemyMeleeAttackComponent.h" />

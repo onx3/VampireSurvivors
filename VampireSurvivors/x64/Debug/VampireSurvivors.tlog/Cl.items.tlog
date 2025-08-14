@@ -6,6 +6,7 @@ D:\VampireSurvivors\VampireSurvivors\AstroidsPrivate.cpp;D:\VampireSurvivors\Vam
 D:\VampireSurvivors\VampireSurvivors\AudioManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\AudioManager.obj
 D:\VampireSurvivors\VampireSurvivors\BaseManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\BaseManager.obj
 D:\VampireSurvivors\VampireSurvivors\BoomerangComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\BoomerangComponent.obj
+D:\VampireSurvivors\VampireSurvivors\Camera2D.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\Camera2D.obj
 D:\VampireSurvivors\VampireSurvivors\CameraManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\CameraManager.obj
 D:\VampireSurvivors\VampireSurvivors\CollisionComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\CollisionComponent.obj
 D:\VampireSurvivors\VampireSurvivors\CollisionListener.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\CollisionListener.obj
@@ -16,6 +17,7 @@ D:\VampireSurvivors\VampireSurvivors\DoorComponent.cpp;D:\VampireSurvivors\Vampi
 D:\VampireSurvivors\VampireSurvivors\DropManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DropManager.obj
 D:\VampireSurvivors\VampireSurvivors\DropMovementComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DropMovementComponent.obj
 D:\VampireSurvivors\VampireSurvivors\DungeonManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\DungeonManager.obj
+D:\VampireSurvivors\VampireSurvivors\EditorManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\EditorManager.obj
 D:\VampireSurvivors\VampireSurvivors\EnemyAIManager.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\EnemyAIManager.obj
 D:\VampireSurvivors\VampireSurvivors\EnemyBulletComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\EnemyBulletComponent.obj
 D:\VampireSurvivors\VampireSurvivors\EnemyMeleeAttackComponent.cpp;D:\VampireSurvivors\VampireSurvivors\x64\Debug\EnemyMeleeAttackComponent.obj

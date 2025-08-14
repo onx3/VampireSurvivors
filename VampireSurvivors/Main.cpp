@@ -2,53 +2,75 @@
 #include <iostream>
 #include <cstdlib>
 #include <curl/curl.h>
+#include "EditorManager.h"
+
+enum class EEngineMode
+{
+    Game,
+    Editor
+};
 
 int main()
 {
     WindowManager windowManager;
-    gInputHandler.reset(new InputHandler);
     InputHandler inputHandler;
-    bool paused = false;
+    EEngineMode engineMode = EEngineMode::Game;
+
     sf::Clock clock;
-    float fpsTimer = 0.f;
-    int frameCount = 0;
 
     while (windowManager.GetWindow()->isOpen())
     {
         GameManager * pGameManager = new GameManager(windowManager, inputHandler);
+        assert(pGameManager && "GameManager is nullptr!!!");
+        EditorManager editorManager = EditorManager(windowManager, inputHandler, *pGameManager);
 
         while (windowManager.GetWindow()->isOpen() && !pGameManager->IsGameOver())
         {
             windowManager.PollEvents();
             inputHandler.Update();
 
-            if (inputHandler.IsKeyJustPressed(sf::Keyboard::Escape))
+            // Handle Engine Mode switch first
+            if (inputHandler.IsKeyJustPressed(sf::Keyboard::F1))
             {
-                paused = !paused;
-                pGameManager->SetPausedState(paused);
+                if (engineMode == EEngineMode::Game)
+                {
+                    engineMode = EEngineMode::Editor;
+                }
+                else
+                {
+                    engineMode = EEngineMode::Game;
+                }
             }
 
             float deltaTime = clock.restart().asSeconds();
 
-            frameCount++;
-            fpsTimer += deltaTime;
+            switch (engineMode)
+            {
+                case (EEngineMode::Game):
+                {
+                    pGameManager->Update(deltaTime);
+                    pGameManager->Render(deltaTime);
+                    break;
+                }
+                case (EEngineMode::Editor):
+                {
+                    editorManager.Update(deltaTime);
+                    pGameManager->Render(deltaTime);
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
 
-            if (fpsTimer >= 1.f) // Once every second
-            {
-                fpsTimer = 0.f;
-                frameCount = 0;
-            }
-            if (!paused)
-            {
-                pGameManager->Update(deltaTime);
-            }
-            else
-            {
-                pGameManager->DebugUpdate(deltaTime);
-                clock.restart();
-            }
             pGameManager->Render(deltaTime);
+            if (engineMode == EEngineMode::Editor)
+            {
+                editorManager.RenderOverlay(deltaTime);
+            }
         }
+
         delete pGameManager;
         pGameManager = nullptr;
 

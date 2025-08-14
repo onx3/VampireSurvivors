@@ -27,7 +27,7 @@ class GameManager
 {
 public:
 	GameManager(WindowManager & windowManager, InputHandler & inputHandler);
-	~GameManager();
+	virtual ~GameManager();
 
 	void EndGame();
 

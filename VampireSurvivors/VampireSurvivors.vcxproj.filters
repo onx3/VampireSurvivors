@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Managers">
       <UniqueIdentifier>{98354638-e5ae-4c2d-b546-9798c18df468}</UniqueIdentifier>
     </Filter>
@@ -20,19 +16,23 @@
     <Filter Include="Core">
       <UniqueIdentifier>{e2cd0ba0-ed7f-41ea-897f-cacb4be8e20e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{79ae500f-2aa0-48a5-ae51-1e6bdbe5ee5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="BaseManager.cpp">
       <Filter>Managers</Filter>
@@ -199,22 +199,28 @@
     <ClCompile Include="WallBuyWeaponComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="MysteryBoxComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WeaponManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MysteryBoxComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorManager.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera2D.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="BaseManager.h">
       <Filter>Managers</Filter>
@@ -378,7 +384,18 @@
     <ClInclude Include="WeaponInventoryComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="MysteryBoxComponent.h" />
-    <ClInclude Include="WeaponManager.h" />
+    <ClInclude Include="MysteryBoxComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorManager.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera2D.h" />
   </ItemGroup>
 </Project>

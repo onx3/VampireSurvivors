@@ -6,7 +6,7 @@ class BaseManager
 {
 public:
 	explicit BaseManager(GameManager * pGameManager);
-	~BaseManager();
+	virtual ~BaseManager();
 
 	virtual void Update(float deltaTime);
 	virtual void Render(sf::RenderWindow & window);

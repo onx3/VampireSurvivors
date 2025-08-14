@@ -219,7 +219,6 @@ void PlayerManager::Update(float deltaTime)
             }
 
             auto pHealthComp = pPlayer->GetComponent<HealthComponent>().lock();
-
             if (pHealthComp)
             {
                 // Set the callbacks
@@ -266,7 +265,7 @@ void PlayerManager::OnPlayerDeath(GameObject * pPlayer)
         mSoundPlayed = true;
     }
 
-    // Add the explosion animation here
+    // Add the explosion animation
     if (!pPlayer->GetComponent<ExplosionComponent>().lock())
     {
         auto explosionComp = std::make_shared<ExplosionComponent>(

@@ -15,7 +15,7 @@ public:
     GameManager & mGameManager;
     sf::Event mEvent;
 private:
-
+    bool mShouldShowWindow;
     Camera2D mCamera;
 };
 

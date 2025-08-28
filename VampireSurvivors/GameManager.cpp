@@ -490,7 +490,6 @@ void GameManager::RenderUI()
 void GameManager::Render(float deltaTime)
 {
     mpWindow->clear();
-    mpWindow->setMouseCursorVisible(false);
 
     if (mGameState == EGameState::EndGame)
     {

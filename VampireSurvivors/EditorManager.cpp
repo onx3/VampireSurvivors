@@ -1,28 +1,31 @@
 #include "AstroidsPrivate.h"
 #include "EditorManager.h"
+#include <imgui.h>
+#include <imgui-SFML.h>
 
 EditorManager::EditorManager(WindowManager & windowManager, InputHandler & inputHandler, GameManager & gameManager)
     : mWindowManager(windowManager)
     , mInputHandler(inputHandler)
     , mGameManager(gameManager)
     , mEvent()
+    , mShouldShowWindow(true)
     , mCamera(windowManager.GetWindow())
 {
-
+    ImGui::SFML::Init(*mWindowManager.GetWindow());
 }
 
 //------------------------------------------------------------------------------------------------------------------------
 
 EditorManager::~EditorManager()
 {
-
+    ImGui::SFML::Shutdown();
 }
 
 //------------------------------------------------------------------------------------------------------------------------
 
 void EditorManager::Update(float deltaTime)
 {
-    float cameraSpeed = 200.f;
+    float cameraSpeed = 600.f;
     // 1. Camera controls
     if (mInputHandler.IsKeyHeld(sf::Keyboard::W))
     {
@@ -67,7 +70,13 @@ void EditorManager::Update(float deltaTime)
 
 void EditorManager::RenderOverlay(float deltaTime)
 {
+    sf::Time dt;
+    ImGui::SFML::Update(*mWindowManager.GetWindow(), sf::milliseconds(1));
+    ImGui::Begin("Editor Panel", &mShouldShowWindow);
+    ImGui::Text("Selected Object:");
+    ImGui::End();
 
+    ImGui::SFML::Render(*mWindowManager.GetWindow());
 }
 
 //------------------------------------------------------------------------------------------------------------------------

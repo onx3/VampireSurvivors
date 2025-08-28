@@ -48,14 +48,14 @@ int main()
             {
                 case (EEngineMode::Game):
                 {
+                    windowManager.GetWindow()->setMouseCursorVisible(false);
                     pGameManager->Update(deltaTime);
-                    pGameManager->Render(deltaTime);
                     break;
                 }
                 case (EEngineMode::Editor):
                 {
+                    windowManager.GetWindow()->setMouseCursorVisible(true);
                     editorManager.Update(deltaTime);
-                    pGameManager->Render(deltaTime);
                     break;
                 }
                 default:
